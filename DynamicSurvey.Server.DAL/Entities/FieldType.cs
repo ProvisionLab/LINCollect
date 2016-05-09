@@ -12,6 +12,8 @@ namespace DynamicSurvey.Server.DAL.Entities
         Email,
         Checkbox,
         List,
-        Button
+        Button,
+        RadioButton,
+        GroupBox
     }
 }

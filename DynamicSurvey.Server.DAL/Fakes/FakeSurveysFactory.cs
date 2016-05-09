@@ -8,6 +8,73 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
 {
     public class FakeSurveysFactory
     {
+        private static Survey CreateSurveyWithGroups()
+        {
+            return new Survey
+            {
+                Language = "English",
+                Title = "English sur with groups",
+                Pages = new List<SurveyPage>
+                {
+                    new SurveyPage()
+                    {
+                        Title = "Page 1",
+                        Fields = new List<SurveyField>()
+                        {
+                            new SurveyField()
+                            {
+                                 Id = 1,
+                                 Label = "Group Box Label. How many times you visit church per month?",
+                                 FieldType = FieldType.GroupBox
+                            },
+
+                            new SurveyField()
+                            {
+                                Id = 2,
+                                Label = "Once",
+                                FieldType = FieldType.RadioButton,
+                                GroupId = 1
+                            },
+                            new SurveyField()
+                            {
+                                Id = 3,
+                                Label = "Twice",
+                                FieldType = FieldType.RadioButton,
+                                GroupId = 1
+                            },
+                            new SurveyField()
+                            {
+                                Id = 3,
+                                Label = "Newer",
+                                FieldType = FieldType.RadioButton,
+                                GroupId = 1
+                            },
+                            new SurveyField()
+                            {
+                                Id = 11,
+                                Label = "Group box label. Select capital of Japan",
+                                 FieldType = FieldType.GroupBox
+                            },
+                            new SurveyField()
+                            {
+                                Id = 12,
+                                Label = "",
+                                FieldType = DAL.Entities.FieldType.List,
+                                DefaultValues = new string [] { "New York", "London", "Lima", "Cairo", "Moscow", "Kioto", "Osaka", "Okinawa", "Tokyo"},
+                                GroupId = 11
+                            },
+                            new SurveyField()
+                            {
+                                Id = 100,
+                                Label = "Submit",
+                                FieldType = FieldType.Button
+                            }
+
+                        }
+                    }
+                }
+            };
+        }
         private static Survey CreateEnglishSurvey()
         {
             return new Survey
@@ -18,8 +85,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                         {
                             new SurveyPage()
                             {
-                                Title = "Page 1",
-                                
+                                Title = "Page 1",                                
                                 Fields = new List<SurveyField>
                                 {
                                     new SurveyField()
@@ -169,7 +235,8 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
             return new Survey[]
             {
                 CreateEnglishSurvey(),
-                CreateRussianSurvey()
+                CreateRussianSurvey(),
+                CreateSurveyWithGroups()
             };
         }
     }
