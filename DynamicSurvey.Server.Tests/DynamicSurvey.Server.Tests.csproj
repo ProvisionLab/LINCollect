@@ -168,9 +168,6 @@
   </Target>
   -->
   <Target Name="AfterBuild">
-  <Message Text="### AfterBuild ###" Importance="high" />
-</Target>
-  <Target Name="AfterBuild">
     <TransformXml Source="@(AppConfigWithTargetPath)" Transform="$(ProjectConfigTransformFileName)" Destination="@(AppConfigWithTargetPath->'$(OutDir)%(TargetPath)')" />
   </Target>
 </Project>
