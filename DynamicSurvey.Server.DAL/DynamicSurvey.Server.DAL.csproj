@@ -89,6 +89,7 @@
     <Compile Include="language.cs">
       <DependentUpon>DbSurveys.tt</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="OperationResults\OperationResult.cs" />
     <Compile Include="OperationResults\ResultCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

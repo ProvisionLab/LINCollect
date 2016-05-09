@@ -1,4 +1,5 @@
-﻿using DynamicSurvey.Server.Infrastructure;
+﻿using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,12 @@ namespace DynamicSurvey.Server
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            var repository = new UsersRepository();
+            repository.Init("Admin", "Password", "Administrator");
+            repository.Init("Administrator", "Password", "Administrator");
+            repository.Init("Enumerator", "Password", "Enumerator");
+            repository.Init("Respondent", "Password", "Respondent");
         }
     }
 }

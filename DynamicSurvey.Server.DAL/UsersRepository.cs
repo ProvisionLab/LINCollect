@@ -20,6 +20,8 @@ namespace DynamicSurvey.Server.DAL
         bool Authorize(string username, string password);
 
         bool CheckCredentials(string username, string hashedPassword);
+
+        void Init(string username, string password, string accessLevelName);
     }
 
     public class UsersRepository : IUsersRepository
@@ -29,34 +31,40 @@ namespace DynamicSurvey.Server.DAL
             using (var context = new DbSurveysContext())
             {
                 ValidateCaller(context, caller);
-                var user = context.user.SingleOrDefault(u => u.login == target.Username);
-                var right = context.user_right.Single(r => r.name == target.AccessRight.Name);
-                var salt = DateTime.Now.ToString("yyyyMMddHHmmsstt");
-                var hashedPassword = CalculateMD5Hash(salt + target.Password);
-                if (user == null)
-                {
-                    context.user.Add(new user()
-                    {
-                        login = target.Username,
-                        user_right_id = right.id,
-                        password = hashedPassword,
-                        salt = salt
-                    });
-                }
-                else
-                {
-                    user.login = target.Username;
-                    user.user_right_id = right.id;
-                    user.password = hashedPassword;
-                    user.salt = salt;
-                    user.is_deleted = 0;
-                }
-
-                context.SaveChanges();
+                AddOrUpdateInternal(context, target.Username, target.Password, target.AccessRight.Name);
             }
         }
 
-        public string CalculateMD5Hash(string input)
+        private void AddOrUpdateInternal(DbSurveysContext context, string username, string plainPassword, string accessRightName)
+        {
+            var user = context.user.SingleOrDefault(u => u.login == username);
+            // HACK: how strange AccessLevel entity performed. 
+            var right = context.user_right.Single(r => r.name == accessRightName);
+            var salt = DateTime.Now.ToString("yyyyMMddHHmmsstt");
+            var hashedPassword = CalculateMD5Hash(salt + plainPassword);
+            if (user == null)
+            {
+                context.user.Add(new user()
+                {
+                    login = username,
+                    user_right_id = right.id,
+                    password = hashedPassword,
+                    salt = salt
+                });
+            }
+            else
+            {
+                user.login = username;
+                user.user_right_id = right.id;
+                user.password = hashedPassword;
+                user.salt = salt;
+                user.is_deleted = 0;
+            }
+
+            context.SaveChanges();
+        }
+
+        private string CalculateMD5Hash(string input)
         {
 
             MD5 md5 = System.Security.Cryptography.MD5.Create();
@@ -146,7 +154,13 @@ namespace DynamicSurvey.Server.DAL
             }
         }
 
-
+        public void Init(string username, string plainPassword, string accessLevel)
+        {
+            using (var context =new DbSurveysContext())
+            {
+                AddOrUpdateInternal(context, username, plainPassword, accessLevel);                           
+            }
+        }
 
         private void ValidateCaller(DbSurveysContext context, User caller)
         {

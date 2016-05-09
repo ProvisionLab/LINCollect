@@ -10,17 +10,17 @@ namespace DynamicSurvey.Server.Controllers
 {
     public class SurveysController : Controller
     {
-        #region TOOD: move to model. cover with tests
-      
-
-       
-        #endregion
-
         private readonly ISurveysRepository surveysRepository;
 
         public SurveysController(ISurveysRepository surveysRepository)
         {
             this.surveysRepository = surveysRepository;
+        }
+
+        public ActionResult FreeFakes()
+        {
+            var res = surveysRepository.GetSurveys(null);
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Index(

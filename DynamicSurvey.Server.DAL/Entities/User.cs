@@ -13,6 +13,11 @@ namespace DynamicSurvey.Server.DAL.Entities
 		public string Password { get; set; }
 		public Language[] SupportedLanguages { get; set; }
 		public AccessRight AccessRight { get; set; }
+
+        public User()
+        {
+
+        }
 	}
 
     public static class UserHelper
