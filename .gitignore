@@ -1,0 +1,7 @@
+DynamicSurvey.Server/obj/
+DynamicSurvey.Server/Properties/PublishProfiles/opros - FTP.pubxml
+DynamicSurvey.Server/Properties/PublishProfiles/opros - Web Deploy.pubxml
+opros.publishsettings
+DynamicSurvey.Server.Tests/bin/
+DynamicSurvey.Server.Tests/obj/
+DynamicSurvey.Server/bin/

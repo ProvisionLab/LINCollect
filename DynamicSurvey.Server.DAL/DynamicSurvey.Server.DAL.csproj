@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DB1CC1A2-130A-42A1-A44D-BAEF85348892}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DynamicSurvey.Server.DAL</RootNamespace>
+    <AssemblyName>DynamicSurvey.Server.DAL</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\MySQL\Connector.NET 6.9\Assemblies\v4.5\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="city.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="company.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="country.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbSurveys.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DbSurveys.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbSurveys.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbSurveys.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DbSurveys.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\AccessLevel.cs" />
+    <Compile Include="Entities\FieldType.cs" />
+    <Compile Include="Entities\Language.cs" />
+    <Compile Include="Entities\AccessRight.cs" />
+    <Compile Include="Entities\Survey.cs" />
+    <Compile Include="Entities\SurveyField.cs" />
+    <Compile Include="Entities\SurveyPage.cs" />
+    <Compile Include="Entities\SurveyReport.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UsersFilter.cs" />
+    <Compile Include="Fakes\FakeSurveysFactory.cs" />
+    <Compile Include="Helpers\Pager.cs" />
+    <Compile Include="language.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="OperationResults\OperationResult.cs" />
+    <Compile Include="OperationResults\ResultCode.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="survey.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SurveysRepository.cs" />
+    <Compile Include="survey_detail.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="survey_field.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="survey_field_template.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="survey_field_type.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="survey_template.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="user.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UsersRepository.cs" />
+    <Compile Include="user_language.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="user_right.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vocabulary.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="DbSurveys.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DbSurveys.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DbSurveys.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DbSurveys.edmx</DependentUpon>
+      <LastGenOutput>DbSurveys.Context.cs</LastGenOutput>
+    </None>
+    <None Include="DbSurveys.edmx.diagram">
+      <DependentUpon>DbSurveys.edmx</DependentUpon>
+    </None>
+    <None Include="DbSurveys.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DbSurveys.edmx</DependentUpon>
+      <LastGenOutput>DbSurveys.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BB8765F6-EEC0-459F-BB06-8B7C230D0B12}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DynamicSurvey.Server.Tests</RootNamespace>
+    <AssemblyName>DynamicSurvey.Server.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectConfigFileName>App.config</ProjectConfigFileName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.OData, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.OData.4.0.30506\lib\net40\System.Web.Http.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="HelpersTests\PagerTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_AddUser_Admin_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_RemoveUser_Respondent_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_RemoveUser_Enumerator_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_UpdateUser_Enumerator_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_UpdateUser_Respondent_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Authorize\Authorize_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\CommonHelpers.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_AddUser_Enumarator_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_AddUser_Respondent_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_UpdateUser_Admin_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Access\Access_RemoveUser_Admin_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Fetch\Fetch_GetUser_Security_Tests.cs" />
+    <Compile Include="Repositories\UsersRepositoryTests\Fetch\Fetch_GetUsers_Filter_Tests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DynamicSurvey.Server.DAL\DynamicSurvey.Server.DAL.csproj">
+      <Project>{db1cc1a2-130a-42a1-a44d-baef85348892}</Project>
+      <Name>DynamicSurvey.Server.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicSurvey.Server\DynamicSurvey.Server.csproj">
+      <Project>{8E948EF3-E862-4909-8E64-3E3849F9E297}</Project>
+      <Name>DynamicSurvey.Server</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="App.Debug.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+    <None Include="App.Release.config">
+      <DependentUpon>App.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v12.0\Web\Microsoft.Web.Publishing.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Target Name="AfterBuild">
+  <Message Text="### AfterBuild ###" Importance="high" />
+</Target>
+  <Target Name="AfterBuild">
+    <TransformXml Source="@(AppConfigWithTargetPath)" Transform="$(ProjectConfigTransformFileName)" Destination="@(AppConfigWithTargetPath->'$(OutDir)%(TargetPath)')" />
+  </Target>
+</Project>

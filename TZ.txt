@@ -1,0 +1,35 @@
+https://nabusdevelopment.mybalsamiq.com/projects/surveys/Survey
+
+Design and development of a web and mobile app (IOS and Android) for a survey to be used for Social Network Analysis. The basis of this functionality should be all functionality included in ONASurveys (www.onasurveys.com), but allowing login of enumerators / respondents, and able to record survey responses while offline and upload results when reconnected.
+
+• An admin panel integrated into the web app to 
+	- create new surveys; 
+	- make a copy of an existing survey; 
+	- edit surveys; 
+	- add, remove, or edit questions of various types (including text, check box, radar button, drop down, phone numbers, emails, etc.); 
+	- add, remove or edit question responses; 
+	- add, remove or edit section / page headers and other text within the surveys; 
+	- see the results of surveys.
+
+• Able to create the surveys in multiple languages.
+
+• Includes ability to create survey flow based on responses to previous questions.
+
+• When the mobile device is disconnected due to lack of internet or other reason, the answers to a survey will be saved in the app and then uploaded to the database upon connection.
+
+• Users will be 
+	- administrators (able to create new surveys, edit questions, add other users), 
+	- enumerators (for surveys conducted by trained staff), 
+	- and individual respondents
+
+• Enumerators will have a login for the app. When logged in, they will choose which survey they are going to conduct by name of the survey, and then they will have access to ask and complete the survey questions.
+
+• The admin panel will integrate with NodeXL (excel plugin for network analysis).
+
+• Name standardization (system checks if an organization named within any open-ended "relationship" question is already in the database and if so the enumerator can select the existing name or decide to add a new name).
+
+• If a new organization is named, they are added to a 'nominations list' and the system will collect contact information that can easily be used to interview the new organization (preferably email that we can automatically send an invitation to participate to).
+
+Infrastructure, Login and Registration screens, list of surveys, ability to see the list in offline
+http://www.linclocal.org
+http://www.surveymonkey.com

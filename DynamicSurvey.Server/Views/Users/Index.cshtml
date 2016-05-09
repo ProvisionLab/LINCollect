@@ -1,0 +1,25 @@
+﻿@model DynamicSurvey.Server.ViewModels.UsersViewModel
+@using DynamicSurvey.Server.Helpers;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Users</h2>
+<h2>Page # @Model.Filter.Pager.CurrentPage</h2>
+
+<table>
+    @foreach (var u in Model.Users)
+    {
+       <tr>
+           <td> @Html.Label(u.Username)</td>
+           <td> @Html.Label(u.AccessRight.Name)</td>
+           <td> @Html.ActionLink("Details", "Profile", new { id = u.Id })</td>
+       </tr> 
+    }
+</table>
+
+<div class="pager">
+    @Html.PageLinks(Model.Filter.Pager, x => Url.Action("Index", new { page = x }));
+</div>
