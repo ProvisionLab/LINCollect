@@ -6,8 +6,8 @@ using System.Web;
 
 namespace DynamicSurvey.Server.ViewModels
 {
-    public class SurveysViewModel
-    {
-        public IEnumerable<Survey> Surveys { get; set; }
-    }
+	public class SurveysViewModel
+	{
+		public IEnumerable<Survey> Surveys { get; set; }
+	}
 }

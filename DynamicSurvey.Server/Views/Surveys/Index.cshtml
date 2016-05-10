@@ -14,7 +14,7 @@
         <th> @Html.Label("Title") </th>
         <th> @Html.Label("Action") </th>
         @*<th> @Html.Label("Pages count") </th>
-        <th> @Html.Label("Responds count") </th>*@
+            <th> @Html.Label("Responds count") </th>*@
     </tr>
     @foreach (var u in Model.Surveys)
     {
@@ -28,5 +28,5 @@
 </table>
 
 @*<div class="pager">
-    @Html.PageLinks(Model.Filter.Pager, x => Url.Action("Index", new { page = x }));
-</div>*@
+        @Html.PageLinks(Model.Filter.Pager, x => Url.Action("Index", new { page = x }));
+    </div>*@
