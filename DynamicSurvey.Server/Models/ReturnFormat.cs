@@ -5,9 +5,9 @@ using System.Web;
 
 namespace DynamicSurvey.Server.Models
 {
-    public enum ReturnFormat
-    {
-        Html,
-        Json
-    }
+	public enum ReturnFormat
+	{
+		Html,
+		Json
+	}
 }

@@ -6,25 +6,25 @@ using System.Web;
 
 namespace DynamicSurvey.Server.Infrastructure.Fakes
 {
-    public class FakeSurveysFactory
-    {
-        public static Survey[] CreateSurveyList()
-        {
-            return new Survey[]
+	public class FakeSurveysFactory
+	{
+		public static Survey[] CreateSurveyList()
+		{
+			return new Survey[]
             {
                 CreateEnglishSurvey(),
                 CreateRussianSurvey(),
                 CreateSurveyWithGroups()
             };
-        }
+		}
 
-        public static Survey CreateSurveyWithGroups()
-        {
-#region page1
-            var page1 = new SurveyPage()
-                {
-                    Title = "Page 1",
-                    Fields = new List<SurveyField>()
+		public static Survey CreateSurveyWithGroups()
+		{
+			#region page1
+			var page1 = new SurveyPage()
+				{
+					Title = "Page 1",
+					Fields = new List<SurveyField>()
                     {
                         new SurveyField()
                         {
@@ -76,13 +76,13 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                         }
 
                     }
-                };
-#endregion
-#region page2
-            var page2 = new SurveyPage()
-            {
-                 Title = "Page 2. Color questions.",
-                Fields= new List<SurveyField>()
+				};
+			#endregion
+			#region page2
+			var page2 = new SurveyPage()
+			{
+				Title = "Page 2. Color questions.",
+				Fields = new List<SurveyField>()
                 {
                     new SurveyField()
                     {
@@ -98,29 +98,29 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                         FieldType = FieldType.Button
                     }
                 }
-            };
-#endregion
-            
-            return new Survey
-            {
-                Id  = 1,
-                Language = "English",
-                Title = "English sur with groups",
-                Pages = new List<SurveyPage>
+			};
+			#endregion
+
+			return new Survey
+			{
+				Id = 1,
+				Language = "English",
+				Title = "English sur with groups",
+				Pages = new List<SurveyPage>
                 {
                     page1,
                     page2
                 }
-            };
-        }
-        public static Survey CreateEnglishSurvey()
-        {
-            return new Survey
-                {
-                    Id = 2,
-                    Language = "English",
-                    Title = "English Survey",
-                    Pages = new List<SurveyPage>
+			};
+		}
+		public static Survey CreateEnglishSurvey()
+		{
+			return new Survey
+				{
+					Id = 2,
+					Language = "English",
+					Title = "English Survey",
+					Pages = new List<SurveyPage>
                         {
                             new SurveyPage()
                             {
@@ -188,17 +188,17 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                                 }
                             }
                         }
-                };
-        }
+				};
+		}
 
-        public static Survey CreateRussianSurvey()
-        {
-            return new Survey
-               {
-                   Id = 3,
-                   Language = "Russian",
-                   Title = "Отчёт на русском",
-                   Pages = new List<SurveyPage>
+		public static Survey CreateRussianSurvey()
+		{
+			return new Survey
+			   {
+				   Id = 3,
+				   Language = "Russian",
+				   Title = "Отчёт на русском",
+				   Pages = new List<SurveyPage>
                         {
                             new SurveyPage()
                             {
@@ -267,9 +267,9 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                                 }
                             }
                         }
-               };
-        }
+			   };
+		}
 
-       
-    }
+
+	}
 }
