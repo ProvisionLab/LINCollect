@@ -1,10 +1,13 @@
 ﻿using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.Models;
+using DynamicSurvey.Server.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DynamicSurvey.Server.Helpers;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -24,9 +27,7 @@ namespace DynamicSurvey.Server.Controllers
         }
 
         public ActionResult Index(
-            object filters = null, 
-            SurveysSelector selector = SurveysSelector.All,  
-            ReturnFormat returnFormat = ReturnFormat.Json )
+            ReturnFormat returnFormat = ReturnFormat.Html )
         {
 
             var res = surveysRepository.GetSurveys(null);
@@ -36,9 +37,64 @@ namespace DynamicSurvey.Server.Controllers
             }
             else
             {
-                throw new NotImplementedException();
+                return View(new SurveysViewModel()
+                    {
+                         Surveys = res
+                    }
+                    );
             }
-            //return View();
         }
+
+        public ActionResult CopySurvey(int sourceId)
+        {
+            var survey = surveysRepository.GetSurveys(null).Single(s => s.Id == sourceId);
+            survey.Id = 0;
+            survey.Title = survey.Title + "_Copy";
+            var id = surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
+            return View("AddSurvey", id);
+        }
+
+        public ActionResult AddSurvey(int sourceId)
+        {
+            var res = surveysRepository.GetSurveyById(sourceId);
+
+            if (res == null)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(res);
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult AddSurvey(Survey survey)
+        {
+            return View();
+        }
+
+        public ActionResult Details(int sourceId)
+        {
+            var res = surveysRepository.GetSurveyById(sourceId);
+
+            if (res == null)
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(res);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Details(Survey editedSurvey)
+        {
+            surveysRepository.AddSurvey(Session.GetCurrentUser(), editedSurvey);
+            return View();
+        }
+
     }
 }

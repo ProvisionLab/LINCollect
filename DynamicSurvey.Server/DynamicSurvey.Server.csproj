@@ -177,10 +177,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HtmlPagingHelper.cs" />
+    <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\ReturnFormat.cs" />
     <Compile Include="Models\SurveysSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\SurveysViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +301,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Profile\Login.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Surveys\Index.cshtml" />
+    <Content Include="Views\Surveys\AddSurvey.cshtml" />
+    <Content Include="Views\Surveys\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

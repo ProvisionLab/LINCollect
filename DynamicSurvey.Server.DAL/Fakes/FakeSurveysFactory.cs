@@ -8,77 +8,116 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
 {
     public class FakeSurveysFactory
     {
-        private static Survey CreateSurveyWithGroups()
+        public static Survey[] CreateSurveyList()
         {
+            return new Survey[]
+            {
+                CreateEnglishSurvey(),
+                CreateRussianSurvey(),
+                CreateSurveyWithGroups()
+            };
+        }
+
+        public static Survey CreateSurveyWithGroups()
+        {
+#region page1
+            var page1 = new SurveyPage()
+                {
+                    Title = "Page 1",
+                    Fields = new List<SurveyField>()
+                    {
+                        new SurveyField()
+                        {
+                                Id = 1,
+                                Label = "Group Box Label. How many times you visit church per month?",
+                                FieldType = FieldType.GroupBox
+                        },
+
+                        new SurveyField()
+                        {
+                            Id = 2,
+                            Label = "Once",
+                            FieldType = FieldType.RadioButton,
+                            GroupId = 1
+                        },
+                        new SurveyField()
+                        {
+                            Id = 3,
+                            Label = "Twice",
+                            FieldType = FieldType.RadioButton,
+                            GroupId = 1
+                        },
+                        new SurveyField()
+                        {
+                            Id = 3,
+                            Label = "Newer",
+                            FieldType = FieldType.RadioButton,
+                            GroupId = 1
+                        },
+                        new SurveyField()
+                        {
+                            Id = 11,
+                            Label = "Group box label. Select capital of Japan",
+                                FieldType = FieldType.GroupBox
+                        },
+                        new SurveyField()
+                        {
+                            Id = 12,
+                            Label = "",
+                            FieldType = DAL.Entities.FieldType.List,
+                            DefaultValues = new string [] { "New York", "London", "Lima", "Cairo", "Moscow", "Kioto", "Osaka", "Okinawa", "Tokyo"},
+                            GroupId = 11
+                        },
+                        new SurveyField()
+                        {
+                            Id = 100,
+                            Label = "Next",
+                            FieldType = FieldType.Button
+                        }
+
+                    }
+                };
+#endregion
+#region page2
+            var page2 = new SurveyPage()
+            {
+                 Title = "Page 2. Color questions.",
+                Fields= new List<SurveyField>()
+                {
+                    new SurveyField()
+                    {
+                        Id = 1,
+                        FieldType = DAL.Entities.FieldType.List,
+                        Label = "What is your favorite color?",
+                        DefaultValues = new string[]{ "Red" , "Green" , "Blue", "Pink", "Violet", "White", "Brown", "Purple", "Black", "Gray", "Yellow", "Cyan" },
+                    },
+                    new SurveyField()
+                    {
+                        Id = 100,
+                        Label = "Submit",
+                        FieldType = FieldType.Button
+                    }
+                }
+            };
+#endregion
+            
             return new Survey
             {
+                Id  = 1,
                 Language = "English",
                 Title = "English sur with groups",
                 Pages = new List<SurveyPage>
                 {
-                    new SurveyPage()
-                    {
-                        Title = "Page 1",
-                        Fields = new List<SurveyField>()
-                        {
-                            new SurveyField()
-                            {
-                                 Id = 1,
-                                 Label = "Group Box Label. How many times you visit church per month?",
-                                 FieldType = FieldType.GroupBox
-                            },
-
-                            new SurveyField()
-                            {
-                                Id = 2,
-                                Label = "Once",
-                                FieldType = FieldType.RadioButton,
-                                GroupId = 1
-                            },
-                            new SurveyField()
-                            {
-                                Id = 3,
-                                Label = "Twice",
-                                FieldType = FieldType.RadioButton,
-                                GroupId = 1
-                            },
-                            new SurveyField()
-                            {
-                                Id = 3,
-                                Label = "Newer",
-                                FieldType = FieldType.RadioButton,
-                                GroupId = 1
-                            },
-                            new SurveyField()
-                            {
-                                Id = 11,
-                                Label = "Group box label. Select capital of Japan",
-                                 FieldType = FieldType.GroupBox
-                            },
-                            new SurveyField()
-                            {
-                                Id = 12,
-                                Label = "",
-                                FieldType = DAL.Entities.FieldType.List,
-                                DefaultValues = new string [] { "New York", "London", "Lima", "Cairo", "Moscow", "Kioto", "Osaka", "Okinawa", "Tokyo"},
-                                GroupId = 11
-                            },
-                            new SurveyField()
-                            {
-                                Id = 100,
-                                Label = "Submit",
-                                FieldType = FieldType.Button
-                            }
-
-                        }
-                    }
+                    page1,
+                    page2
                 }
             };
         }
-        private static Survey CreateEnglishSurvey()
+        public static Survey CreateEnglishSurvey()
         {
             return new Survey
                 {
+                    Id = 2,
                     Language = "English",
                     Title = "English Survey",
                     Pages = new List<SurveyPage>
@@ -152,10 +191,11 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                 };
         }
 
-        private static Survey CreateRussianSurvey()
+        public static Survey CreateRussianSurvey()
         {
             return new Survey
                {
+                   Id = 3,
                    Language = "Russian",
                    Title = "Отчёт на русском",
                    Pages = new List<SurveyPage>
@@ -230,14 +270,6 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                };
         }
 
-        public static Survey[] CreateSurveyList()
-        {
-            return new Survey[]
-            {
-                CreateEnglishSurvey(),
-                CreateRussianSurvey(),
-                CreateSurveyWithGroups()
-            };
-        }
+       
     }
 }

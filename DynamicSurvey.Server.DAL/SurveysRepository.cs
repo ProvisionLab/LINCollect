@@ -9,9 +9,11 @@ namespace DynamicSurvey.Server.DAL
 {
     public interface ISurveysRepository
     {
-        Survey[] GetSurveys(User enumerator);
-        void AddSurvey(User admin, Survey survey);
-        void EditSurveyField(User admin, SurveyField surveyField);
+        Survey[] GetSurveys(User enumerator); // change enumerator param to "reportedBy" ?
+
+        Survey GetSurveyById(int id);
+
+        int AddSurvey(User admin, Survey survey);
         void UploadReport(User enumarator, SurveyReport report);
         void UploadReportBulk(User enumerator, IEnumerable<SurveyReport> reportList);
     }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using DynamicSurvey.Server.Helpers;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -28,22 +28,11 @@ namespace DynamicSurvey.Server.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            
-            var username = (string) Session["Username"];
-            var password = (string) Session["Password"];
-
-            if (usersRepository.CheckCredentials(username, password))
-            {
-                return RedirectToAction("Index", "Surveys");
-            }
-            else
-            {
-                return View();
-            }
+           return View();
         }
 
         [HttpPost]
-        public ActionResult Login(User user, ReturnFormat returnFormat = ReturnFormat.Html)
+        public ActionResult Login(User user)
         {
             if (!usersRepository.Authorize(user.Username, user.Password))
             {
@@ -53,18 +42,14 @@ namespace DynamicSurvey.Server.Controllers
 
             user = usersRepository.GetUserByName(user.Username);
 
-            if (returnFormat == ReturnFormat.Html)
-            {
-                Session["Username"] = user.Username;
-                Session["Password"] = user.Password;
-            }
-            
+            Session.SetCurrentUser(user);
+
             // fetch all user fields via database
             // if not valid - return view;
 
             if (user.AccessRight.AccessLevel == AccessLevel.Administrator)
             {
-                return RedirectToAction("Index", "Users");
+                return RedirectToAction("Index", "Surveys");
             }
             else
             {
