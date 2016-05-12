@@ -317,7 +317,9 @@
     <Content Include="Views\Surveys\AddSurvey.cshtml" />
     <Content Include="Views\Surveys\Details.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\theme\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
