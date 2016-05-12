@@ -53,10 +53,10 @@
     <EntitySetMapping Name="survey_field">
       <EntityTypeMapping TypeName="dbsurveysModel.survey_field">
         <MappingFragment StoreEntitySet="survey_field">
-          <ScalarProperty Name="group_index" ColumnName="group_index" />
-          <ScalarProperty Name="page_index" ColumnName="page_index" />
-          <ScalarProperty Name="fk_survey_field_type" ColumnName="fk_survey_field_type" />
-          <ScalarProperty Name="fk_parent_survey_id" ColumnName="fk_parent_survey_id" />
+          <ScalarProperty Name="label" ColumnName="label" />
+          <ScalarProperty Name="fk_group_id" ColumnName="fk_group_id" />
+          <ScalarProperty Name="fk_survey_field_type_id" ColumnName="fk_survey_field_type_id" />
+          <ScalarProperty Name="fk_parent_page_id" ColumnName="fk_parent_page_id" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -65,6 +65,25 @@
       <EntityTypeMapping TypeName="dbsurveysModel.survey_field_type">
         <MappingFragment StoreEntitySet="survey_field_type">
           <ScalarProperty Name="field_type" ColumnName="field_type" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="survey_field_vocabulary_cross">
+      <EntityTypeMapping TypeName="dbsurveysModel.survey_field_vocabulary_cross">
+        <MappingFragment StoreEntitySet="survey_field_vocabulary_cross">
+          <ScalarProperty Name="fk_vocabulary_word_id" ColumnName="fk_vocabulary_word_id" />
+          <ScalarProperty Name="fk_survey_field_id" ColumnName="fk_survey_field_id" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="survey_page">
+      <EntityTypeMapping TypeName="dbsurveysModel.survey_page">
+        <MappingFragment StoreEntitySet="survey_page">
+          <ScalarProperty Name="fk_survey_template_parent_id" ColumnName="fk_survey_template_parent_id" />
+          <ScalarProperty Name="page_title" ColumnName="page_title" />
+          <ScalarProperty Name="page_index" ColumnName="page_index" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>

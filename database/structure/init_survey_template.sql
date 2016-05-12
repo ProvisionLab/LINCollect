@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS Survey_Template(
 	ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
+select 'survey_page' as '';
+CREATE TABLE IF NOT EXISTS Survey_Page(
+	id								SERIAL,
+    page_index						BIGINT UNSIGNED NOT NULL,
+    page_title						varchar(50) NOT NULL,    
+    fk_survey_template_parent_id 	BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_survey_template_parent_id) REFERENCES Survey_Template (id)
+	ON DELETE RESTRICT ON UPDATE CASCADE
+);
 
 select 'survey_field_type' as '';
 CREATE TABLE IF NOT EXISTS Survey_Field_Type(
@@ -28,6 +38,8 @@ CREATE TABLE IF NOT EXISTS Survey_Field_Type(
 
 	PRIMARY KEY (id)
 );
+
+
 
 select 'survey_field' as '';
 # values stored in vocabulary because survey can be in different languages, 
@@ -39,13 +51,27 @@ select 'survey_field' as '';
 # default value is stored in vocabulary
 CREATE TABLE IF NOT EXISTS Survey_Field(
 	id 							SERIAL,
-	fk_parent_survey_id			BIGINT UNSIGNED NOT NULL,
-    fk_survey_field_type		BIGINT UNSIGNED NOT NULL,
-    page_index					BIGINT UNSIGNED NOT NULL,
-	group_index					BIGINT UNSIGNED NOT NULL,
+	fk_parent_page_id			BIGINT UNSIGNED NOT NULL,
+    fk_survey_field_type_id		BIGINT UNSIGNED NOT NULL,
+	fk_group_id					BIGINT UNSIGNED NULL,    
+    label						varchar(50) NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (fk_parent_survey_id) REFERENCES Survey_Template (id)
+	FOREIGN KEY (fk_survey_field_type_id) REFERENCES Survey_Field_Type (id)
 	ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (fk_survey_field_type) REFERENCES Survey_Field_Type (id)
+    FOREIGN KEY (fk_group_id) REFERENCES Survey_Field (id)
+	ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (fk_parent_page_id) REFERENCES Survey_Page (id)
 	ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+select 'survey_field_vocabulary_cross - for default values in survey_field' as '';
+CREATE TABLE IF NOT EXISTS Survey_Field_Vocabulary_Cross(
+	id							SERIAL,
+    fk_survey_field_id			BIGINT UNSIGNED NOT NULL,
+    fk_vocabulary_word_id		BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_survey_field_id) REFERENCES Survey_Field(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (fk_vocabulary_word_id) REFERENCES Vocabulary(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
 );

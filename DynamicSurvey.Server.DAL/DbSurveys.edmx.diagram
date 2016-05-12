@@ -10,13 +10,15 @@
         <EntityTypeShape EntityType="dbsurveysModel.country" Width="1.5" PointX="1.5" PointY="9.25" />
         <EntityTypeShape EntityType="dbsurveysModel.survey" Width="1.5" PointX="5.25" PointY="1.75" />
         <EntityTypeShape EntityType="dbsurveysModel.survey_detail" Width="1.5" PointX="7.5" PointY="1" />
-        <EntityTypeShape EntityType="dbsurveysModel.survey_field" Width="1.5" PointX="10.5" PointY="4.75" />
-        <EntityTypeShape EntityType="dbsurveysModel.survey_field_type" Width="1.5" PointX="8.25" PointY="9.875" />
-        <EntityTypeShape EntityType="dbsurveysModel.survey_template" Width="1.5" PointX="8.25" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbsurveysModel.survey_field" Width="1.5" PointX="12.75" PointY="4.5" />
+        <EntityTypeShape EntityType="dbsurveysModel.survey_field_type" Width="1.5" PointX="10.5" PointY="1.875" />
+        <EntityTypeShape EntityType="dbsurveysModel.survey_field_vocabulary_cross" Width="1.5" PointX="15" PointY="5" />
+        <EntityTypeShape EntityType="dbsurveysModel.survey_page" Width="1.5" PointX="10.5" PointY="5" />
+        <EntityTypeShape EntityType="dbsurveysModel.survey_template" Width="1.5" PointX="8.25" PointY="4.5" />
         <EntityTypeShape EntityType="dbsurveysModel.user" Width="1.5" PointX="3" PointY="4.375" />
         <EntityTypeShape EntityType="dbsurveysModel.user_language_cross" Width="1.5" PointX="5.25" PointY="5" />
         <EntityTypeShape EntityType="dbsurveysModel.user_right" Width="1.5" PointX="0.75" PointY="5" />
-        <EntityTypeShape EntityType="dbsurveysModel.vocabulary" Width="1.5" PointX="8.25" PointY="13.125" />
+        <EntityTypeShape EntityType="dbsurveysModel.vocabulary" Width="1.5" PointX="12.75" PointY="1" />
         <EntityTypeShape EntityType="dbsurveysModel.language" Width="1.5" PointX="6" PointY="8" />
         <AssociationConnector Association="dbsurveysModel.city_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.company_ibfk_1" />
@@ -27,6 +29,10 @@
         <AssociationConnector Association="dbsurveysModel.survey_detail_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.survey_field_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.survey_field_ibfk_2" />
+        <AssociationConnector Association="dbsurveysModel.survey_field_ibfk_3" />
+        <AssociationConnector Association="dbsurveysModel.survey_field_vocabulary_cross_ibfk_1" />
+        <AssociationConnector Association="dbsurveysModel.survey_field_vocabulary_cross_ibfk_2" />
+        <AssociationConnector Association="dbsurveysModel.survey_page_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.survey_template_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.survey_template_ibfk_2" />
         <AssociationConnector Association="dbsurveysModel.survey_template_ibfk_3" />

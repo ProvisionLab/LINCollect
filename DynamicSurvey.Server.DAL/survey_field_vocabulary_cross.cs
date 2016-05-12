@@ -12,18 +12,13 @@ namespace DynamicSurvey.Server.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class vocabulary
+    public partial class survey_field_vocabulary_cross
     {
-        public vocabulary()
-        {
-            this.survey_field_vocabulary_cross = new HashSet<survey_field_vocabulary_cross>();
-        }
-    
         public decimal id { get; set; }
-        public string word { get; set; }
-        public decimal language_id { get; set; }
+        public decimal fk_survey_field_id { get; set; }
+        public decimal fk_vocabulary_word_id { get; set; }
     
-        public virtual ICollection<survey_field_vocabulary_cross> survey_field_vocabulary_cross { get; set; }
-        public virtual language language { get; set; }
+        public virtual survey_field survey_field { get; set; }
+        public virtual vocabulary vocabulary { get; set; }
     }
 }

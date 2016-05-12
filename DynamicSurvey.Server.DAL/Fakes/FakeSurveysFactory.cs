@@ -24,6 +24,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
 			#region page1
 			var page1 = new SurveyPage()
 				{
+					Id = 1,
 					Title = "Page 1",
 					Fields = new List<SurveyField>()
                     {
@@ -82,6 +83,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
 			#region page2
 			var page2 = new SurveyPage()
 			{
+				Id = 2,
 				Title = "Page 2. Color questions.",
 				Fields = new List<SurveyField>()
                 {
@@ -125,6 +127,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                         {
                             new SurveyPage()
                             {
+								Id = 3,
                                 Title = "Page 1",                                
                                 Fields = new List<SurveyField>
                                 {
@@ -152,6 +155,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                             },
                             new SurveyPage()
                             {
+								Id = 4,
                                 Title = "Page 2",
                                 Fields = new List<SurveyField>
                                 {
@@ -203,6 +207,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                         {
                             new SurveyPage()
                             {
+								Id = 6,
                                 Title = "Страница 1",
                                 
                                 Fields = new List<SurveyField>
@@ -231,6 +236,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                             },
                             new SurveyPage()
                             {
+								Id = 7,
                                 Title = "Страница 2",
                                 Fields = new List<SurveyField>
                                 {

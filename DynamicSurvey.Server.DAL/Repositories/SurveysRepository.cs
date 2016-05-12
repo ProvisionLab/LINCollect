@@ -12,9 +12,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 	{
 		Survey[] GetSurveys(User admin);
 		Survey GetSurveyById(User admin, int id);
-		int AddSurvey(User admin, Survey survey);
-		void UploadReport(User enumarator, SurveyReport report);
-		void UploadReportBulk(User enumerator, IEnumerable<SurveyReport> reportList);
+		decimal AddSurvey(User admin, Survey survey);
 	}
 
 	public class SurveysRepository : ISurveysRepository
@@ -22,11 +20,13 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		private readonly VocabularyRepository vocabularyRepository;
 		private readonly LanguageRepository languageRepository;
 		private readonly UsersRepository usersRepository;
+		private readonly FieldTypeRepository fieldTypeRepository;
 		public SurveysRepository()
 		{
 			this.vocabularyRepository = new VocabularyRepository();
 			this.languageRepository = new LanguageRepository();
 			this.usersRepository = new UsersRepository();
+			this.fieldTypeRepository = new FieldTypeRepository();
 		}
 
 		public Survey[] GetSurveys(User admin)
@@ -34,8 +34,9 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			using (var context = new DbSurveysContext())
 			{
 				context.ValidateCaller(admin);
+				return context.survey_template.Select(s => ToContract(s)).ToArray();
 			}
-			throw new NotImplementedException();
+			
 		}
 
 		public Survey GetSurveyById(User admin, int id)
@@ -43,57 +44,115 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			using (var context = new DbSurveysContext())
 			{
 				context.ValidateCaller(admin);
+				return ToContract(context.survey_template
+					.Where(t => t.id == id).
+					Single());
+					
 			}
-
-			throw new NotImplementedException();
 		}
 
-		public int AddSurvey(User admin, Survey survey)
+		public decimal AddSurvey(User admin, Survey survey)
 		{
 			using (var context = new DbSurveysContext())
 			{
 				context.ValidateCaller(admin);
 
-
-				var dbSurveyTemplate = new survey_template();
-				dbSurveyTemplate.template_name = survey.Title;
-				dbSurveyTemplate.language = languageRepository.AddLanguage(survey.Language, context);
-				dbSurveyTemplate.created = DateTime.UtcNow;
-				dbSurveyTemplate.last_modified = DateTime.UtcNow;
-				dbSurveyTemplate.user_created_id = admin.Id;
-				dbSurveyTemplate.user_modified_id = admin.Id;
-
-
-				for (int i = 0; i < survey.Pages.Count; i++)
-				{
-					var page = survey.Pages[i];
-					var pageIndex = i;
-					// page.Title
-					// page.Fields
-					foreach (var field in page.Fields)
-					{
-						var dbField = new survey_field();
-						dbField.fk_parent_survey_id = dbSurveyTemplate.id;
-					}
-				}
-
-
-				//dbSurveyTemplate.
+				var surveyTemplate = ToData(survey, admin, context);
+				// add 
+				context.survey_template.Add(surveyTemplate);
+				// or update
+				// TODO:
 
 				context.SaveChanges();
+				return surveyTemplate.id;
+			}
+		}
+
+		private Survey ToContract(survey_template template)
+		{
+			return new Survey()
+			{
+				Language = template.language.name,
+				Title = template.template_name,
+				Id = template.id,
+				Pages = template.survey_page.Select(p => new SurveyPage()
+				{
+					Title = p.page_title,
+					Fields = p.survey_field.Select(f => new SurveyField()
+					{
+						DefaultValues = f.survey_field_vocabulary_cross.Select(cr => cr.vocabulary.word).ToArray(),
+						FieldType = f.survey_field_type.field_type,
+						Id = f.id,
+						Label = f.label,
+						GroupId = f.fk_group_id
+					}).ToList()
+				}).ToList()
+			};
+		}
+
+		private survey_template ToData(Survey survey, User admin, DbSurveysContext context)
+		{
+			var dbSurveyTemplate = new survey_template()
+			{
+				template_name = survey.Title,
+				language = languageRepository.AddLanguage(survey.Language, context),
+				created = DateTime.UtcNow,
+				last_modified = DateTime.UtcNow,
+				user_created_id = admin.Id,
+				user_modified_id = admin.Id
+			};
+
+			for (int i = 0; i < survey.Pages.Count; i++)
+			{
+				var page = survey.Pages[i];
+				var pageIndex = i;
+
+				var dbPage = new survey_page()
+				{
+					page_index = i,
+					page_title = page.Title,
+					survey_template = dbSurveyTemplate,
+					survey_field = page.Fields.Select(f =>
+						{
+							var dbField = new survey_field()
+							{
+								fk_survey_field_type_id = this.fieldTypeRepository.GetIdOf(f.FieldType),
+								fk_group_id = f.GroupId,
+								label = f.Label,
+							};
+							foreach (var value in f.DefaultValues)
+							{
+								var vocabularyRecord = context.vocabulary
+								.Where(r => r.language.Equals(survey.Language))
+								.Where(r => r.word.Equals(value))
+								.SingleOrDefault();
+
+								if (vocabularyRecord == null)
+								{
+									vocabularyRecord = new vocabulary()
+									{
+										language = languageRepository.AddLanguage(survey.Language, context),
+										word = value
+									};
+								}
+
+								dbField.survey_field_vocabulary_cross.Add(new survey_field_vocabulary_cross()
+								{
+									vocabulary = vocabularyRecord,
+									survey_field = dbField
+								}
+								);
+							}
+
+							return dbField;
+						}
+					   ).ToArray()
+				};
+
+				dbSurveyTemplate.survey_page.Add(dbPage);
 			}
 
-			throw new NotImplementedException();
-		}
-
-		public void UploadReport(User enumarator, SurveyReport report)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void UploadReportBulk(User enumerator, IEnumerable<SurveyReport> reportList)
-		{
-			throw new NotImplementedException();
+			return dbSurveyTemplate;
 		}
 	}
 }

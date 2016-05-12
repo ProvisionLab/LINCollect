@@ -8,7 +8,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 {
 	public class User
 	{
-		public int Id { get; set; }
+		public decimal Id { get; set; }
 		public string Username { get; set; }
 		public string Password { get; set; }
 		public Language[] SupportedLanguages { get; set; }

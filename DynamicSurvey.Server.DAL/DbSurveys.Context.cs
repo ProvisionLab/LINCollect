@@ -32,6 +32,8 @@ namespace DynamicSurvey.Server.DAL
         public DbSet<survey_detail> survey_detail { get; set; }
         public DbSet<survey_field> survey_field { get; set; }
         public DbSet<survey_field_type> survey_field_type { get; set; }
+        public DbSet<survey_field_vocabulary_cross> survey_field_vocabulary_cross { get; set; }
+        public DbSet<survey_page> survey_page { get; set; }
         public DbSet<survey_template> survey_template { get; set; }
         public DbSet<user> user { get; set; }
         public DbSet<user_language_cross> user_language_cross { get; set; }

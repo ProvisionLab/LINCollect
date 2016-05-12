@@ -13,6 +13,8 @@ namespace DynamicSurvey.Server.DAL.Entities
 		string Button {get;}
 		string RadioButton {get;}
 		string GroupBox {get;}
+
+		decimal GetIdOf(string value);
 	}
 
 	public class FieldTypeRepository : IFieldTypeRepository
@@ -53,6 +55,16 @@ namespace DynamicSurvey.Server.DAL.Entities
 			}
 
 			return fieldDict[key];
+		}
+
+		public decimal GetIdOf(string value)
+		{
+			using (var context = new DbSurveysContext())
+			{
+				return context.survey_field_type
+					.Single(f => f.field_type.Equals(value, StringComparison.InvariantCultureIgnoreCase))
+					.id;
+			}
 		}
 
 	}

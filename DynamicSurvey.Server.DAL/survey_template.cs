@@ -16,7 +16,7 @@ namespace DynamicSurvey.Server.DAL
     {
         public survey_template()
         {
-            this.survey_field = new HashSet<survey_field>();
+            this.survey_page = new HashSet<survey_page>();
         }
     
         public decimal id { get; set; }
@@ -27,7 +27,7 @@ namespace DynamicSurvey.Server.DAL
         public Nullable<System.DateTime> last_modified { get; set; }
         public decimal language_id { get; set; }
     
-        public virtual ICollection<survey_field> survey_field { get; set; }
+        public virtual ICollection<survey_page> survey_page { get; set; }
         public virtual user user { get; set; }
         public virtual user user1 { get; set; }
         public virtual language language { get; set; }
