@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
 using DynamicSurvey.Server.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests
+namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests.Fetch
 {
     [TestClass]
     public class Fetch_GetUser_Security_Tests

@@ -1,10 +1,7 @@
-﻿using DynamicSurvey.Server.DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using DynamicSurvey.Server.DAL.Entities;
 
-namespace DynamicSurvey.Server.Infrastructure.Fakes
+namespace DynamicSurvey.Server.DAL.Fakes
 {
 	public class FakeSurveysFactory
 	{

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Ninject.Parameters;
 using Moq;
 using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Fakes;
 
 
 namespace DynamicSurvey.Server.Infrastructure
@@ -27,16 +28,16 @@ namespace DynamicSurvey.Server.Infrastructure
 		{
 			var mock = new Mock<ISurveysRepository>();
 			mock.Setup(m => m.GetSurveys(It.IsAny<User>()))
-				.Returns(Fakes.FakeSurveysFactory.CreateSurveyList());
+				.Returns(FakeSurveysFactory.CreateSurveyList());
 
 			mock.Setup(m => m.GetSurveyById(It.Is<int>(i => i == 1)))
-				.Returns(Fakes.FakeSurveysFactory.CreateSurveyWithGroups());
+				.Returns(FakeSurveysFactory.CreateSurveyWithGroups());
 
 			mock.Setup(m => m.GetSurveyById(It.Is<int>(i => i == 2)))
-				.Returns(Fakes.FakeSurveysFactory.CreateEnglishSurvey());
+				.Returns(FakeSurveysFactory.CreateEnglishSurvey());
 
 			mock.Setup(m => m.GetSurveyById(It.Is<int>(i => i == 3)))
-				.Returns(Fakes.FakeSurveysFactory.CreateRussianSurvey());
+				.Returns(FakeSurveysFactory.CreateRussianSurvey());
 
 			Func<int, bool> anyOther = (i) =>
 			{
@@ -45,7 +46,7 @@ namespace DynamicSurvey.Server.Infrastructure
 			};
 
 			mock.Setup(m => m.GetSurveyById(It.Is<int>(i => anyOther(i))))
-							.Returns(Fakes.FakeSurveysFactory.CreateRussianSurvey());
+							.Returns(FakeSurveysFactory.CreateRussianSurvey());
 
 			kernel.Bind<ISurveysRepository>().ToConstant(mock.Object);
 			kernel.Bind<IUsersRepository>().To<UsersRepository>();

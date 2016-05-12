@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DynamicSurvey.Server.Areas.HelpPage.Models;
+using DynamicSurvey.Server.Areas.HelpPage.SampleGeneration;
 
 namespace DynamicSurvey.Server.Areas.HelpPage
 {
