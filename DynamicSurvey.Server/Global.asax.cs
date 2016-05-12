@@ -1,13 +1,9 @@
-﻿using DynamicSurvey.Server.DAL;
-using DynamicSurvey.Server.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.Infrastructure;
 
 namespace DynamicSurvey.Server
 {
@@ -21,7 +17,7 @@ namespace DynamicSurvey.Server
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
-            DependencyResolver.SetResolver(new  NinjectDependencyResolver());
+            DependencyResolver.SetResolver(new NinjectDependencyResolver());
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

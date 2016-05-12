@@ -7,6 +7,5 @@ namespace DynamicSurvey.Server.ViewModels
 	{
 		public UsersFilter Filter { get; set; }
 		public IEnumerable<User> Users { get; set; }
-
 	}
 }
