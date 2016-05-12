@@ -16,18 +16,20 @@ namespace DynamicSurvey.Server.DAL
     {
         public survey_template()
         {
-            this.survey_field_template = new HashSet<survey_field_template>();
+            this.survey_page = new HashSet<survey_page>();
         }
     
         public decimal id { get; set; }
-        public decimal word_id { get; set; }
+        public string template_name { get; set; }
+        public decimal user_created_id { get; set; }
         public decimal user_modified_id { get; set; }
+        public System.DateTime created { get; set; }
         public Nullable<System.DateTime> last_modified { get; set; }
         public decimal language_id { get; set; }
     
-        public virtual ICollection<survey_field_template> survey_field_template { get; set; }
-        public virtual vocabulary vocabulary { get; set; }
+        public virtual ICollection<survey_page> survey_page { get; set; }
         public virtual user user { get; set; }
+        public virtual user user1 { get; set; }
         public virtual language language { get; set; }
     }
 }

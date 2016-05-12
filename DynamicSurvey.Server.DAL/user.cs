@@ -17,8 +17,10 @@ namespace DynamicSurvey.Server.DAL
         public user()
         {
             this.survey = new HashSet<survey>();
+            this.survey1 = new HashSet<survey>();
             this.survey_template = new HashSet<survey_template>();
-            this.user_language = new HashSet<user_language>();
+            this.survey_template1 = new HashSet<survey_template>();
+            this.user_language_cross = new HashSet<user_language_cross>();
         }
     
         public decimal id { get; set; }
@@ -29,8 +31,10 @@ namespace DynamicSurvey.Server.DAL
         public sbyte is_deleted { get; set; }
     
         public virtual ICollection<survey> survey { get; set; }
+        public virtual ICollection<survey> survey1 { get; set; }
         public virtual ICollection<survey_template> survey_template { get; set; }
+        public virtual ICollection<survey_template> survey_template1 { get; set; }
         public virtual user_right user_right { get; set; }
-        public virtual ICollection<user_language> user_language { get; set; }
+        public virtual ICollection<user_language_cross> user_language_cross { get; set; }
     }
 }

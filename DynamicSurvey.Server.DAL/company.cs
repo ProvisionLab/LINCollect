@@ -21,14 +21,12 @@ namespace DynamicSurvey.Server.DAL
     
         public decimal id { get; set; }
         public string name { get; set; }
-        public decimal country_id { get; set; }
         public decimal city_id { get; set; }
         public string address { get; set; }
         public string phone_number { get; set; }
         public string postal_code { get; set; }
     
         public virtual city city { get; set; }
-        public virtual country country { get; set; }
         public virtual ICollection<survey> survey { get; set; }
     }
 }
