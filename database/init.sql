@@ -1,6 +1,7 @@
 # cd C:/Work/Work/My/DynamicSurveys/database/
 # mysql --host=mysql2.gear.host --user=dbsurveys --password=In0Dd~uc!A55
 # mysql --user=root --password=00000
+# set global optimizer_switch='derived_merge=OFF';
 # # DROP DATABASE DBSurveys;
 # source init.sql
 
@@ -11,4 +12,5 @@ USE DBSurveys;
 
 source structure/init.sql
 # source stored_procedures/init.sql
+source views/init.sql
 source seed/init.sql

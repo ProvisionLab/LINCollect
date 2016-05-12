@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests
 {

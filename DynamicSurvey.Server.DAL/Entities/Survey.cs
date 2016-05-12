@@ -13,7 +13,4 @@ namespace DynamicSurvey.Server.DAL.Entities
 		public string Language { get; set; }
 		public List<SurveyPage> Pages { get; set; }
 	}
-
-
-
 }

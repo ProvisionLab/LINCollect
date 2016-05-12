@@ -5,7 +5,7 @@
       <EntityTypeMapping TypeName="dbsurveysModel.city">
         <MappingFragment StoreEntitySet="city">
           <ScalarProperty Name="country_id" ColumnName="country_id" />
-          <ScalarProperty Name="word_id" ColumnName="word_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -17,7 +17,6 @@
           <ScalarProperty Name="phone_number" ColumnName="phone_number" />
           <ScalarProperty Name="address" ColumnName="address" />
           <ScalarProperty Name="city_id" ColumnName="city_id" />
-          <ScalarProperty Name="country_id" ColumnName="country_id" />
           <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
@@ -26,7 +25,7 @@
     <EntitySetMapping Name="country">
       <EntityTypeMapping TypeName="dbsurveysModel.country">
         <MappingFragment StoreEntitySet="country">
-          <ScalarProperty Name="word_id" ColumnName="word_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -34,9 +33,9 @@
     <EntitySetMapping Name="survey">
       <EntityTypeMapping TypeName="dbsurveysModel.survey">
         <MappingFragment StoreEntitySet="survey">
-          <ScalarProperty Name="survey_detail_id" ColumnName="survey_detail_id" />
           <ScalarProperty Name="company_id" ColumnName="company_id" />
           <ScalarProperty Name="respondent_id" ColumnName="respondent_id" />
+          <ScalarProperty Name="enumerator_id" ColumnName="enumerator_id" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -44,8 +43,9 @@
     <EntitySetMapping Name="survey_detail">
       <EntityTypeMapping TypeName="dbsurveysModel.survey_detail">
         <MappingFragment StoreEntitySet="survey_detail">
-          <ScalarProperty Name="field_value" ColumnName="field_value" />
-          <ScalarProperty Name="survey_field_template_id" ColumnName="survey_field_template_id" />
+          <ScalarProperty Name="user_answer" ColumnName="user_answer" />
+          <ScalarProperty Name="fk_parent_survey_id" ColumnName="fk_parent_survey_id" />
+          <ScalarProperty Name="survey_field_id" ColumnName="survey_field_id" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -53,18 +53,10 @@
     <EntitySetMapping Name="survey_field">
       <EntityTypeMapping TypeName="dbsurveysModel.survey_field">
         <MappingFragment StoreEntitySet="survey_field">
-          <ScalarProperty Name="default_value_id" ColumnName="default_value_id" />
-          <ScalarProperty Name="field_type_id" ColumnName="field_type_id" />
-          <ScalarProperty Name="id" ColumnName="id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="survey_field_template">
-      <EntityTypeMapping TypeName="dbsurveysModel.survey_field_template">
-        <MappingFragment StoreEntitySet="survey_field_template">
-          <ScalarProperty Name="word_id" ColumnName="word_id" />
-          <ScalarProperty Name="survey_field_id" ColumnName="survey_field_id" />
-          <ScalarProperty Name="survey_template_id" ColumnName="survey_template_id" />
+          <ScalarProperty Name="group_index" ColumnName="group_index" />
+          <ScalarProperty Name="page_index" ColumnName="page_index" />
+          <ScalarProperty Name="fk_survey_field_type" ColumnName="fk_survey_field_type" />
+          <ScalarProperty Name="fk_parent_survey_id" ColumnName="fk_parent_survey_id" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -82,8 +74,10 @@
         <MappingFragment StoreEntitySet="survey_template">
           <ScalarProperty Name="language_id" ColumnName="language_id" />
           <ScalarProperty Name="last_modified" ColumnName="last_modified" />
+          <ScalarProperty Name="created" ColumnName="created" />
           <ScalarProperty Name="user_modified_id" ColumnName="user_modified_id" />
-          <ScalarProperty Name="word_id" ColumnName="word_id" />
+          <ScalarProperty Name="user_created_id" ColumnName="user_created_id" />
+          <ScalarProperty Name="template_name" ColumnName="template_name" />
           <ScalarProperty Name="id" ColumnName="id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -100,9 +94,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="user_language">
-      <EntityTypeMapping TypeName="dbsurveysModel.user_language">
-        <MappingFragment StoreEntitySet="user_language">
+    <EntitySetMapping Name="user_language_cross">
+      <EntityTypeMapping TypeName="dbsurveysModel.user_language_cross">
+        <MappingFragment StoreEntitySet="user_language_cross">
           <ScalarProperty Name="language_id" ColumnName="language_id" />
           <ScalarProperty Name="user_id" ColumnName="user_id" />
           <ScalarProperty Name="id" ColumnName="id" />
@@ -122,7 +116,6 @@
     <EntitySetMapping Name="vocabulary">
       <EntityTypeMapping TypeName="dbsurveysModel.vocabulary">
         <MappingFragment StoreEntitySet="vocabulary">
-          <ScalarProperty Name="parent_translation_id" ColumnName="parent_translation_id" />
           <ScalarProperty Name="language_id" ColumnName="language_id" />
           <ScalarProperty Name="word" ColumnName="word" />
           <ScalarProperty Name="id" ColumnName="id" />

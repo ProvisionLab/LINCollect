@@ -14,16 +14,12 @@ namespace DynamicSurvey.Server.DAL
     
     public partial class survey_detail
     {
-        public survey_detail()
-        {
-            this.survey = new HashSet<survey>();
-        }
-    
         public decimal id { get; set; }
-        public decimal survey_field_template_id { get; set; }
-        public string field_value { get; set; }
+        public decimal survey_field_id { get; set; }
+        public decimal fk_parent_survey_id { get; set; }
+        public string user_answer { get; set; }
     
-        public virtual ICollection<survey> survey { get; set; }
-        public virtual survey_field_template survey_field_template { get; set; }
+        public virtual survey survey { get; set; }
+        public virtual survey_field survey_field { get; set; }
     }
 }

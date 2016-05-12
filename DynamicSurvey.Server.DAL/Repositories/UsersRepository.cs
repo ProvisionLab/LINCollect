@@ -1,13 +1,14 @@
 ﻿using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.OperationResults;
 using System;
+using DynamicSurvey.Server.DAL.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DynamicSurvey.Server.DAL
+namespace DynamicSurvey.Server.DAL.Repositories
 {
 
 	public interface IUsersRepository
@@ -26,44 +27,74 @@ namespace DynamicSurvey.Server.DAL
 
 	public class UsersRepository : IUsersRepository
 	{
+		internal user GetUser(string username, DbSurveysContext dbContext = null)
+		{
+			var context = dbContext ?? new DbSurveysContext();
+			try
+			{
+				return context.user
+					.Where(u => u.login.Equals(username)) // login have to be enough, just need unuqie login field
+					.Single();
+			}
+			finally
+			{
+				if (dbContext == null)
+				{
+					// context.SaveChanges(); // this is a GET request!
+					context.Dispose();
+				}
+			}
+		}
+		internal void AddUser(string username, string plainPassword, string accessRightName, DbSurveysContext dbContext = null)
+		{
+			var context = dbContext ?? new DbSurveysContext();
+			try
+			{
+				var user = context.user.SingleOrDefault(u => u.login == username);
+				// HACK: how strange AccessLevel entity performed. 
+				var right = context.user_right.Single(r => r.name == accessRightName);
+				var salt = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fffffff");
+				var hashedPassword = CalculateMD5Hash(salt + plainPassword);
+				if (user == null)
+				{
+					user = context.user.Add(new user()
+					{
+						login = username,
+						user_right_id = right.id,
+						password = hashedPassword,
+						salt = salt
+					});
+				}
+				else
+				{
+					user.login = username;
+					user.user_right_id = right.id;
+					user.password = hashedPassword;
+					user.salt = salt;
+					user.is_deleted = 0;
+				}
+
+			}
+			finally
+			{
+				if (dbContext == null)
+				{
+					context.SaveChanges();
+					context.Dispose();
+				}
+			}
+		}
 		public void AddOrUpdate(User caller, User target)
 		{
 			using (var context = new DbSurveysContext())
 			{
-				ValidateCaller(context, caller);
-				AddOrUpdateInternal(context, target.Username, target.Password, target.AccessRight.Name);
+				context.ValidateCaller(caller);
+				AddUser(target.Username, target.Password, target.AccessRight.Name, context);
+				context.SaveChanges();
 			}
 		}
 
-		private void AddOrUpdateInternal(DbSurveysContext context, string username, string plainPassword, string accessRightName)
-		{
-			var user = context.user.SingleOrDefault(u => u.login == username);
-			// HACK: how strange AccessLevel entity performed. 
-			var right = context.user_right.Single(r => r.name == accessRightName);
-			var salt = DateTime.Now.ToString("yyyyMMddHHmmsstt");
-			var hashedPassword = CalculateMD5Hash(salt + plainPassword);
-			if (user == null)
-			{
-				context.user.Add(new user()
-				{
-					login = username,
-					user_right_id = right.id,
-					password = hashedPassword,
-					salt = salt
-				});
-			}
-			else
-			{
-				user.login = username;
-				user.user_right_id = right.id;
-				user.password = hashedPassword;
-				user.salt = salt;
-				user.is_deleted = 0;
-			}
-
-			context.SaveChanges();
-		}
-
+		
 		private string CalculateMD5Hash(string input)
 		{
 
@@ -84,7 +115,7 @@ namespace DynamicSurvey.Server.DAL
 		{
 			using (var context = new DbSurveysContext())
 			{
-				ValidateCaller(context, caller);
+				context.ValidateCaller(caller);
 
 				var user = context.user.SingleOrDefault(u => u.login.Equals(username, StringComparison.InvariantCultureIgnoreCase));
 
@@ -102,18 +133,7 @@ namespace DynamicSurvey.Server.DAL
 		{
 			using (var context = new DbSurveysContext())
 			{
-
-				var user = context.user
-					.Where(u => u.is_deleted != 1)
-					.Where(u => u.login == username)
-					.SingleOrDefault();
-
-				if (user == null)
-				{
-					return null;
-				}
-
-				return user.ToContract();
+				return context.GetUserByName(username);
 			}
 		}
 
@@ -158,29 +178,11 @@ namespace DynamicSurvey.Server.DAL
 		{
 			using (var context = new DbSurveysContext())
 			{
-				AddOrUpdateInternal(context, username, plainPassword, accessLevel);
+				AddUser(username, plainPassword, accessLevel, context);
 			}
 		}
 
-		private void ValidateCaller(DbSurveysContext context, User caller)
-		{
-#if DEBUG
-			if (caller == null)
-			{
-				return;
-			}
-#endif
-
-			if (caller.AccessRight.AccessLevel != AccessLevel.Administrator)
-			{
-				throw new System.Security.SecurityException("caller not administrator");
-			}
-			if (GetUserByName(caller.Username) == null)
-			{
-				throw new System.ArgumentException("user {0} not found", caller.Username);
-			}
-		}
-
+	
 
 		public bool CheckCredentials(string username, string hashedPassword)
 		{

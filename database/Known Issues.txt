@@ -1,0 +1,18 @@
+После изменения структуры данных 
+Открыть .sln
+Открыть в DAL файл DbSurveys.edmx
+Правый клик - update database
+Или более радикально - удалить все объекты представленные в диаграмме и заново добавить все таблицы
+
+Таблицы могут не добавиться.
+В Output может быть следующее:
+
+System.Data.StrongTypingException: The value for column 'IsPrimaryKey' in table 'TableDetails
+
+Решается так:
+	1. Open Services (services.msc) and restart MySQL57 service.
+	2. Execute the following commands in MySQL.
+	   use <<database name>>;
+	   set global optimizer_switch='derived_merge=OFF';
+	3. Update the .edmx.
+		(с) http://stackoverflow.com/a/35422569

@@ -14,28 +14,10 @@ namespace DynamicSurvey.Server.DAL
     
     public partial class vocabulary
     {
-        public vocabulary()
-        {
-            this.city = new HashSet<city>();
-            this.country = new HashSet<country>();
-            this.survey_field = new HashSet<survey_field>();
-            this.survey_field_template = new HashSet<survey_field_template>();
-            this.survey_template = new HashSet<survey_template>();
-            this.vocabulary1 = new HashSet<vocabulary>();
-        }
-    
         public decimal id { get; set; }
         public string word { get; set; }
         public decimal language_id { get; set; }
-        public Nullable<decimal> parent_translation_id { get; set; }
     
-        public virtual ICollection<city> city { get; set; }
-        public virtual ICollection<country> country { get; set; }
-        public virtual ICollection<survey_field> survey_field { get; set; }
-        public virtual ICollection<survey_field_template> survey_field_template { get; set; }
-        public virtual ICollection<survey_template> survey_template { get; set; }
         public virtual language language { get; set; }
-        public virtual ICollection<vocabulary> vocabulary1 { get; set; }
-        public virtual vocabulary vocabulary2 { get; set; }
     }
 }

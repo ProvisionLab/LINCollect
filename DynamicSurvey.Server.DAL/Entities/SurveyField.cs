@@ -11,7 +11,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 		public int Id { get; set; }
 		public string Label { get; set; }
 
-		public FieldType FieldType { get; set; }
+		public string FieldType { get; set; }
 
 		public string[] DefaultValues { get; set; }
 

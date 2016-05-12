@@ -17,14 +17,11 @@ namespace DynamicSurvey.Server.DAL
         public country()
         {
             this.city = new HashSet<city>();
-            this.company = new HashSet<company>();
         }
     
         public decimal id { get; set; }
-        public decimal word_id { get; set; }
+        public string name { get; set; }
     
         public virtual ICollection<city> city { get; set; }
-        public virtual ICollection<company> company { get; set; }
-        public virtual vocabulary vocabulary { get; set; }
     }
 }

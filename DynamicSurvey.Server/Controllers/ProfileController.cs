@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DynamicSurvey.Server.Helpers;
+using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.Controllers
 {

@@ -17,7 +17,7 @@ namespace DynamicSurvey.Server.DAL
         public language()
         {
             this.survey_template = new HashSet<survey_template>();
-            this.user_language = new HashSet<user_language>();
+            this.user_language_cross = new HashSet<user_language_cross>();
             this.vocabulary = new HashSet<vocabulary>();
         }
     
@@ -25,7 +25,7 @@ namespace DynamicSurvey.Server.DAL
         public string name { get; set; }
     
         public virtual ICollection<survey_template> survey_template { get; set; }
-        public virtual ICollection<user_language> user_language { get; set; }
+        public virtual ICollection<user_language_cross> user_language_cross { get; set; }
         public virtual ICollection<vocabulary> vocabulary { get; set; }
     }
 }

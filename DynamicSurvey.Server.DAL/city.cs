@@ -20,10 +20,9 @@ namespace DynamicSurvey.Server.DAL
         }
     
         public decimal id { get; set; }
-        public decimal word_id { get; set; }
+        public string name { get; set; }
         public decimal country_id { get; set; }
     
-        public virtual vocabulary vocabulary { get; set; }
         public virtual country country { get; set; }
         public virtual ICollection<company> company { get; set; }
     }

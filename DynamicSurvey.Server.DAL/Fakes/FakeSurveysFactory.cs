@@ -8,6 +8,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
 {
 	public class FakeSurveysFactory
 	{
+		private static readonly IFieldTypeRepository FieldType = new FieldTypeRepository();
 		public static Survey[] CreateSurveyList()
 		{
 			return new Survey[]
@@ -64,7 +65,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                         {
                             Id = 12,
                             Label = "",
-                            FieldType = DAL.Entities.FieldType.List,
+                            FieldType = FieldType.List,
                             DefaultValues = new string [] { "New York", "London", "Lima", "Cairo", "Moscow", "Kioto", "Osaka", "Okinawa", "Tokyo"},
                             GroupId = 11
                         },
@@ -87,7 +88,7 @@ namespace DynamicSurvey.Server.Infrastructure.Fakes
                     new SurveyField()
                     {
                         Id = 1,
-                        FieldType = DAL.Entities.FieldType.List,
+                        FieldType = FieldType.List,
                         Label = "What is your favorite color?",
                         DefaultValues = new string[]{ "Red" , "Green" , "Blue", "Pink", "Violet", "White", "Brown", "Purple", "Black", "Gray", "Yellow", "Cyan" },
                     },

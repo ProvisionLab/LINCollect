@@ -1,4 +1,5 @@
 ﻿using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.DAL.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
