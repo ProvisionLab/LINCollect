@@ -1,12 +1,8 @@
+using System.Data.Entity.Migrations;
+
 namespace DynamicSurvey.Server.DAL.Migrations
 {
-	using DynamicSurvey.Server.DAL.Entities;
-	using System;
-	using System.Data.Entity;
-	using System.Data.Entity.Migrations;
-	using System.Linq;
-
-	internal sealed class Configuration : DbMigrationsConfiguration<DynamicSurvey.Server.DAL.DbSurveysContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DynamicSurvey.Server.DAL.DbSurveysContext>
 	{
 		public Configuration()
 		{

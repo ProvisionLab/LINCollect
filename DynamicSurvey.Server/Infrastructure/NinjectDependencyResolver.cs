@@ -1,16 +1,12 @@
-﻿using DynamicSurvey.Server.DAL;
-using Ninject;
-using Ninject.Activation;
-using Ninject.Syntax;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
-using Ninject.Parameters;
-using Moq;
+using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Fakes;
-
+using Moq;
+using Ninject;
 
 namespace DynamicSurvey.Server.Infrastructure
 {

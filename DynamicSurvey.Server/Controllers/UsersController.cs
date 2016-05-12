@@ -1,12 +1,8 @@
-﻿using DynamicSurvey.Server.DAL;
-using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Helpers;
-using DynamicSurvey.Server.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 using System.Web.Mvc;
+using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.ViewModels;
 
 namespace DynamicSurvey.Server.Controllers
 {
