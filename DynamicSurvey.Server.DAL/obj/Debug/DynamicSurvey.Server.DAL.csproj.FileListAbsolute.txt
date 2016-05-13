@@ -5,3 +5,4 @@ C:\Work\Work\My\DynamicSurveys\DynamicSurvey.Server.DAL\bin\Debug\EntityFramewor
 C:\Work\Work\My\DynamicSurveys\DynamicSurvey.Server.DAL\bin\Debug\EntityFramework.xml
 C:\Work\Work\My\DynamicSurveys\DynamicSurvey.Server.DAL\obj\Debug\DynamicSurvey.Server.DAL.dll
 C:\Work\Work\My\DynamicSurveys\DynamicSurvey.Server.DAL\obj\Debug\DynamicSurvey.Server.DAL.pdb
+C:\Work\Work\My\DynamicSurveys\DynamicSurvey.Server.DAL\obj\Debug\DynamicSurvey.Server.DAL.csprojResolveAssemblyReference.cache
