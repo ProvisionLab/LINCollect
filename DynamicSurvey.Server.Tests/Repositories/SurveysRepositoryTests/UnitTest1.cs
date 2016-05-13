@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DynamicSurvey.Server.DAL.Fakes;
 using DynamicSurvey.Server.DAL.Repositories;
+using DynamicSurvey.Server.Infrastructure.Fakes;
 
 namespace DynamicSurvey.Server.Tests.Repositories.SurveysRepositoryTests
 {

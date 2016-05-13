@@ -4,10 +4,10 @@ using System.Linq;
 using System.Web.Mvc;
 using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Fakes;
 using Moq;
 using Ninject;
 using DynamicSurvey.Server.DAL.Repositories;
+using DynamicSurvey.Server.Infrastructure.Fakes;
 
 namespace DynamicSurvey.Server.Infrastructure
 {
