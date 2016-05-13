@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.DAL.Fakes
 {

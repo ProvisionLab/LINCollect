@@ -1,5 +1,4 @@
-﻿using DynamicSurvey.Server.DAL;
-using DynamicSurvey.Server.DAL.Repositories;
+﻿using DynamicSurvey.Server.DAL.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests.Authorize

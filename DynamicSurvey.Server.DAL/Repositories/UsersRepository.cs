@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DynamicSurvey.Server.DAL.Entities;
 
-namespace DynamicSurvey.Server.DAL
+namespace DynamicSurvey.Server.DAL.Repositories
 {
 
 	public interface IUsersRepository

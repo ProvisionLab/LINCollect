@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.Models;
 using DynamicSurvey.Server.ViewModels;
@@ -48,7 +48,7 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult AddSurvey(int sourceId)
         {
-            var res = _surveysRepository.GetSurveyById(sourceId);
+            var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
 
             if (res == null)
             {
@@ -65,7 +65,7 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult Details(int sourceId)
         {
-            var res = _surveysRepository.GetSurveyById(sourceId);
+            var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
 
             if (res == null)
             {
