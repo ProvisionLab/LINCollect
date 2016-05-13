@@ -30,6 +30,6 @@ namespace DynamicSurvey.Server.DAL
         public virtual ICollection<survey_page> survey_page { get; set; }
         public virtual user user { get; set; }
         public virtual user user1 { get; set; }
-        public virtual language language { get; set; }
+        public virtual user_language user_language { get; set; }
     }
 }

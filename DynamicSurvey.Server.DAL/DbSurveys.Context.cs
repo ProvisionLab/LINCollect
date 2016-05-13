@@ -12,12 +12,15 @@ namespace DynamicSurvey.Server.DAL
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+	using System.Diagnostics;
     
     public partial class DbSurveysContext : DbContext
     {
         public DbSurveysContext()
             : base("name=DbSurveysContext")
         {
+			Database.Log = m => Trace.WriteLine(m);
+
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -39,6 +42,6 @@ namespace DynamicSurvey.Server.DAL
         public DbSet<user_language_cross> user_language_cross { get; set; }
         public DbSet<user_right> user_right { get; set; }
         public DbSet<vocabulary> vocabulary { get; set; }
-        public DbSet<language> language { get; set; }
+        public DbSet<user_language> user_language { get; set; }
     }
 }

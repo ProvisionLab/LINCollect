@@ -31,15 +31,6 @@
           <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.dbsurveys.language' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="language">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="name" Type="varchar" MaxLength="20" />
-        </EntityType>
         <EntityType Name="survey">
           <Key>
             <PropertyRef Name="id" />
@@ -114,6 +105,15 @@ warning 6002: The table/view 'def.dbsurveys.language' does not have a primary ke
           <Property Name="salt" Type="varchar" MaxLength="32" Nullable="false" />
           <Property Name="user_right_id" Type="ubigint" Nullable="false" />
           <Property Name="is_deleted" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.dbsurveys.user_language' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="user_language">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="user_language_cross">
           <Key>
@@ -321,10 +321,10 @@ warning 6002: The table/view 'def.dbsurveys.language' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="survey_template_ibfk_3">
-          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="user_language" Type="Self.user_language" Multiplicity="1" />
           <End Role="survey_template" Type="Self.survey_template" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="language">
+            <Principal Role="user_language">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="survey_template">
@@ -357,10 +357,10 @@ warning 6002: The table/view 'def.dbsurveys.language' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="user_language_cross_ibfk_2">
-          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="user_language" Type="Self.user_language" Multiplicity="1" />
           <End Role="user_language_cross" Type="Self.user_language_cross" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="language">
+            <Principal Role="user_language">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="user_language_cross">
@@ -369,10 +369,10 @@ warning 6002: The table/view 'def.dbsurveys.language' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="vocabulary_ibfk_1">
-          <End Role="language" Type="Self.language" Multiplicity="1" />
+          <End Role="user_language" Type="Self.user_language" Multiplicity="1" />
           <End Role="vocabulary" Type="Self.vocabulary" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="language">
+            <Principal Role="user_language">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="vocabulary">
@@ -395,11 +395,11 @@ warning 6002: The table/view 'def.dbsurveys.language' does not have a primary ke
           <EntitySet Name="user_language_cross" EntityType="Self.user_language_cross" Schema="dbsurveys" store:Type="Tables" />
           <EntitySet Name="user_right" EntityType="Self.user_right" Schema="dbsurveys" store:Type="Tables" />
           <EntitySet Name="vocabulary" EntityType="Self.vocabulary" Schema="dbsurveys" store:Type="Tables" />
-          <EntitySet Name="language" EntityType="Self.language" store:Type="Tables" store:Schema="dbsurveys">
+          <EntitySet Name="user_language" EntityType="Self.user_language" store:Type="Tables" store:Schema="dbsurveys">
             <DefiningQuery>SELECT
-`language`.`id`, 
-`language`.`name`
-FROM `language` AS `language`</DefiningQuery>
+`user_language`.`id`, 
+`user_language`.`name`
+FROM `user_language` AS `user_language`</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="city_ibfk_1" Association="Self.city_ibfk_1">
             <End Role="country" EntitySet="country" />
@@ -462,7 +462,7 @@ FROM `language` AS `language`</DefiningQuery>
             <End Role="survey_template" EntitySet="survey_template" />
           </AssociationSet>
           <AssociationSet Name="survey_template_ibfk_3" Association="Self.survey_template_ibfk_3">
-            <End Role="language" EntitySet="language" />
+            <End Role="user_language" EntitySet="user_language" />
             <End Role="survey_template" EntitySet="survey_template" />
           </AssociationSet>
           <AssociationSet Name="user_ibfk_1" Association="Self.user_ibfk_1">
@@ -474,11 +474,11 @@ FROM `language` AS `language`</DefiningQuery>
             <End Role="user_language_cross" EntitySet="user_language_cross" />
           </AssociationSet>
           <AssociationSet Name="user_language_cross_ibfk_2" Association="Self.user_language_cross_ibfk_2">
-            <End Role="language" EntitySet="language" />
+            <End Role="user_language" EntitySet="user_language" />
             <End Role="user_language_cross" EntitySet="user_language_cross" />
           </AssociationSet>
           <AssociationSet Name="vocabulary_ibfk_1" Association="Self.vocabulary_ibfk_1">
-            <End Role="language" EntitySet="language" />
+            <End Role="user_language" EntitySet="user_language" />
             <End Role="vocabulary" EntitySet="vocabulary" />
           </AssociationSet>
         </EntityContainer>
@@ -501,7 +501,7 @@ FROM `language` AS `language`</DefiningQuery>
           <EntitySet Name="user_language_cross" EntityType="dbsurveysModel.user_language_cross" />
           <EntitySet Name="user_right" EntityType="dbsurveysModel.user_right" />
           <EntitySet Name="vocabulary" EntityType="dbsurveysModel.vocabulary" />
-          <EntitySet Name="language" EntityType="dbsurveysModel.language" />
+          <EntitySet Name="user_language" EntityType="dbsurveysModel.user_language" />
           <AssociationSet Name="city_ibfk_1" Association="dbsurveysModel.city_ibfk_1">
             <End Role="country" EntitySet="country" />
             <End Role="city" EntitySet="city" />
@@ -563,7 +563,7 @@ FROM `language` AS `language`</DefiningQuery>
             <End Role="survey_template" EntitySet="survey_template" />
           </AssociationSet>
           <AssociationSet Name="survey_template_ibfk_3" Association="dbsurveysModel.survey_template_ibfk_3">
-            <End Role="language" EntitySet="language" />
+            <End Role="user_language" EntitySet="user_language" />
             <End Role="survey_template" EntitySet="survey_template" />
           </AssociationSet>
           <AssociationSet Name="user_ibfk_1" Association="dbsurveysModel.user_ibfk_1">
@@ -575,11 +575,11 @@ FROM `language` AS `language`</DefiningQuery>
             <End Role="user_language_cross" EntitySet="user_language_cross" />
           </AssociationSet>
           <AssociationSet Name="user_language_cross_ibfk_2" Association="dbsurveysModel.user_language_cross_ibfk_2">
-            <End Role="language" EntitySet="language" />
+            <End Role="user_language" EntitySet="user_language" />
             <End Role="user_language_cross" EntitySet="user_language_cross" />
           </AssociationSet>
           <AssociationSet Name="vocabulary_ibfk_1" Association="dbsurveysModel.vocabulary_ibfk_1">
-            <End Role="language" EntitySet="language" />
+            <End Role="user_language" EntitySet="user_language" />
             <End Role="vocabulary" EntitySet="vocabulary" />
           </AssociationSet>
         </EntityContainer>
@@ -697,7 +697,7 @@ FROM `language` AS `language`</DefiningQuery>
           <NavigationProperty Name="survey_page" Relationship="dbsurveysModel.survey_page_ibfk_1" FromRole="survey_template" ToRole="survey_page" />
           <NavigationProperty Name="user" Relationship="dbsurveysModel.survey_template_ibfk_1" FromRole="survey_template" ToRole="user" />
           <NavigationProperty Name="user1" Relationship="dbsurveysModel.survey_template_ibfk_2" FromRole="survey_template" ToRole="user" />
-          <NavigationProperty Name="language" Relationship="dbsurveysModel.survey_template_ibfk_3" FromRole="survey_template" ToRole="language" />
+          <NavigationProperty Name="user_language" Relationship="dbsurveysModel.survey_template_ibfk_3" FromRole="survey_template" ToRole="user_language" />
         </EntityType>
         <EntityType Name="user">
           <Key>
@@ -724,7 +724,7 @@ FROM `language` AS `language`</DefiningQuery>
           <Property Name="user_id" Type="Decimal" Nullable="false" />
           <Property Name="language_id" Type="Decimal" Nullable="false" />
           <NavigationProperty Name="user" Relationship="dbsurveysModel.user_language_cross_ibfk_1" FromRole="user_language_cross" ToRole="user" />
-          <NavigationProperty Name="language" Relationship="dbsurveysModel.user_language_cross_ibfk_2" FromRole="user_language_cross" ToRole="language" />
+          <NavigationProperty Name="user_language" Relationship="dbsurveysModel.user_language_cross_ibfk_2" FromRole="user_language_cross" ToRole="user_language" />
         </EntityType>
         <EntityType Name="user_right">
           <Key>
@@ -744,17 +744,17 @@ FROM `language` AS `language`</DefiningQuery>
           <Property Name="word" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="language_id" Type="Decimal" Nullable="false" />
           <NavigationProperty Name="survey_field_vocabulary_cross" Relationship="dbsurveysModel.survey_field_vocabulary_cross_ibfk_2" FromRole="vocabulary" ToRole="survey_field_vocabulary_cross" />
-          <NavigationProperty Name="language" Relationship="dbsurveysModel.vocabulary_ibfk_1" FromRole="vocabulary" ToRole="language" />
+          <NavigationProperty Name="user_language" Relationship="dbsurveysModel.vocabulary_ibfk_1" FromRole="vocabulary" ToRole="user_language" />
         </EntityType>
-        <EntityType Name="language">
+        <EntityType Name="user_language">
           <Key>
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Decimal" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="survey_template" Relationship="dbsurveysModel.survey_template_ibfk_3" FromRole="language" ToRole="survey_template" />
-          <NavigationProperty Name="user_language_cross" Relationship="dbsurveysModel.user_language_cross_ibfk_2" FromRole="language" ToRole="user_language_cross" />
-          <NavigationProperty Name="vocabulary" Relationship="dbsurveysModel.vocabulary_ibfk_1" FromRole="language" ToRole="vocabulary" />
+          <NavigationProperty Name="survey_template" Relationship="dbsurveysModel.survey_template_ibfk_3" FromRole="user_language" ToRole="survey_template" />
+          <NavigationProperty Name="user_language_cross" Relationship="dbsurveysModel.user_language_cross_ibfk_2" FromRole="user_language" ToRole="user_language_cross" />
+          <NavigationProperty Name="vocabulary" Relationship="dbsurveysModel.vocabulary_ibfk_1" FromRole="user_language" ToRole="vocabulary" />
         </EntityType>
         <Association Name="city_ibfk_1">
           <End Type="dbsurveysModel.country" Role="country" Multiplicity="1" />
@@ -937,10 +937,10 @@ FROM `language` AS `language`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="survey_template_ibfk_3">
-          <End Type="dbsurveysModel.language" Role="language" Multiplicity="1" />
+          <End Type="dbsurveysModel.user_language" Role="user_language" Multiplicity="1" />
           <End Type="dbsurveysModel.survey_template" Role="survey_template" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="language">
+            <Principal Role="user_language">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="survey_template">
@@ -973,10 +973,10 @@ FROM `language` AS `language`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="user_language_cross_ibfk_2">
-          <End Type="dbsurveysModel.language" Role="language" Multiplicity="1" />
+          <End Type="dbsurveysModel.user_language" Role="user_language" Multiplicity="1" />
           <End Type="dbsurveysModel.user_language_cross" Role="user_language_cross" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="language">
+            <Principal Role="user_language">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="user_language_cross">
@@ -985,10 +985,10 @@ FROM `language` AS `language`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="vocabulary_ibfk_1">
-          <End Type="dbsurveysModel.language" Role="language" Multiplicity="1" />
+          <End Type="dbsurveysModel.user_language" Role="user_language" Multiplicity="1" />
           <End Type="dbsurveysModel.vocabulary" Role="vocabulary" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="language">
+            <Principal Role="user_language">
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="vocabulary">
@@ -1142,9 +1142,9 @@ FROM `language` AS `language`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="language">
-            <EntityTypeMapping TypeName="dbsurveysModel.language">
-              <MappingFragment StoreEntitySet="language">
+          <EntitySetMapping Name="user_language">
+            <EntityTypeMapping TypeName="dbsurveysModel.user_language">
+              <MappingFragment StoreEntitySet="user_language">
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>

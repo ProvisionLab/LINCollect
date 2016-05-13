@@ -1,7 +1,7 @@
 USE DBSURVEYS;
 
-select 'language' as '';
-CREATE TABLE IF NOT EXISTS Language(
+select 'user_language' as '';
+CREATE TABLE IF NOT EXISTS User_Language(
 	id 					SERIAL,
 	name 				VARCHAR (20)
 );

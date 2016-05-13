@@ -24,6 +24,6 @@ namespace DynamicSurvey.Server.DAL
         public decimal language_id { get; set; }
     
         public virtual ICollection<survey_field_vocabulary_cross> survey_field_vocabulary_cross { get; set; }
-        public virtual language language { get; set; }
+        public virtual user_language user_language { get; set; }
     }
 }

@@ -83,9 +83,6 @@
     </Compile>
     <Compile Include="Entities\AccessLevel.cs" />
     <Compile Include="Helpers\Convertion\SurveyConverter.cs" />
-    <Compile Include="language.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
     <Compile Include="Repositories\FieldTypeRepository.cs" />
     <Compile Include="Entities\Language.cs" />
     <Compile Include="Entities\AccessRight.cs" />
@@ -128,6 +125,9 @@
       <DependentUpon>DbSurveys.tt</DependentUpon>
     </Compile>
     <Compile Include="user.cs">
+      <DependentUpon>DbSurveys.tt</DependentUpon>
+    </Compile>
+    <Compile Include="user_language.cs">
       <DependentUpon>DbSurveys.tt</DependentUpon>
     </Compile>
     <Compile Include="user_language_cross.cs">

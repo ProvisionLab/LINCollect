@@ -19,6 +19,6 @@ namespace DynamicSurvey.Server.DAL
         public decimal language_id { get; set; }
     
         public virtual user user { get; set; }
-        public virtual language language { get; set; }
+        public virtual user_language user_language { get; set; }
     }
 }

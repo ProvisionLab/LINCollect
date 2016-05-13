@@ -17,7 +17,7 @@ namespace DynamicSurvey.Server.DAL.Helpers.Convertion
 		{
 			return new Survey()
 			{
-				Language = template.language.name,
+				Language = template.user_language.name,
 				Title = template.template_name,
 				Id = template.id,
 				Pages = template.survey_page.Select(p => new SurveyPage()
@@ -41,14 +41,15 @@ namespace DynamicSurvey.Server.DAL.Helpers.Convertion
 			IFieldTypeRepository fieldTypeRepository, 
 			ILanguageRepository languageRepository)
 		{
+			var userId = new UsersRepository().GetUserByName(admin.Username).Id;
 			var dbSurveyTemplate = new survey_template()
 			{
 				template_name = survey.Title,
-				language = languageRepository.AddLanguage(survey.Language, context),
+				user_language = languageRepository.AddLanguage(survey.Language, context),
 				created = DateTime.UtcNow,
 				last_modified = DateTime.UtcNow,
-				user_created_id = admin.Id,
-				user_modified_id = admin.Id
+				user_created_id = userId,
+				user_modified_id = userId
 			};
 
 			for (int i = 0; i < survey.Pages.Count; i++)
@@ -67,20 +68,21 @@ namespace DynamicSurvey.Server.DAL.Helpers.Convertion
 						{
 							fk_survey_field_type_id = fieldTypeRepository.GetIdOf(f.FieldType),
 							fk_group_id = f.GroupId,
+							fk_parent_page_id = page.Id,
 							label = f.Label,
 						};
 						foreach (var value in f.DefaultValues)
 						{
 							var vocabularyRecord = context.vocabulary
-							.Where(r => r.language.Equals(survey.Language))
-							.Where(r => r.word.Equals(value))
-							.SingleOrDefault();
+								.Where(r => r.user_language.name.Equals(survey.Language))
+								.Where(r => r.word.Equals(value))
+								.SingleOrDefault();
 
 							if (vocabularyRecord == null)
 							{
 								vocabularyRecord = new vocabulary()
 								{
-									language = languageRepository.AddLanguage(survey.Language, context),
+									user_language = languageRepository.AddLanguage(survey.Language, context),
 									word = value
 								};
 							}

@@ -8,32 +8,32 @@ namespace DynamicSurvey.Server.DAL.Repositories
 {
 	internal interface ILanguageRepository
 	{
-		language AddLanguage(string language, DbSurveysContext dbContext = null);
+		user_language AddLanguage(string language, DbSurveysContext dbContext = null);
 	}
 	internal class LanguageRepository : ILanguageRepository
 	{
-		public language AddLanguage(string language, DbSurveysContext dbContext = null)
+		public user_language AddLanguage(string language, DbSurveysContext dbContext = null)
 		{
 			var context = dbContext ?? new DbSurveysContext();
-
 			try
 			{
 
-				var dbLanguage = context.language
+				
+				var dbLanguage = context.user_language
 						.SingleOrDefault(l => l.name == language);
 
 				if (dbLanguage == null)
 				{
-					dbLanguage = new language()
+					dbLanguage = new user_language()
 					{
 						name = language
 					};
-					dbLanguage = context.language.Add(dbLanguage);
+
+					context.Database.ExecuteSqlCommand("INSERT INTO user_language (name) VALUES ({0})", language);
+					return context.user_language.Where(l => l.name == language).Single();
 				}
 
-				return context.language
-					.Where(l => l.name.Equals(language, StringComparison.OrdinalIgnoreCase))
-					.Single();
+				return dbLanguage;
 			}
 			finally
 			{

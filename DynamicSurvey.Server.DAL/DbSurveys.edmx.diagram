@@ -19,7 +19,7 @@
         <EntityTypeShape EntityType="dbsurveysModel.user_language_cross" Width="1.5" PointX="5.25" PointY="5" />
         <EntityTypeShape EntityType="dbsurveysModel.user_right" Width="1.5" PointX="0.75" PointY="5" />
         <EntityTypeShape EntityType="dbsurveysModel.vocabulary" Width="1.5" PointX="12.75" PointY="1" />
-        <EntityTypeShape EntityType="dbsurveysModel.language" Width="1.5" PointX="6" PointY="8" />
+        <EntityTypeShape EntityType="dbsurveysModel.user_language" Width="1.5" PointX="6" PointY="8" />
         <AssociationConnector Association="dbsurveysModel.city_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.company_ibfk_1" />
         <AssociationConnector Association="dbsurveysModel.survey_ibfk_3" />

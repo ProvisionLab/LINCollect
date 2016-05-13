@@ -12,9 +12,9 @@ namespace DynamicSurvey.Server.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class language
+    public partial class user_language
     {
-        public language()
+        public user_language()
         {
             this.survey_template = new HashSet<survey_template>();
             this.user_language_cross = new HashSet<user_language_cross>();

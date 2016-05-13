@@ -60,6 +60,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		{
 			using (var context = new DbSurveysContext())
 			{
+
 				context.ValidateCaller(admin);
 
 				//var surveyTemplate = surveyConverter.ToData(survey, admin, context, fieldTypeRepository, languageRepository);

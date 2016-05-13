@@ -1,4 +1,5 @@
 using System.Data.Entity.Migrations;
+using System.Diagnostics;
 
 namespace DynamicSurvey.Server.DAL.Migrations
 {

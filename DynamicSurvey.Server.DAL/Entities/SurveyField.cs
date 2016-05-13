@@ -12,5 +12,10 @@
 		public decimal? GroupId { get; set; }
 
 		public string UserAnswer { get; set; }
+
+		public SurveyField()
+		{
+			DefaultValues = new string[0];
+		}
 	}
 }
