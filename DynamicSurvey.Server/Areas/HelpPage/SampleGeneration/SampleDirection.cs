@@ -1,4 +1,4 @@
-namespace DynamicSurvey.Server.Areas.HelpPage
+namespace DynamicSurvey.Server.Areas.HelpPage.SampleGeneration
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

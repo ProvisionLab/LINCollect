@@ -1,13 +1,8 @@
 ﻿using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests
+namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests.Authorize
 {
     [TestClass]
     public class Authorize_Tests

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace DynamicSurvey.Server.Models
+﻿namespace DynamicSurvey.Server.Models
 {
 	public enum ReturnFormat
 	{

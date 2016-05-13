@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DynamicSurvey.Server.DAL.Repositories
 {
-	internal class LanguageRepository
+	internal interface ILanguageRepository
+	{
+		language AddLanguage(string language, DbSurveysContext dbContext = null);
+	}
+	internal class LanguageRepository : ILanguageRepository
 	{
 		public language AddLanguage(string language, DbSurveysContext dbContext = null)
 		{

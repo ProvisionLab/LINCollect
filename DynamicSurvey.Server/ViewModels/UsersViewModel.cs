@@ -1,9 +1,5 @@
-﻿using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using DynamicSurvey.Server.DAL.Entities;
 
 namespace DynamicSurvey.Server.ViewModels
 {
@@ -11,6 +7,5 @@ namespace DynamicSurvey.Server.ViewModels
 	{
 		public UsersFilter Filter { get; set; }
 		public IEnumerable<User> Users { get; set; }
-
 	}
 }

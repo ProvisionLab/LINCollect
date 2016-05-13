@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Web;
 using System.Web.Http;
 
-namespace DynamicSurvey.Server.Areas.HelpPage
+namespace DynamicSurvey.Server.Areas.HelpPage.App_Start
 {
     /// <summary>
     /// Use this class to customize the Help Page.

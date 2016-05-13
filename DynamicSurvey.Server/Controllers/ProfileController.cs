@@ -1,61 +1,55 @@
-﻿using DynamicSurvey.Server.DAL;
-using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Security;
 using System.Web.Mvc;
+using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.Controllers
 {
-	public class ProfileController : Controller
-	{
-		private readonly IUsersRepository usersRepository;
-		public ProfileController(IUsersRepository usersRepository)
-		{
-			this.usersRepository = usersRepository;
-		}
+    public class ProfileController : Controller
+    {
+        private readonly IUsersRepository _usersRepository;
 
-		//public ActionResult Index()
-		//{
-		//    // get current profile from session
-		//    // and return profile page
-		//    return View();
-		//}
+        public ProfileController(IUsersRepository usersRepository)
+        {
+            _usersRepository = usersRepository;
+        }
 
-		[HttpGet]
-		public ActionResult Login()
-		{
-			return View();
-		}
+        //public ActionResult Index()
+        //{
+        //    // get current profile from session
+        //    // and return profile page
+        //    return View();
+        //}
 
-		[HttpPost]
-		public ActionResult Login(User user)
-		{
-			if (!usersRepository.Authorize(user.Username, user.Password))
-			{
-				ModelState.AddModelError("Invalid email or password", new System.Security.SecurityException());
-				return View();
-			}
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
 
-			user = usersRepository.GetUserByName(user.Username);
+        [HttpPost]
+        public ActionResult Login(User user)
+        {
+            if (!_usersRepository.Authorize(user.Username, user.Password))
+            {
+                ModelState.AddModelError("Invalid email or password", new SecurityException());
+                return View();
+            }
 
-			Session.SetCurrentUser(user);
+            user = _usersRepository.GetUserByName(user.Username);
 
-			// fetch all user fields via database
-			// if not valid - return view;
+            Session.SetCurrentUser(user);
 
-			if (user.AccessRight.AccessLevel == AccessLevel.Administrator)
-			{
-				return RedirectToAction("Index", "Surveys");
-			}
-			else
-			{
-				return RedirectToAction("Index");
-			}
-		}
-	}
+            // fetch all user fields via database
+            // if not valid - return view;
+
+            if (user.AccessRight.AccessLevel == AccessLevel.Administrator)
+            {
+                return RedirectToAction("Index", "Surveys");
+            }
+            return RedirectToAction("Index");
+        }
+    }
 }

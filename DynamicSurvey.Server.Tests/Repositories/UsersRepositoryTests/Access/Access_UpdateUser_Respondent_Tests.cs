@@ -1,9 +1,7 @@
-﻿using System;
+﻿using DynamicSurvey.Server.DAL;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DynamicSurvey.Server.DAL;
-using DynamicSurvey.Server.DAL.Repositories;
 
-namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests
+namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests.Access
 {
 	[TestClass]
 	public class Access_UpdateUser_Respondent_Tests
