@@ -80,5 +80,25 @@ namespace DynamicSurvey.Server.Controllers
             _surveysRepository.AddSurvey(Session.GetCurrentUser(), editedSurvey);
             return View();
         }
+
+        public ActionResult EditSurvey()
+        {
+            return View();
+        }
+
+        public ActionResult AboutRespondent()
+        {
+            return View();
+        }
+
+        public ActionResult Relationships()
+        {
+            return View();
+        }
+
+        public ActionResult PreviewSurvey()
+        {
+            return View();
+        }
     }
 }

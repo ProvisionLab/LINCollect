@@ -1,0 +1,39 @@
+﻿@using DynamicSurvey.Server.ViewModels
+@model EditSurveyMenu
+
+@functions
+{
+
+    static string SelectMenuItem(EditSurveyMenu editSurveyMenuItem, EditSurveyMenu editSurveyMenu)
+    {
+        return editSurveyMenuItem == editSurveyMenu ? "purple" : "blue";
+    }
+
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <a href="@Url.Action("EditSurvey")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.SurveyOptions, Model)">
+            <i class="fa fa-user"></i>
+            Survey Options
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="@Url.Action("AboutRespondent")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.AboutRespondent, Model)">
+            <i class="fa fa-user"></i>
+            About Respondent
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="@Url.Action("Relationships")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.Relationships, Model)">
+            <i class="fa fa-user"></i>
+            Relationships
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="@Url.Action("PreviewSurvey")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.PreviewSurvey, Model)">
+            <i class="fa fa-user"></i>
+            Preview Survey
+        </a>
+    </div>
+</div>

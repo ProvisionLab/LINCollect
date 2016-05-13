@@ -194,6 +194,7 @@
     <Compile Include="Models\ReturnFormat.cs" />
     <Compile Include="Models\SurveysSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\EditSurveyMenu.cs" />
     <Compile Include="ViewModels\SurveysViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
@@ -451,6 +452,11 @@
     <Content Include="Views\Surveys\Index.cshtml" />
     <Content Include="Views\Surveys\AddSurvey.cshtml" />
     <Content Include="Views\Surveys\Details.cshtml" />
+    <Content Include="Views\Surveys\EditSurvey.cshtml" />
+    <Content Include="Views\Surveys\_EditSurveyMenu.cshtml" />
+    <Content Include="Views\Surveys\AboutRespondent.cshtml" />
+    <Content Include="Views\Surveys\Relationships.cshtml" />
+    <Content Include="Views\Surveys\PreviewSurvey.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
