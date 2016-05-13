@@ -14,6 +14,9 @@ namespace DynamicSurvey.Server.DAL.Entities
 		string RadioButton {get;}
 		string GroupBox {get;}
 
+		string DatePicker { get; }
+		string DropdownList { get; }
+
 		decimal GetIdOf(string value);
 	}
 
@@ -28,6 +31,9 @@ namespace DynamicSurvey.Server.DAL.Entities
 		public string Button { get { return GetFieldType("Button"); } }
 		public string RadioButton { get { return GetFieldType("RadioButton"); } }
 		public string GroupBox { get { return GetFieldType("GroupBox"); } }
+
+		public string DatePicker { get { return GetFieldType("DatePicker"); } }
+		public string DropdownList { get { return GetFieldType("DropdownList"); } }
 
 		private string GetFieldType(string key)
 		{
