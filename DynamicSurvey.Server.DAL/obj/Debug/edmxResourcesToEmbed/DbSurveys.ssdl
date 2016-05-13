@@ -1,0 +1,480 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbsurveysModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.7" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="city">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="country_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="company">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" />
+    <Property Name="city_id" Type="ubigint" Nullable="false" />
+    <Property Name="address" Type="varchar" MaxLength="500" Nullable="false" />
+    <Property Name="phone_number" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="postal_code" Type="varchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="country">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'def.dbsurveys.language' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="language">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="survey">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="enumerator_id" Type="ubigint" Nullable="false" />
+    <Property Name="respondent_id" Type="ubigint" Nullable="false" />
+    <Property Name="company_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="survey_detail">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="survey_field_id" Type="ubigint" Nullable="false" />
+    <Property Name="fk_parent_survey_id" Type="ubigint" Nullable="false" />
+    <Property Name="user_answer" Type="varchar" MaxLength="1000" Nullable="false" />
+  </EntityType>
+  <EntityType Name="survey_field">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="fk_parent_page_id" Type="ubigint" Nullable="false" />
+    <Property Name="fk_survey_field_type_id" Type="ubigint" Nullable="false" />
+    <Property Name="fk_group_id" Type="ubigint" />
+    <Property Name="label" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="survey_field_type">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="field_type" Type="varchar" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="survey_field_vocabulary_cross">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="fk_survey_field_id" Type="ubigint" Nullable="false" />
+    <Property Name="fk_vocabulary_word_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="survey_page">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="page_index" Type="ubigint" Nullable="false" />
+    <Property Name="page_title" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="fk_survey_template_parent_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="survey_template">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="template_name" Type="varchar" MaxLength="100" />
+    <Property Name="user_created_id" Type="ubigint" Nullable="false" />
+    <Property Name="user_modified_id" Type="ubigint" Nullable="false" />
+    <Property Name="created" Type="date" Nullable="false" />
+    <Property Name="last_modified" Type="date" />
+    <Property Name="language_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="login" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="password" Type="varchar" MaxLength="32" Nullable="false" />
+    <Property Name="salt" Type="varchar" MaxLength="32" Nullable="false" />
+    <Property Name="user_right_id" Type="ubigint" Nullable="false" />
+    <Property Name="is_deleted" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="user_language_cross">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="user_id" Type="ubigint" Nullable="false" />
+    <Property Name="language_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="user_right">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="last_modified" Type="date" />
+    <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="access_level" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vocabulary">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="ubigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="word" Type="varchar" MaxLength="50" />
+    <Property Name="language_id" Type="ubigint" Nullable="false" />
+  </EntityType>
+  <Association Name="city_ibfk_1">
+    <End Role="country" Type="Self.country" Multiplicity="1" />
+    <End Role="city" Type="Self.city" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="country">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="city">
+        <PropertyRef Name="country_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="company_ibfk_1">
+    <End Role="city" Type="Self.city" Multiplicity="1" />
+    <End Role="company" Type="Self.company" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="city">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="company">
+        <PropertyRef Name="city_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_detail_ibfk_1">
+    <End Role="survey_field" Type="Self.survey_field" Multiplicity="1" />
+    <End Role="survey_detail" Type="Self.survey_detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey_field">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_detail">
+        <PropertyRef Name="survey_field_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_detail_ibfk_2">
+    <End Role="survey" Type="Self.survey" Multiplicity="1" />
+    <End Role="survey_detail" Type="Self.survey_detail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_detail">
+        <PropertyRef Name="fk_parent_survey_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_field_ibfk_1">
+    <End Role="survey_field_type" Type="Self.survey_field_type" Multiplicity="1" />
+    <End Role="survey_field" Type="Self.survey_field" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey_field_type">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_field">
+        <PropertyRef Name="fk_survey_field_type_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_field_ibfk_2">
+    <End Role="survey_field" Type="Self.survey_field" Multiplicity="0..1" />
+    <End Role="survey_field1" Type="Self.survey_field" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey_field">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_field1">
+        <PropertyRef Name="fk_group_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_field_ibfk_3">
+    <End Role="survey_page" Type="Self.survey_page" Multiplicity="1" />
+    <End Role="survey_field" Type="Self.survey_field" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey_page">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_field">
+        <PropertyRef Name="fk_parent_page_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_field_vocabulary_cross_ibfk_1">
+    <End Role="survey_field" Type="Self.survey_field" Multiplicity="1" />
+    <End Role="survey_field_vocabulary_cross" Type="Self.survey_field_vocabulary_cross" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey_field">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_field_vocabulary_cross">
+        <PropertyRef Name="fk_survey_field_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_field_vocabulary_cross_ibfk_2">
+    <End Role="vocabulary" Type="Self.vocabulary" Multiplicity="1" />
+    <End Role="survey_field_vocabulary_cross" Type="Self.survey_field_vocabulary_cross" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="vocabulary">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_field_vocabulary_cross">
+        <PropertyRef Name="fk_vocabulary_word_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_ibfk_1">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="survey" Type="Self.survey" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey">
+        <PropertyRef Name="respondent_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_ibfk_2">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="survey" Type="Self.survey" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey">
+        <PropertyRef Name="enumerator_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_ibfk_3">
+    <End Role="company" Type="Self.company" Multiplicity="1" />
+    <End Role="survey" Type="Self.survey" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="company">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey">
+        <PropertyRef Name="company_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_page_ibfk_1">
+    <End Role="survey_template" Type="Self.survey_template" Multiplicity="1" />
+    <End Role="survey_page" Type="Self.survey_page" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="survey_template">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_page">
+        <PropertyRef Name="fk_survey_template_parent_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_template_ibfk_1">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="survey_template" Type="Self.survey_template" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_template">
+        <PropertyRef Name="user_created_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_template_ibfk_2">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="survey_template" Type="Self.survey_template" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_template">
+        <PropertyRef Name="user_modified_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="survey_template_ibfk_3">
+    <End Role="language" Type="Self.language" Multiplicity="1" />
+    <End Role="survey_template" Type="Self.survey_template" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="language">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="survey_template">
+        <PropertyRef Name="language_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="user_ibfk_1">
+    <End Role="user_right" Type="Self.user_right" Multiplicity="1" />
+    <End Role="user" Type="Self.user" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user_right">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="user">
+        <PropertyRef Name="user_right_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="user_language_cross_ibfk_1">
+    <End Role="user" Type="Self.user" Multiplicity="1" />
+    <End Role="user_language_cross" Type="Self.user_language_cross" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="user">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="user_language_cross">
+        <PropertyRef Name="user_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="user_language_cross_ibfk_2">
+    <End Role="language" Type="Self.language" Multiplicity="1" />
+    <End Role="user_language_cross" Type="Self.user_language_cross" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="language">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="user_language_cross">
+        <PropertyRef Name="language_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="vocabulary_ibfk_1">
+    <End Role="language" Type="Self.language" Multiplicity="1" />
+    <End Role="vocabulary" Type="Self.vocabulary" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="language">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="vocabulary">
+        <PropertyRef Name="language_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="dbsurveysModelStoreContainer">
+    <EntitySet Name="city" EntityType="Self.city" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="company" EntityType="Self.company" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="country" EntityType="Self.country" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey" EntityType="Self.survey" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey_detail" EntityType="Self.survey_detail" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey_field" EntityType="Self.survey_field" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey_field_type" EntityType="Self.survey_field_type" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey_field_vocabulary_cross" EntityType="Self.survey_field_vocabulary_cross" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey_page" EntityType="Self.survey_page" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="survey_template" EntityType="Self.survey_template" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="user" EntityType="Self.user" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="user_language_cross" EntityType="Self.user_language_cross" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="user_right" EntityType="Self.user_right" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="vocabulary" EntityType="Self.vocabulary" Schema="dbsurveys" store:Type="Tables" />
+    <EntitySet Name="language" EntityType="Self.language" store:Type="Tables" store:Schema="dbsurveys">
+      <DefiningQuery>SELECT
+`language`.`id`, 
+`language`.`name`
+FROM `language` AS `language`</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="city_ibfk_1" Association="Self.city_ibfk_1">
+      <End Role="country" EntitySet="country" />
+      <End Role="city" EntitySet="city" />
+    </AssociationSet>
+    <AssociationSet Name="company_ibfk_1" Association="Self.company_ibfk_1">
+      <End Role="city" EntitySet="city" />
+      <End Role="company" EntitySet="company" />
+    </AssociationSet>
+    <AssociationSet Name="survey_detail_ibfk_1" Association="Self.survey_detail_ibfk_1">
+      <End Role="survey_field" EntitySet="survey_field" />
+      <End Role="survey_detail" EntitySet="survey_detail" />
+    </AssociationSet>
+    <AssociationSet Name="survey_detail_ibfk_2" Association="Self.survey_detail_ibfk_2">
+      <End Role="survey" EntitySet="survey" />
+      <End Role="survey_detail" EntitySet="survey_detail" />
+    </AssociationSet>
+    <AssociationSet Name="survey_field_ibfk_1" Association="Self.survey_field_ibfk_1">
+      <End Role="survey_field_type" EntitySet="survey_field_type" />
+      <End Role="survey_field" EntitySet="survey_field" />
+    </AssociationSet>
+    <AssociationSet Name="survey_field_ibfk_2" Association="Self.survey_field_ibfk_2">
+      <End Role="survey_field" EntitySet="survey_field" />
+      <End Role="survey_field1" EntitySet="survey_field" />
+    </AssociationSet>
+    <AssociationSet Name="survey_field_ibfk_3" Association="Self.survey_field_ibfk_3">
+      <End Role="survey_page" EntitySet="survey_page" />
+      <End Role="survey_field" EntitySet="survey_field" />
+    </AssociationSet>
+    <AssociationSet Name="survey_field_vocabulary_cross_ibfk_1" Association="Self.survey_field_vocabulary_cross_ibfk_1">
+      <End Role="survey_field" EntitySet="survey_field" />
+      <End Role="survey_field_vocabulary_cross" EntitySet="survey_field_vocabulary_cross" />
+    </AssociationSet>
+    <AssociationSet Name="survey_field_vocabulary_cross_ibfk_2" Association="Self.survey_field_vocabulary_cross_ibfk_2">
+      <End Role="vocabulary" EntitySet="vocabulary" />
+      <End Role="survey_field_vocabulary_cross" EntitySet="survey_field_vocabulary_cross" />
+    </AssociationSet>
+    <AssociationSet Name="survey_ibfk_1" Association="Self.survey_ibfk_1">
+      <End Role="user" EntitySet="user" />
+      <End Role="survey" EntitySet="survey" />
+    </AssociationSet>
+    <AssociationSet Name="survey_ibfk_2" Association="Self.survey_ibfk_2">
+      <End Role="user" EntitySet="user" />
+      <End Role="survey" EntitySet="survey" />
+    </AssociationSet>
+    <AssociationSet Name="survey_ibfk_3" Association="Self.survey_ibfk_3">
+      <End Role="company" EntitySet="company" />
+      <End Role="survey" EntitySet="survey" />
+    </AssociationSet>
+    <AssociationSet Name="survey_page_ibfk_1" Association="Self.survey_page_ibfk_1">
+      <End Role="survey_template" EntitySet="survey_template" />
+      <End Role="survey_page" EntitySet="survey_page" />
+    </AssociationSet>
+    <AssociationSet Name="survey_template_ibfk_1" Association="Self.survey_template_ibfk_1">
+      <End Role="user" EntitySet="user" />
+      <End Role="survey_template" EntitySet="survey_template" />
+    </AssociationSet>
+    <AssociationSet Name="survey_template_ibfk_2" Association="Self.survey_template_ibfk_2">
+      <End Role="user" EntitySet="user" />
+      <End Role="survey_template" EntitySet="survey_template" />
+    </AssociationSet>
+    <AssociationSet Name="survey_template_ibfk_3" Association="Self.survey_template_ibfk_3">
+      <End Role="language" EntitySet="language" />
+      <End Role="survey_template" EntitySet="survey_template" />
+    </AssociationSet>
+    <AssociationSet Name="user_ibfk_1" Association="Self.user_ibfk_1">
+      <End Role="user_right" EntitySet="user_right" />
+      <End Role="user" EntitySet="user" />
+    </AssociationSet>
+    <AssociationSet Name="user_language_cross_ibfk_1" Association="Self.user_language_cross_ibfk_1">
+      <End Role="user" EntitySet="user" />
+      <End Role="user_language_cross" EntitySet="user_language_cross" />
+    </AssociationSet>
+    <AssociationSet Name="user_language_cross_ibfk_2" Association="Self.user_language_cross_ibfk_2">
+      <End Role="language" EntitySet="language" />
+      <End Role="user_language_cross" EntitySet="user_language_cross" />
+    </AssociationSet>
+    <AssociationSet Name="vocabulary_ibfk_1" Association="Self.vocabulary_ibfk_1">
+      <End Role="language" EntitySet="language" />
+      <End Role="vocabulary" EntitySet="vocabulary" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -12,21 +12,19 @@ namespace DynamicSurvey.Server.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class survey_field_template
+    public partial class survey_page
     {
-        public survey_field_template()
+        public survey_page()
         {
-            this.survey_detail = new HashSet<survey_detail>();
+            this.survey_field = new HashSet<survey_field>();
         }
     
         public decimal id { get; set; }
-        public decimal survey_template_id { get; set; }
-        public decimal survey_field_id { get; set; }
-        public Nullable<decimal> word_id { get; set; }
+        public decimal page_index { get; set; }
+        public string page_title { get; set; }
+        public decimal fk_survey_template_parent_id { get; set; }
     
-        public virtual ICollection<survey_detail> survey_detail { get; set; }
-        public virtual survey_field survey_field { get; set; }
+        public virtual ICollection<survey_field> survey_field { get; set; }
         public virtual survey_template survey_template { get; set; }
-        public virtual vocabulary vocabulary { get; set; }
     }
 }

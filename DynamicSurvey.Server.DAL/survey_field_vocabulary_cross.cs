@@ -12,13 +12,13 @@ namespace DynamicSurvey.Server.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class user_language
+    public partial class survey_field_vocabulary_cross
     {
         public decimal id { get; set; }
-        public decimal user_id { get; set; }
-        public decimal language_id { get; set; }
+        public decimal fk_survey_field_id { get; set; }
+        public decimal fk_vocabulary_word_id { get; set; }
     
-        public virtual user user { get; set; }
-        public virtual language language { get; set; }
+        public virtual survey_field survey_field { get; set; }
+        public virtual vocabulary vocabulary { get; set; }
     }
 }

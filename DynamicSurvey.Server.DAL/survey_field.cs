@@ -16,15 +16,22 @@ namespace DynamicSurvey.Server.DAL
     {
         public survey_field()
         {
-            this.survey_field_template = new HashSet<survey_field_template>();
+            this.survey_detail = new HashSet<survey_detail>();
+            this.survey_field1 = new HashSet<survey_field>();
+            this.survey_field_vocabulary_cross = new HashSet<survey_field_vocabulary_cross>();
         }
     
         public decimal id { get; set; }
-        public decimal field_type_id { get; set; }
-        public decimal default_value_id { get; set; }
+        public decimal fk_parent_page_id { get; set; }
+        public decimal fk_survey_field_type_id { get; set; }
+        public Nullable<decimal> fk_group_id { get; set; }
+        public string label { get; set; }
     
+        public virtual ICollection<survey_detail> survey_detail { get; set; }
         public virtual survey_field_type survey_field_type { get; set; }
-        public virtual vocabulary vocabulary { get; set; }
-        public virtual ICollection<survey_field_template> survey_field_template { get; set; }
+        public virtual ICollection<survey_field> survey_field1 { get; set; }
+        public virtual survey_field survey_field2 { get; set; }
+        public virtual survey_page survey_page { get; set; }
+        public virtual ICollection<survey_field_vocabulary_cross> survey_field_vocabulary_cross { get; set; }
     }
 }

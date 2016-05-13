@@ -5,6 +5,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
 {
 	public class FakeSurveysFactory
 	{
+		private static readonly IFieldTypeRepository FieldType = new FieldTypeRepository();
 		public static Survey[] CreateSurveyList()
 		{
 			return new Survey[]
@@ -20,6 +21,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
 			#region page1
 			var page1 = new SurveyPage()
 				{
+					Id = 1,
 					Title = "Page 1",
 					Fields = new List<SurveyField>()
                     {
@@ -61,7 +63,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
                         {
                             Id = 12,
                             Label = "",
-                            FieldType = DAL.Entities.FieldType.List,
+                            FieldType = FieldType.List,
                             DefaultValues = new string [] { "New York", "London", "Lima", "Cairo", "Moscow", "Kioto", "Osaka", "Okinawa", "Tokyo"},
                             GroupId = 11
                         },
@@ -78,13 +80,14 @@ namespace DynamicSurvey.Server.DAL.Fakes
 			#region page2
 			var page2 = new SurveyPage()
 			{
+				Id = 2,
 				Title = "Page 2. Color questions.",
 				Fields = new List<SurveyField>()
                 {
                     new SurveyField()
                     {
                         Id = 1,
-                        FieldType = DAL.Entities.FieldType.List,
+                        FieldType = FieldType.List,
                         Label = "What is your favorite color?",
                         DefaultValues = new string[]{ "Red" , "Green" , "Blue", "Pink", "Violet", "White", "Brown", "Purple", "Black", "Gray", "Yellow", "Cyan" },
                     },
@@ -121,6 +124,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
                         {
                             new SurveyPage()
                             {
+								Id = 3,
                                 Title = "Page 1",                                
                                 Fields = new List<SurveyField>
                                 {
@@ -148,6 +152,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
                             },
                             new SurveyPage()
                             {
+								Id = 4,
                                 Title = "Page 2",
                                 Fields = new List<SurveyField>
                                 {
@@ -199,6 +204,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
                         {
                             new SurveyPage()
                             {
+								Id = 6,
                                 Title = "Страница 1",
                                 
                                 Fields = new List<SurveyField>
@@ -227,6 +233,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
                             },
                             new SurveyPage()
                             {
+								Id = 7,
                                 Title = "Страница 2",
                                 Fields = new List<SurveyField>
                                 {
