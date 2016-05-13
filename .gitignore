@@ -5,3 +5,5 @@ opros.publishsettings
 DynamicSurvey.Server.Tests/bin/
 DynamicSurvey.Server.Tests/obj/
 DynamicSurvey.Server/bin/
+DynamicSurvey.Server.DAL/obj/
+DynamicSurvey.Server.DAL/bin/
