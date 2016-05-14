@@ -1,3 +1,5 @@
 USE DBSurveys;
 
-source views\survey_view.sql
+source views\survey_template_details_view.sql
+source views\survey_template_page_details_view.sql
+source views\survey_template_view.sql

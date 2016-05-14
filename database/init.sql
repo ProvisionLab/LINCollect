@@ -11,6 +11,6 @@ CREATE DATABASE IF NOT EXISTS DBSurveys;
 USE DBSurveys;
 
 source structure/init.sql
-# source stored_procedures/init.sql
+source stored_procedures/init.sql
 source views/init.sql
 source seed/init.sql

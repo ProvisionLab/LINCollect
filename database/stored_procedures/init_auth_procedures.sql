@@ -1,6 +1,7 @@
 USE DBSurveys;
-select 'is_user_exists started' as '';
 
+##########################################################
+select 'is_user_exists ' as '';
 DROP FUNCTION IF EXISTS is_user_exists;
 DELIMITER // 
 CREATE FUNCTION is_user_exists (
@@ -13,7 +14,7 @@ BEGIN
 	
 	SELECT 	1 
 	INTO	result
-	FROM 	Users u
+	FROM 	User u
 	WHERE 	BINARY u.login = username
 	AND		BINARY  u.password = password;
 
@@ -23,11 +24,29 @@ END;
 //
 DELIMITER ;
 
-SELECT is_user_exists('Administrator', 'Password') as result;
-SELECT is_user_exists('Administrator', 'PASSword') as result;
-SELECT is_user_exists('ADMINistrator', 'PASSword') as result;
-SELECT is_user_exists('Administrator', 'not-password') as result;
-SELECT is_user_exists('Administrator', '') as result;
-SELECT is_user_exists('not-exist-Administrator', 'password') as result;
+##########################################################
+select 'is_user_admin' as '';
+DROP FUNCTION IF EXISTS is_user_admin;
+DELIMITER // 
+CREATE FUNCTION is_user_admin (
+	username 				VARCHAR(100)
+)  RETURNS INT
+BEGIN
+	DECLARE result varchar(50);
+	SET result = "";
+	
+	SELECT 	ur.name
+	INTO	result
+	FROM 	User u
+    JOIN	user_right ur ON u.user_right_id = ur.id
+	WHERE 	BINARY u.login = username;
 
-select 'is_user_exists executed' as '';
+	IF result = 'Administrator' THEN
+		return 1;
+    ELSE
+		return 0;
+    END IF;
+
+END;
+//
+DELIMITER ;

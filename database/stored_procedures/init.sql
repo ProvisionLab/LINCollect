@@ -1,6 +1,10 @@
 USE DBSurveys;
 
-source stored_procedures\init_survey_crud.sql
+source stored_procedures\survey\init.sql
+source stored_procedures\survey_template\init.sql
+source stored_procedures\init_auth_procedures.sql
+source stored_procedures\init_user_admin.sql
+source stored_procedures\init_field_types_functions.sql
 
 
 #### create new survey

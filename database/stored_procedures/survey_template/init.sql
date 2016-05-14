@@ -1,0 +1,3 @@
+source stored_procedures\survey_template\init_survey_template_crud.sql
+source stored_procedures\survey_template\init_survey_template_fields_crud.sql
+source stored_procedures\survey_template\init_survey_template_pages_crud.sql

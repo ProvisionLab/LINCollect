@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS Survey_Field(
 	id 							SERIAL,
 	fk_parent_page_id			BIGINT UNSIGNED NOT NULL,
     fk_survey_field_type_id		BIGINT UNSIGNED NOT NULL,
-	fk_group_id					BIGINT UNSIGNED NULL,    
+	fk_group_id					BIGINT UNSIGNED NULL,  
+	field_index					BIGINT UNSIGNED NOT NULL,
     label						varchar(50) NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (fk_survey_field_type_id) REFERENCES Survey_Field_Type (id)
