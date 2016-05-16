@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS User(
 	is_deleted			TINYINT not null default 0,
 	PRIMARY KEY (id),
 	FOREIGN KEY (user_right_id) REFERENCES User_Right (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE
+	ON DELETE RESTRICT
 );

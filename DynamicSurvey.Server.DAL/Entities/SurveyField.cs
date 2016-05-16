@@ -1,15 +1,18 @@
-﻿namespace DynamicSurvey.Server.DAL.Entities
+﻿using System.Collections.Generic;
+namespace DynamicSurvey.Server.DAL.Entities
 {
 	public class SurveyField
 	{
-		public decimal Id { get; set; }
+		public long Id { get; set; }
 		public string Label { get; set; }
 
 		public string FieldType { get; set; }
 
-		public string[] DefaultValues { get; set; }
+		public long FieldTypeId { get; set; }
 
-		public decimal? GroupId { get; set; }
+		public IEnumerable<string> DefaultValues { get; set; }
+
+		public long? GroupId { get; set; }
 
 		public string UserAnswer { get; set; }
 

@@ -13,13 +13,13 @@ namespace DynamicSurvey.Server.Tests
 			usersRepository.AddOrUpdate(null, user);
 		}
 
-		public static User CreateAdmin(string username = "Admin")
+		public static User CreateAdmin(string username = "Admin", bool encrypted = false)
 		{
 			return new User()
 			{
 				Id = 0,
 				Username = username,
-				Password = "Password",
+				Password = encrypted ? "DFD14FF9FA9464A63ADAEF65271E8C32" : "Password",
 				AccessRight = new AccessRight()
 				{
 					AccessLevel = AccessLevel.Administrator,

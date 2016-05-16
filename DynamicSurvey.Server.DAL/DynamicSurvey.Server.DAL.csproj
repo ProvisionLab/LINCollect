@@ -48,6 +48,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -57,32 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="city.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="company.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="country.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DbSurveys.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DbSurveys.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DbSurveys.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DbSurveys.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DbSurveys.edmx</DependentUpon>
-    </Compile>
+    <Compile Include="DataEngine.cs" />
     <Compile Include="Entities\AccessLevel.cs" />
-    <Compile Include="Helpers\Convertion\SurveyConverter.cs" />
+    <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Repositories\FieldTypeRepository.cs" />
     <Compile Include="Entities\Language.cs" />
     <Compile Include="Entities\AccessRight.cs" />
@@ -95,71 +73,16 @@
     <Compile Include="Fakes\FakeSurveysFactory.cs" />
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Helpers\Pager.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="OperationResults\OperationResult.cs" />
     <Compile Include="OperationResults\ResultCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\LanguageRepository.cs" />
     <Compile Include="Repositories\VocabularyRepository.cs" />
     <Compile Include="Repositories\SurveysRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />
-    <Compile Include="survey.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="survey_detail.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="survey_field.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="survey_field_type.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="survey_field_vocabulary_cross.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="survey_page.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="survey_template.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="user.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="user_language.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="user_language_cross.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="user_right.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
-    <Compile Include="vocabulary.cs">
-      <DependentUpon>DbSurveys.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config">
       <SubType>Designer</SubType>
-    </None>
-    <EntityDeploy Include="DbSurveys.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DbSurveys.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="DbSurveys.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DbSurveys.edmx</DependentUpon>
-      <LastGenOutput>DbSurveys.Context.cs</LastGenOutput>
-    </None>
-    <None Include="DbSurveys.edmx.diagram">
-      <DependentUpon>DbSurveys.edmx</DependentUpon>
-    </None>
-    <None Include="DbSurveys.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DbSurveys.edmx</DependentUpon>
-      <LastGenOutput>DbSurveys.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

@@ -22,9 +22,10 @@ namespace DynamicSurvey.Server.DAL.Helpers
 
 		public IQueryable<TData> SelectPageQuery<TData, TKey>(IQueryable<TData> source, Func<TData, TKey> orderBy)
 		{
-			var count = (decimal)source.Count();
-			var pageSizeDecimal = (decimal)PageSize;
-			TotalPages = (int)Math.Ceiling(count / pageSizeDecimal);
+			var count = (long)source.Count();
+			var pageSizelong = (long)PageSize;
+			var d = count / pageSizelong;
+			TotalPages = (int) Math.Ceiling((decimal)d);
 
 			if (CurrentPage < 1)
 				CurrentPage = 1;

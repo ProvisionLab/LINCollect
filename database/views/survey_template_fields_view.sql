@@ -1,22 +1,21 @@
 USE DBSurveys;
 
 
-select 'views/survey_template_page_details_view started' as '';
+select 'vw_survey_template_fields' as '';
 
 
-DROP VIEW IF EXISTS vw_survey_template_details;
+DROP VIEW IF EXISTS vw_survey_template_fields;
 
-CREATE VIEW vw_survey_template_details 	as 
+CREATE VIEW vw_survey_template_fields 	as 
 SELECT 
 	st.id 							as 'TemplateId'
     ,sp.id							as 'PageId'
-    ,sp.page_index 					as 'PageIndex'
-    ,sp.page_title 					as 'PageLabel'
     ,sf.label 						as 'FieldLabel'
     ,sf.id							as 'FieldId'
 	,sf.field_index					as 'FieldIndex'
     ,sfParentGroup.field_index		as 'ParentGroupBoxIndex'
     ,sft.field_type					as 'FieldType'
+	,sft.id							as 'FieldTypeId'
 FROM survey_field sf 
 JOIN survey_page sp 
 	ON sp.id = sf.fk_parent_page_id    

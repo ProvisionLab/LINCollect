@@ -14,3 +14,4 @@ source structure/init.sql
 source stored_procedures/init.sql
 source views/init.sql
 source seed/init.sql
+source access/init.sql

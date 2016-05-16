@@ -61,4 +61,62 @@ proc_label:BEGIN
 END//
 DELIMITER ;
 
+
 ###################################
+select 'sp_update_survey_template_field' as '';
+DROP PROCEDURE IF EXISTS sp_update_survey_template_field;
+DELIMITER // 
+CREATE PROCEDURE `sp_update_survey_template_field` (	
+	IN creator_login 				VARCHAR(100),
+    IN creator_password				VARCHAR(50),
+	IN field_id						BIGINT UNSIGNED,
+    IN new_label					VARCHAR(50),
+    OUT error_code					BIGINT UNSIGNED
+) 
+proc_label:BEGIN
+	DECLARE fieldIndex BIGINT UNSIGNED;
+    SET fieldIndex = 0;
+    IF NOT is_user_exists(creator_login, creator_password) THEN
+		SELECT 2 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+    IF NOT is_user_admin(creator_login) THEN
+		SELECT 1 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+	
+	UPDATE 	survey_field sf
+	SET 	sf.label = new_label
+	WHERE	sf.id = fieldId;
+	
+    SELECT 0 INTO error_code;
+END//
+DELIMITER ;
+
+###################################
+select 'sp_remove_survey_template_field' as '';
+DROP PROCEDURE IF EXISTS sp_remove_survey_template_field;
+DELIMITER // 
+CREATE PROCEDURE `sp_remove_survey_template_field` (	
+	IN creator_login 				VARCHAR(100),
+    IN creator_password				VARCHAR(50),
+	IN field_id						BIGINT UNSIGNED,
+    OUT error_code					BIGINT UNSIGNED
+) 
+proc_label:BEGIN
+	IF NOT is_user_exists(creator_login, creator_password) THEN
+		SELECT 2 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+    IF NOT is_user_admin(creator_login) THEN
+		SELECT 1 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+	
+	DELETE 
+	FROM 	survey_field 
+	WHERE 	id = field_id;
+	
+    SELECT 0 INTO error_code;
+END//
+DELIMITER ;

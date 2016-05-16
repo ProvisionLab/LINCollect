@@ -26,11 +26,33 @@ CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, f
 SET @surveyGroupFieldId = @myLastId;
 
 CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @surveyGroupFieldId, 'ST1 - P1 - Field3 - RadioButton1', @myLastId, @myErrorCode);
-CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @fieldTypeRadioButtonId, 'ST1 - P1 - Field3 - RadioButton2', @myLastId, @myErrorCode);
+CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @surveyGroupFieldId, 'ST1 - P1 - Field3 - RadioButton2', @myLastId, @myErrorCode);
 CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @surveyGroupFieldId, 'ST1 - P1 - Field3 - RadioButton3', @myLastId, @myErrorCode);
 CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_button_field_type_id(), NULL, 'ST1 - P1 - Field3 - Buttun', @myLastId, @myErrorCode);
 
-select * from vw_survey_template_details;
+CALL sp_add_survey_template_page(@username, @password, 'ST1 - Page Title_2 for default values!!', @surveyTemplateId, @myLastId, @myErrorCode);
+SET @surveyTemplatePageId = @myLastId;
+
+CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_dropdownlist_field_type_id(), NULL, 'ST1 - P2 - Field1 - Dropdown', @myLastId, @myErrorCode);
+SET @lastFieldId = @myLastId;
+SELECT @lastFieldId;
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Red', @myLastId, @myErrorCode);
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Green', @myLastId, @myErrorCode);
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Blue', @myLastId, @myErrorCode);
+
+CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_list_field_type_id(), NULL, 'ST1 - P2 - Field1 - List', @myLastId, @myErrorCode);
+SET @lastFieldId = @myLastId;
+SELECT @lastFieldId;
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Red', @myLastId, @myErrorCode);
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Green', @myLastId, @myErrorCode);
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Blue', @myLastId, @myErrorCode);
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'White', @myLastId, @myErrorCode);
+CALL sp_add_field_default_value(@username, @password, @lastFieldId, @languageId, 'Black', @myLastId, @myErrorCode);
+
+CALL sp_update_field_default_value(@username, @password, @lastFieldId, @languageId, 'White', 'SnowWhite(Updated)', @myErrorCode);
+CALL sp_remove_field_default_value(@username, @password, @lastFieldId, 'Black', @myErrorCode);
+
+select * from vw_survey_template_fields;
 
 
 SELECT '-----------------Create Survey Template 1' as '';
@@ -45,8 +67,8 @@ CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, f
 SET @surveyGroupFieldId = @myLastId;
 
 CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @surveyGroupFieldId, 'ST2 - P1 - Field3 - RadioButton1', @myLastId, @myErrorCode);
-CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @fieldTypeRadioButtonId, 'ST2 - P1 - Field3 - RadioButton2', @myLastId, @myErrorCode);
+CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @surveyGroupFieldId, 'ST2 - P1 - Field3 - RadioButton2', @myLastId, @myErrorCode);
 CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_radiobutton_field_type_id(), @surveyGroupFieldId, 'ST2 - P1 - Field3 - RadioButton3', @myLastId, @myErrorCode);
 CALL sp_add_survey_template_field(@username, @password, @surveyTemplatePageId, fn_get_button_field_type_id(), NULL, 'ST2 - P1 - Field3 - Buttun', @myLastId, @myErrorCode);
 
-select * from vw_survey_template_details;
+select * from vw_survey_template_fields;

@@ -5,19 +5,19 @@ select 'survey_template' as '';
 CREATE TABLE IF NOT EXISTS Survey_Template(
 	id 					SERIAL,
     template_name		varchar(100) UNIQUE,
-    user_created_id		BIGINT UNSIGNED NOT NULL,
-	user_modified_id 	BIGINT UNSIGNED NOT NULL, 
+    user_created_id		BIGINT UNSIGNED NULL,
+	user_modified_id 	BIGINT UNSIGNED NULL, 
     created				DATE NOT NULL,
 	last_modified 		DATE NULL,
-	language_id 		BIGINT UNSIGNED NOT NULL, #survey_langiage
+	language_id 		BIGINT UNSIGNED NULL, #survey_langiage
 
 	PRIMARY KEY (id),	
 	FOREIGN KEY (user_created_id) REFERENCES User (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
+	ON DELETE SET NULL,
     FOREIGN KEY (user_modified_id) REFERENCES User (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE,    
+	ON DELETE SET NULL,
 	FOREIGN KEY (language_id) REFERENCES User_Language (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE
+	ON DELETE SET NULL
 );
 
 select 'survey_page' as '';
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS Survey_Page(
     fk_survey_template_parent_id 	BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (fk_survey_template_parent_id) REFERENCES Survey_Template (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE
+	ON DELETE CASCADE
 );
 
 select 'survey_field_type' as '';
@@ -52,17 +52,17 @@ select 'survey_field' as '';
 CREATE TABLE IF NOT EXISTS Survey_Field(
 	id 							SERIAL,
 	fk_parent_page_id			BIGINT UNSIGNED NOT NULL,
-    fk_survey_field_type_id		BIGINT UNSIGNED NOT NULL,
+    fk_survey_field_type_id		BIGINT UNSIGNED NULL,
 	fk_group_id					BIGINT UNSIGNED NULL,  
 	field_index					BIGINT UNSIGNED NOT NULL,
     label						varchar(50) NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (fk_survey_field_type_id) REFERENCES Survey_Field_Type (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
+	ON DELETE SET NULL,
     FOREIGN KEY (fk_group_id) REFERENCES Survey_Field (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE,
+	ON DELETE CASCADE,
     FOREIGN KEY (fk_parent_page_id) REFERENCES Survey_Page (id)
-	ON DELETE RESTRICT ON UPDATE CASCADE
+	ON DELETE CASCADE
 );
 
 select 'survey_field_vocabulary_cross - for default values in survey_field' as '';
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS Survey_Field_Vocabulary_Cross(
     fk_vocabulary_word_id		BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (fk_survey_field_id) REFERENCES Survey_Field(id)
-    ON DELETE RESTRICT ON UPDATE CASCADE,
+    ON DELETE CASCADE,
     FOREIGN KEY (fk_vocabulary_word_id) REFERENCES Vocabulary(id)
-    ON DELETE RESTRICT ON UPDATE CASCADE
+    ON DELETE RESTRICT
 );

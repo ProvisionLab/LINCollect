@@ -10,6 +10,7 @@ CREATE VIEW vw_survey_template 	as
 SELECT 	st.id					as 'id'
 		,st.template_name 		as 'title' 
 		,templateLanguage.name	as 'language'
+		,templateLanguage.id	as 'languageId'
 		,st.created 			as 'date_created'
         ,uCreated.login 		as 'user_created'
 		,st.last_modified 		as 'date_modified'

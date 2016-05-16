@@ -24,7 +24,7 @@ namespace DynamicSurvey.Server.Infrastructure
         private void AddBindings()
         {
             var mock = new Mock<ISurveysRepository>();
-            mock.Setup(m => m.GetSurveys(It.IsAny<User>()))
+            mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
                 .Returns(FakeSurveysFactory.CreateSurveyList());
 
             mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 1)))

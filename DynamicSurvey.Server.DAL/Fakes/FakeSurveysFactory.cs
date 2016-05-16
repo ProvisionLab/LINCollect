@@ -183,6 +183,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
 				{
 					Id = 2,
 					Language = "English",
+					LanguageId = 1,
 					Title = "English Survey",
 					Pages = new List<SurveyPage>
                         {

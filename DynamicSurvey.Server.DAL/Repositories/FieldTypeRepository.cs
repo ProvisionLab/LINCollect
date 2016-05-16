@@ -17,12 +17,12 @@ namespace DynamicSurvey.Server.DAL.Entities
 		string DatePicker { get; }
 		string DropdownList { get; }
 
-		decimal GetIdOf(string value);
+		long GetIdOf(string value);
 	}
 
 	public class FieldTypeRepository : IFieldTypeRepository
 	{
-		private readonly Dictionary<string, string> fieldDict = new Dictionary<string, string>();
+		private readonly Dictionary<long, string> fieldDict = new Dictionary<long, string>();
 
 		public string TextBox { get { return GetFieldType("TextBox"); } }
 		public string Email { get { return GetFieldType("Email"); } }
@@ -35,42 +35,30 @@ namespace DynamicSurvey.Server.DAL.Entities
 		public string DatePicker { get { return GetFieldType("DatePicker"); } }
 		public string DropdownList { get { return GetFieldType("DropdownList"); } }
 
-		private string GetFieldType(string key)
+		public FieldTypeRepository()
 		{
-			if (!fieldDict.ContainsKey(key))
+			var fields = new List<string>();
+
+			DataEngine.Engine.SelectFromView(DataEngine.vw_field_type_view, (r) =>
 			{
-				using (var dbContext = new DbSurveysContext())
-				{
-					var fields = dbContext.survey_field_type.ToArray();
+				var id = Convert.ToInt64(r["Id"]);
+				var fieldType = (string)r["FieldType"];
 
-					Action<string> addKey = (s) =>
-					{
-						fieldDict.Add(s, fields.Single(f => f.field_type.Equals(s, StringComparison.InvariantCultureIgnoreCase)).field_type);
-					};
-
-					addKey("TextBox");
-					addKey("Email");
-					addKey("Checkbox");
-					addKey("List");
-					addKey("Button");
-					addKey("RadioButton");
-					addKey("GroupBox");
-					addKey("DatePicker");
-					addKey("DropdownList");
-				}
-			}
-
-			return fieldDict[key];
+				fieldDict.Add(id, fieldType);
+			});
+		}
+		private string GetFieldType(string value)
+		{
+			return fieldDict
+				.Select(d => d.Value).Where(d => d.Equals(value))
+				.Single();
 		}
 
-		public decimal GetIdOf(string value)
+		public long GetIdOf(string value)
 		{
-			using (var context = new DbSurveysContext())
-			{
-				return context.survey_field_type
-					.Single(f => f.field_type.Equals(value, StringComparison.InvariantCultureIgnoreCase))
-					.id;
-			}
+			return fieldDict
+				.Where(d => d.Value.Equals(value))
+				.Single().Key;
 		}
 
 	}

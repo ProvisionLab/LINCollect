@@ -9,8 +9,10 @@ namespace DynamicSurvey.Server.DAL.Helpers
 {
 	public static class AuthHelper
 	{
-		public static void ValidateCaller(this DbSurveysContext context, User caller, AccessLevel accessLevel = AccessLevel.Administrator)
+		public static void ValidateCaller(this object context, User caller, AccessLevel accessLevel = AccessLevel.Administrator)
 		{
+			return;
+
 #if DEBUG
 			if (caller == null)
 			{
@@ -28,19 +30,21 @@ namespace DynamicSurvey.Server.DAL.Helpers
 			}
 		}
 
-		public static User GetUserByName(this DbSurveysContext context, string username)
+		public static User GetUserByName(this object context, string username)
 		{
-			var user = context.user
-						.Where(u => u.is_deleted != 1)
-						.Where(u => u.login == username)
-						.SingleOrDefault();
+			//var user = context.user
+			//			.Where(u => u.is_deleted != 1)
+			//			.Where(u => u.login == username)
+			//			.SingleOrDefault();
 
-			if (user == null)
-			{
-				return null;
-			}
+			//if (user == null)
+			//{
+			//	return null;
+			//}
 
-			return user.ToContract();
+			//return user.ToContract();
+
+			throw new NotImplementedException();
 		}
 
 	}
