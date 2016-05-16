@@ -1,10 +1,12 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.Models;
 using DynamicSurvey.Server.ViewModels;
+using DynamicSurvey.Server.ViewModels.Surveys;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -83,7 +85,22 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditSurvey()
         {
-            return View();
+            var editSurveyViewModel = new EditSurveyViewModel();
+
+            using (var dbContext = new DbSurveysContext())
+            {
+                var languages = dbContext.language.OrderBy(l => l.name)
+                    .Select(l => new LanguageItemViewModel
+                    {
+                        Id = l.id,
+                        Name = l.name
+                    })
+                    .ToList();
+
+                editSurveyViewModel.Languages = languages;
+            }
+
+            return View(editSurveyViewModel);
         }
 
         public ActionResult AboutRespondent()
