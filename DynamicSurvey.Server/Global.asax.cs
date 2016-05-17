@@ -22,12 +22,6 @@ namespace DynamicSurvey.Server
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            var repository = new UsersRepository();
-            repository.Init("Admin", "Password", "Administrator");
-            repository.Init("Administrator", "Password", "Administrator");
-            repository.Init("Enumerator", "Password", "Enumerator");
-            repository.Init("Respondent", "Password", "Respondent");
         }
     }
 }

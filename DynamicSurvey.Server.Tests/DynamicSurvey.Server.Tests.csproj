@@ -37,8 +37,22 @@
     <ProjectConfigFileName>App.config</ProjectConfigFileName>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data.Entity.EF6, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.Entity.6.9.8\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -121,13 +135,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\SurveysRepositoryTests\Add\Duplicates_Test.cs" />
     <Compile Include="Repositories\SurveysRepositoryTests\Add\Add_Test.cs" />
+    <Compile Include="Repositories\SurveysRepositoryTests\UnitTest1.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_AddUser_Admin_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_RemoveUser_Respondent_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_RemoveUser_Enumerator_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_UpdateUser_Enumerator_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_UpdateUser_Respondent_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Authorize\Authorize_Tests.cs" />
-    <Compile Include="Repositories\UsersRepositoryTests\CommonHelpers.cs" />
+    <Compile Include="CommonHelpers.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_AddUser_Enumarator_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_AddUser_Respondent_Tests.cs" />
     <Compile Include="Repositories\UsersRepositoryTests\Access\Access_UpdateUser_Admin_Tests.cs" />

@@ -2,7 +2,7 @@
 {
 	public class AccessRight
 	{
-		public decimal Id { get; set; }
+		public long Id { get; set; }
 		public string Name { get; set; }
 		public AccessLevel AccessLevel { get; set; }
 	}

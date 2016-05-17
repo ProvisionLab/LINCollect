@@ -7,6 +7,8 @@ using DynamicSurvey.Server.DAL.Fakes;
 using DynamicSurvey.Server.DAL.Repositories;
 using Moq;
 using Ninject;
+using DynamicSurvey.Server.DAL.Repositories;
+using DynamicSurvey.Server.DAL.Fakes;
 
 namespace DynamicSurvey.Server.Infrastructure
 {
@@ -23,7 +25,7 @@ namespace DynamicSurvey.Server.Infrastructure
         private void AddBindings()
         {
             var mock = new Mock<ISurveysRepository>();
-            mock.Setup(m => m.GetSurveys(It.IsAny<User>()))
+            mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
                 .Returns(FakeSurveysFactory.CreateSurveyList());
 
             mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 1)))

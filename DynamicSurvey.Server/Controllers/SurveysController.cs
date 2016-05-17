@@ -7,6 +7,8 @@ using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.Models;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
+using DynamicSurvey.Server.DAL.Repositories;
+
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -85,20 +87,29 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditSurvey()
         {
-            var editSurveyViewModel = new EditSurveyViewModel();
+			var editSurveyViewModel = new EditSurveyViewModel();
 
-            using (var dbContext = new DbSurveysContext())
-            {
-                var languages = dbContext.language.OrderBy(l => l.name)
-                    .Select(l => new LanguageItemViewModel
-                    {
-                        Id = l.id,
-                        Name = l.name
-                    })
-                    .ToList();
+			editSurveyViewModel.Languages = new LanguageItemViewModel[] 
+			{ 
+				new LanguageItemViewModel()
+				{
+					Id = 1,
+					Name = "English"
+				}
+			};
 
-                editSurveyViewModel.Languages = languages;
-            }
+			//using (var dbContext = new DbSurveysContext())
+			//{
+			//	var languages = dbContext.language.OrderBy(l => l.name)
+			//		.Select(l => new LanguageItemViewModel
+			//		{
+			//			Id = l.id,
+			//			Name = l.name
+			//		})
+			//		.ToList();
+
+			//	editSurveyViewModel.Languages = languages;
+			//}
 
             return View(editSurveyViewModel);
         }

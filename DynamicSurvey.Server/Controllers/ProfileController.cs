@@ -44,7 +44,7 @@ namespace DynamicSurvey.Server.Controllers
             // fetch all user fields via database
             // if not valid - return view;
 
-            if (user.AccessRight.AccessLevel == AccessLevel.Administrator)
+            //if (user.AccessRight.AccessLevel == AccessLevel.Administrator)
             {
                 return RedirectToAction("Index", "Surveys");
             }

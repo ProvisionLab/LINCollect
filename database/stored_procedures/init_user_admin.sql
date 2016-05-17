@@ -1,88 +1,124 @@
 USE DBSurveys;
-select 'procedures/init_user_admin started' as '';
 
-DROP PROCEDURE IF EXISTS add_user;
+select 'sp_add_user' as '';
+DROP PROCEDURE IF EXISTS sp_add_user;
 DELIMITER // 
-CREATE PROCEDURE `add_user` (
+CREATE PROCEDURE `sp_add_user` (
 	IN creator_login 				VARCHAR(100),
+	IN creator_password				VARCHAR(100),
 	IN target_username 				VARCHAR(100),
 	IN target_password 				VARCHAR(100),
-	IN target_right_name 			VARCHAR(100)
+	IN target_salt					VARCHAR(100),
+	IN target_right_id 				BIGINT UNSIGNED,
+	OUT result_id					BIGINT UNSIGNED,
+	OUT error_code					BIGINT UNSIGNED
 ) 
 proc_label:BEGIN
-	DECLARE creator_id BIGINT UNSIGNED;
-	DECLARE right_id BIGINT UNSIGNED;
 	
+    IF NOT is_user_exists(creator_login, creator_password) THEN
+		SELECT 2 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+    IF NOT is_user_admin(creator_login) THEN
+		SELECT 1 INTO error_code;
+        LEAVE proc_label;
+    END IF;
 	
-END//
-DELIMITER ;
-
-
-DROP PROCEDURE IF EXISTS add_user;
-DELIMITER // 
-CREATE PROCEDURE `add_user` (
-	IN creator_login 				VARCHAR(100),
-	IN target_username 				VARCHAR(100),
-	IN target_password 				VARCHAR(100),
-	IN target_right_name 			VARCHAR(100)
-) 
-proc_label:BEGIN
-	DECLARE creator_id BIGINT UNSIGNED;
-	DECLARE right_id BIGINT UNSIGNED;
-	
-	SELECT 	u.id 
-	INTO 	creator_id
-	FROM 	Users u
-	JOIN	User_Rights ur 
-		ON	u.user_right_id 	= ur.id
-	WHERE 	u.login 			= creator_login
-	AND 	ur.access_level 	= 0;
-
-	IF (creator_id IS NULL)
-	THEN
-		BEGIN
-			SELECT 'SecurityError: you dont have rights';
-			LEAVE proc_label;
-		END;
-	END IF;
-
 	IF EXISTS(
 			SELECT 1 
-			FROM Users u
+			FROM User u
 			WHERE u.login = target_username) 
 	THEN
 		SELECT 'User already exists';
 		LEAVE proc_label;
 	END IF;
 
-	SELECT 	ur.id
-	INTO 	right_id
-	FROM	User_Rights ur
-	WHERE 	ur.name = target_right_name;
-
-	IF (right_id IS NULL) THEN
-		BEGIN
-			SELECT 'Desired right not found';
-			LEAVE proc_label;
-		END;
-	END IF;
-
-	INSERT 	INTO Users (login, password, user_right_id) 
-			VALUES (target_username, target_password, right_id);
-
-	SELECT 'SUCCESS';
+	INSERT 	INTO User (login, password, salt, user_right_id) 
+			VALUES (target_username, target_password, target_salt, target_right_id);
+			
+	SELECT LAST_INSERT_ID() INTO result_id;
 
 END//
+
+select 'sp_update_user' as '';//
+CREATE PROCEDURE `sp_update_user` (
+	IN creator_login 				VARCHAR(100),
+	IN creator_password				VARCHAR(100),
+	IN target_id					BIGINT UNSIGNED,
+	IN target_username 				VARCHAR(100),
+	IN target_password 				VARCHAR(100),
+	IN target_salt					VARCHAR(100),
+	IN target_right_id 				BIGINT UNSIGNED,
+	IN target_right_name 			VARCHAR(100),
+	OUT error_code					BIGINT UNSIGNED
+) 
+proc_label:BEGIN
+	
+    IF NOT is_user_exists(creator_login, creator_password) THEN
+		SELECT 2 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+    IF NOT is_user_admin(creator_login) THEN
+		SELECT 1 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+	
+	IF EXISTS(
+			SELECT 1 
+			FROM User u
+			WHERE u.login = target_username) 
+	THEN
+		SELECT 'User already exists';
+		LEAVE proc_label;
+	END IF;
+	
+	UPDATE 	User u
+	SET 	u.login = target_username,
+			u.password = target_password,
+			u.salt = target_salt,
+			u.user_right_id = target_right_id
+	WHERE 
+		u.id = target_id;
+		
+	SELECT 0 INTO error_code;
+
+END//
+
+select 'sp_add_language_to_user' as '';//
+CREATE PROCEDURE `sp_add_language_to_user` (
+	IN creator_login 				VARCHAR(100),
+	IN creator_password				VARCHAR(100),
+	IN target_username 				VARCHAR(100),
+	IN language_id	 				BIGINT UNSIGNED,
+	OUT error_code					BIGINT UNSIGNED
+) 
+proc_label:BEGIN
+	
+    IF NOT is_user_exists(creator_login, creator_password) THEN
+		SELECT 2 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+    IF NOT is_user_admin(creator_login) THEN
+		SELECT 1 INTO error_code;
+        LEAVE proc_label;
+    END IF;
+	
+	SELECT 'TODO' as '';
+	
+	SELECT 0 INTO error_code;
+
+END//
+
 DELIMITER ;
 
 
-call add_user('Administrator', 'Respondent', 'password', '12324324234Respondent');
-call add_user('Respondent', 'new_respondent', 'password', 'Respondent');
-call add_user('new_respondent', 'new_respondent', 'password', 3);
-call add_user('Administrator', 'Respondent2', 'password', 'Respondent');
-call add_user('Administrator', 'Enumerator2', 'password', 'Enumerator');
-call add_user('Administrator', 'void_rights', 'password', 'not_existing_right');
+#call add_user('Administrator', 'Respondent', 'password', '12324324234Respondent');
+#call add_user('Respondent', 'new_respondent', 'password', 'Respondent');
+#call add_user('new_respondent', 'new_respondent', 'password', 3);
+#call add_user('Administrator', 'Respondent2', 'password', 'Respondent');
+#call add_user('Administrator', 'Enumerator2', 'password', 'Enumerator');
+#call add_user('Administrator', 'void_rights', 'password', 'not_existing_right');
 
-select * from users;
+#select * from user;
 
 select 'procedures/init_user_admin executed' as '';

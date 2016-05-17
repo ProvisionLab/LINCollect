@@ -1,0 +1,2 @@
+source stored_procedures\survey\init_survey_crud.sql
+source stored_procedures\survey\init_survey_details_crud.sql

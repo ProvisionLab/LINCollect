@@ -14,7 +14,7 @@
 		//		{
 		//			return dbWord;
 		//		}
-		//		var dbLanguage = new LanguageRepository().AddLanguage(language, context);
+		//		var dbLanguage = new user_languageRepository().AddLanguage(language, context);
 
 		//		var res = new vocabulary()
 		//		{
