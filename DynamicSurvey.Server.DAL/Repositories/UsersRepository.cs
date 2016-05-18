@@ -3,6 +3,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using DynamicSurvey.Server.DAL.Entities;
+using MySql.Data.MySqlClient;
+using System.Collections.Generic;
+using System.Data;
 
 namespace DynamicSurvey.Server.DAL
 {
@@ -17,53 +20,44 @@ namespace DynamicSurvey.Server.DAL
 		bool Authorize(string username, string password);
 
 		bool CheckCredentials(string username, string hashedPassword);
-
-		void Init(string username, string password, string accessLevelName);
 	}
 
 	public class UsersRepository : IUsersRepository
 	{
 		public void AddOrUpdate(User caller, User target)
 		{
-			throw new NotImplementedException();
-			//using (var context = new DbSurveysContext())
-			//{
-			//	ValidateCaller(context, caller);
-			//	AddOrUpdateInternal(context, target.Username, target.Password, target.AccessRight.Name);
-			//}
+			bool isTargetExists = this.CheckCredentials(target.Username, target.Password);
+
+			if (isTargetExists)
+			{
+				DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_update_user, cmd => 
+				{
+					cmd.Parameters.Add("creator_login", caller.Username);
+					cmd.Parameters.Add("creator_password", caller.Password);			
+					cmd.Parameters.Add("target_id", target.Id);
+					cmd.Parameters.Add("target_username", target.Username);
+					cmd.Parameters.Add("target_password", target.Password);
+					cmd.Parameters.Add("target_salt", target.Salt);
+					cmd.Parameters.Add("target_right_id", target.AccessRight.Id);
+					cmd.Parameters.Add("target_right_name", target.AccessRight.Name);
+				});
+			}
+			else
+			{
+				DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_user, cmd =>
+				{
+					cmd.Parameters.Add("creator_login", caller.Username);
+					cmd.Parameters.Add("creator_password", caller.Salt);
+					cmd.Parameters.Add("target_username", target.Username);
+					cmd.Parameters.Add("target_password", target.Password );
+					cmd.Parameters.Add("target_salt",  target.Salt);
+					cmd.Parameters.Add("target_right_id", target.AccessRight.Id);
+				});
+			}
 		}
 
-		private void AddOrUpdateInternal(object context, string username, string plainPassword, string accessRightName)
-		{
-			throw new NotImplementedException();
-			//var user = context.user.SingleOrDefault(u => u.login == username);
-			//// HACK: how strange AccessLevel entity performed. 
-			//var right = context.user_right.Single(r => r.name == accessRightName);
-			//var salt = DateTime.Now.ToString("yyyyMMddHHmmsstt");
-			//var hashedPassword = CalculateMD5Hash(salt + plainPassword);
-			//if (user == null)
-			//{
-			//	context.user.Add(new user()
-			//	{
-			//		login = username,
-			//		user_right_id = right.id,
-			//		password = hashedPassword,
-			//		salt = salt
-			//	});
-			//}
-			//else
-			//{
-			//	user.login = username;
-			//	user.user_right_id = right.id;
-			//	user.password = hashedPassword;
-			//	user.salt = salt;
-			//	user.is_deleted = 0;
-			//}
-
-			//context.SaveChanges();
-		}
-
-		private string CalculateMD5Hash(string input)
+		// TODO: move to common
+		public string CalculateMD5Hash(string input)
 		{
 
 			MD5 md5 = System.Security.Cryptography.MD5.Create();
@@ -82,119 +76,81 @@ namespace DynamicSurvey.Server.DAL
 		public void Remove(User caller, string username)
 		{
 			throw new NotImplementedException();
-			//using (var context = new DbSurveysContext())
-			//{
-			//	ValidateCaller(context, caller);
-
-			//	var user = context.user.SingleOrDefault(u => u.login.Equals(username, StringComparison.InvariantCultureIgnoreCase));
-
-			//	if (user == null)
-			//	{
-			//		throw new ArgumentException(string.Format("user with name {0} not found", username));
-			//	}
-
-			//	user.is_deleted = 1;
-			//	context.SaveChanges();
-			//}
+			
 		}
+
+		private void DataRowToUser(DataRow row, out User user)
+		{
+			user = new User()
+			{
+				Salt = Convert.ToString(row["Salt"]),
+				Id = Convert.ToInt64(row["Id"]),
+				Password = Convert.ToString(row["Password"]),
+				Username = Convert.ToString(row["Login"]),
+				AccessRight = new AccessRight()
+				{
+					Name = Convert.ToString(row["UserRight"]),
+					AccessLevel = (AccessLevel)(row["AccessLevel"]),
+					Id = Convert.ToInt64(row["UserRightId"])
+				}
+
+				// TODO: Language
+				// user.SupportedLanguages = 
+			};
+				
+		}			
 
 		public User GetUserByName(string username)
 		{
-			throw new NotImplementedException();
-			//using (var context = new DbSurveysContext())
-			//{
 
-			//	var user = context.user
-			//		.Where(u => u.is_deleted != 1)
-			//		.Where(u => u.login == username)
-			//		.SingleOrDefault();
+			var usernameClause = "@Username";
+			User res = null;
+			DataEngine.Engine.SelectFromView(DataEngine.vw_user, row => DataRowToUser(row, out res),
+			whereClause: "WHERE Login = " + usernameClause,
+			fillCommandAction: cmd =>
+			{
+				cmd.Parameters.AddWithValue(usernameClause, username);
+			});
 
-			//	if (user == null)
-			//	{
-			//		return null;
-			//	}
-
-			//	return user.ToContract();
-			//}
+			return res;
 		}
 
 		public User[] GetUsers(User caller, UsersFilter filter)
 		{
-			throw new NotImplementedException();
-			//using (var context = new DbSurveysContext())
-			//{
+			//TODO: filters
 
-			//	var userQuery = context.user
-			//		.Where(u => u.is_deleted != 1)
-			//		.AsQueryable();
-
-			//	// final filter
-			//	userQuery = filter.Pager.SelectPageQuery(userQuery, u => u.login);
-
-			//	// TODO: rework
-			//	return userQuery
-			//		.ToArray()
-			//		.Select(u => u.ToContract())
-			//		.ToArray();
-			//}
+			var userList = new List<User>();
+			DataEngine.Engine.SelectFromView(DataEngine.vw_user, row =>
+			{
+				User user = null;
+				DataRowToUser(row, out user);
+				userList.Add(user);
+			});
+			return userList.ToArray();
 		}
 
 
 		public bool Authorize(string username, string password)
 		{
-			return true;
-			//using (var context = new DbSurveysContext())
-			//{
-			//	var user = context.user
-			//		.Where(u => u.login.Equals(username))
-			//		.SingleOrDefault();
 
-			//	if (user == null)
-			//		return false;
+			var user = GetUserByName(username);
 
-			//	var hashedPassword = CalculateMD5Hash(user.salt + password);
-			//	return user.password.Equals(hashedPassword);
-			//}
+			if (user == null)
+				return false;
+
+			var hashedPassword = CalculateMD5Hash(user.Salt + password);
+			return CheckCredentials(username, hashedPassword);
 		}
-
-		public void Init(string username, string plainPassword, string accessLevel)
-		{
-			//using (var context = new DbSurveysContext())
-			//{
-			//	AddOrUpdateInternal(context, username, plainPassword, accessLevel);
-			//}
-		}
-
-		private void ValidateCaller(object context, User caller)
-		{
-#if DEBUG
-			if (caller == null)
-			{
-				return;
-			}
-#endif
-
-			if (caller.AccessRight.AccessLevel != AccessLevel.Administrator)
-			{
-				throw new System.Security.SecurityException("caller not administrator");
-			}
-			if (GetUserByName(caller.Username) == null)
-			{
-				throw new System.ArgumentException("user {0} not found", caller.Username);
-			}
-		}
-
 
 		public bool CheckCredentials(string username, string hashedPassword)
 		{
-			return true;
-			//using (var context = new DbSurveysContext())
-			//{
-			//	return context.user
-			//		.Where(u => u.login.Equals(username))
-			//		.Where(u => u.password.Equals(hashedPassword))
-			//		.Any();
-			//}
+			var res = DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_is_user_exists, cmd => 
+			{
+				cmd.Parameters.Add(new MySqlParameter("username", username));
+				cmd.Parameters.Add(new MySqlParameter("password", hashedPassword));
+			});
+
+			return res != 0;
 		}
 	}
 }

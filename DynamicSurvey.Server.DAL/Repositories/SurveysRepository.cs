@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using System.Data.Entity.Core.Objects;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -150,7 +149,11 @@ namespace DynamicSurvey.Server.DAL.Repositories
 
 		public Survey GetSurveyById(User admin, int id)
 		{
-			return GetSurveys(admin).Single(s => s.Id == id);
+			// TODO: rework this approach. 
+			// Basically there is no need in GetSurveys(bool) parameter - 
+			// it always should return non-detailed info
+			// While GetSurveyById pulls full info with cross-join.
+			return GetSurveys(admin, fullInfo: true).Single(s => s.Id == id);
 		}
 
 		#region Survey

@@ -12,11 +12,19 @@ namespace DynamicSurvey.Server.DAL
 
 	public class DataEngine
 	{
+
+#if LOCAL_DB
+		private readonly string connectionString = "server=localhost;user id=CodeClient;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
+#else
+		// gear.host deny access to create user
+		private readonly string connectionString = "server=mysql2.gear.host;user id=dbsurveys;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
+#endif
+
 		private static DataEngine engine;
 		public static DataEngine Engine
 		{
-			get 
-			{ 
+			get
+			{
 				if (engine == null)
 					engine = new DataEngine();
 				return engine;
@@ -30,16 +38,18 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string sp_add_user = "sp_add_user";
 		public static readonly string sp_add_field_default_value = "sp_add_field_default_value";
 
-		public static readonly string sp_remove_field_default_value = "sp_remove_field_default_value";
-		public static readonly string sp_remove_survey_template_page = "sp_remove_survey_template_page";
-		public static readonly string sp_remove_survey_template_field = "sp_remove_survey_template_field";
-		public static readonly string sp_remove_survey_template = "sp_remove_survey_template";
-
 		public static readonly string sp_update_field_default_value = "sp_update_field_default_value";
 		public static readonly string sp_update_survey_template = "sp_update_survey_template";
 		public static readonly string sp_update_survey_template_field = "sp_update_survey_template_field";
 		public static readonly string sp_update_survey_template_page = "sp_update_survey_template_page";
 		public static readonly string sp_update_user = "sp_update_user";
+
+		public static readonly string sp_remove_field_default_value = "sp_remove_field_default_value";
+		public static readonly string sp_remove_survey_template_page = "sp_remove_survey_template_page";
+		public static readonly string sp_remove_survey_template_field = "sp_remove_survey_template_field";
+		public static readonly string sp_remove_survey_template = "sp_remove_survey_template";
+		public static readonly string sp_remove_user = "sp_remove_user";
+
 
 		public static readonly string vw_field_type_view = "vw_field_type_view";
 		public static readonly string vw_survey_template = "vw_survey_template";
@@ -47,13 +57,12 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string vw_survey_template_fields = "vw_survey_template_fields";
 		public static readonly string vw_survey_template_pages = "vw_survey_template_pages";
 		public static readonly string vw_user = "vw_user";
+		public static readonly string vw_survey_report = "vw_survey_report";
+		
 
-#if LOCAL_DB
-		private readonly string connectionString = "server=localhost;user id=CodeClient;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
-#else
-		// gear.host deny access to create user
-		private readonly string connectionString = "server=mysql2.gear.host;user id=dbsurveys;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
-#endif
+		public static readonly string sp_is_user_exists = "sp_is_user_exists";
+		public static readonly string sp_is_user_admin = "sp_is_user_admin";
+
 
 
 		private readonly MySqlParameter resultIdParameter;
@@ -74,26 +83,23 @@ namespace DynamicSurvey.Server.DAL
 
 		private void ThrowIfError()
 		{
-			if (errorCodeParameter.Value.GetType() != typeof(DBNull))
+			if (errorCodeParameter.Value == null || errorCodeParameter.Value.GetType() == typeof(DBNull))
 			{
-				var val = Convert.ToInt32(errorCodeParameter.Value);
-				if (val != 0)
-				{
-					throw new InvalidOperationException(string.Format("Failed to perform operation. Error code = {0}", val));
-				}
+				return;
+			}
+			var val = Convert.ToInt32(errorCodeParameter.Value);
+			if (val != 0)
+			{
+				throw new InvalidOperationException(string.Format("Failed to perform operation. Error code = {0}", val));
 			}
 		}
 
 		private long GetLastInsertId()
 		{
-			if (errorCodeParameter.Value.GetType() != typeof(DBNull))
-			{
-				return Convert.ToInt64(resultIdParameter.Value);
-			}
-			else
-			{
+			if (resultIdParameter.Value == null || resultIdParameter.Value.GetType() == typeof(DBNull))
 				return 0;
-			}
+
+			return Convert.ToInt64(resultIdParameter.Value);
 		}
 
 		public long ExecuteStoredProcedure(string procedureName, Action<MySqlCommand> fillParamsAction)
@@ -160,9 +166,9 @@ namespace DynamicSurvey.Server.DAL
 
 					}
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
-
+					throw; // place breakpoint here
 				}
 			}
 		}

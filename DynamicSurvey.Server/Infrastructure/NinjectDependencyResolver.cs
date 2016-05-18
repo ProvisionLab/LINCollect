@@ -23,29 +23,8 @@ namespace DynamicSurvey.Server.Infrastructure
 
         private void AddBindings()
         {
-            var mock = new Mock<ISurveysRepository>();
-            mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
-                .Returns(FakeSurveysFactory.CreateSurveyList());
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 1)))
-                .Returns(FakeSurveysFactory.CreateSurveyWithGroups());
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 2)))
-                .Returns(FakeSurveysFactory.CreateEnglishSurvey());
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 3)))
-                .Returns(FakeSurveysFactory.CreateRussianSurvey());
-
-            Func<int, bool> anyOther = i =>
-            {
-                var usedIndexes = new[] {1, 2, 3};
-                return usedIndexes.All(ui => ui != i);
-            };
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => anyOther(i))))
-                .Returns(FakeSurveysFactory.CreateRussianSurvey());
-
-            _kernel.Bind<ISurveysRepository>().ToConstant(mock.Object);
+			_kernel.Bind<IAnswersRepository>().To<AnswersRepository>();
+            _kernel.Bind<ISurveysRepository>().To<SurveysRepository>();
             _kernel.Bind<IUsersRepository>().To<UsersRepository>();
         }
 

@@ -16,6 +16,8 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 		public string UserAnswer { get; set; }
 
+		public long? UserAnswerId { get; set; }
+
 		public SurveyField()
 		{
 			DefaultValues = new string[0];

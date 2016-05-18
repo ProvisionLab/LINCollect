@@ -9,7 +9,6 @@ namespace DynamicSurvey.Server.DAL.Entities
 		string TextBox {get;}
 		string Email {get;}
 		string Checkbox {get;}
-		string List {get;}
 		string Button {get;}
 		string RadioButton {get;}
 		string GroupBox {get;}

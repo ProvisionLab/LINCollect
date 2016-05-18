@@ -7,3 +7,6 @@ DynamicSurvey.Server.Tests/obj/
 DynamicSurvey.Server/bin/
 DynamicSurvey.Server.DAL/obj/
 DynamicSurvey.Server.DAL/bin/
+DynamicSurvey.Server.v12.suo
+DynamicSurvey.Server/DynamicSurvey.Server.csproj.user
+DynamicSurvey.Server/Properties/PublishProfiles/opros - Web Deploy.pubxml.user
