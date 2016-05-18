@@ -8,7 +8,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 		public string Title { get; set; }
 		public string Language { get; set; }
 
-		public long LanguageId { get; set; }
+		public long? LanguageId { get; set; }
 		public List<SurveyPage> Pages { get; set; }
 
 		public Survey()

@@ -36,7 +36,7 @@ namespace DynamicSurvey.Server.DAL.Fakes
 						},
                         new SurveyField()
                         {
-                            Id = 100,
+                            Id = 2,
                             Label = "Next",
                             FieldType = FieldType.Button
                         }
@@ -53,14 +53,14 @@ namespace DynamicSurvey.Server.DAL.Fakes
                 {
                     new SurveyField()
                     {
-                        Id = 1,
+                        Id = 3,
                         FieldType = FieldType.DropdownList,
                         Label = "What is your favorite color?",
                         DefaultValues = new string[]{ "Red" , "Green" , "Blue", "Pink", "Violet", "White", "Brown", "Purple", "Black", "Gray", "Yellow", "Cyan" },
                     },
                     new SurveyField()
                     {
-                        Id = 100,
+                        Id = 4,
                         Label = "Submit",
                         FieldType = FieldType.Button
                     }
@@ -92,49 +92,49 @@ namespace DynamicSurvey.Server.DAL.Fakes
                     {
                         new SurveyField()
                         {
-                                Id = 1,
+                                Id = 5,
                                 Label = "Group Box Label. How many times you visit church per month?",
                                 FieldType = FieldType.GroupBox
                         },
 
                         new SurveyField()
                         {
-                            Id = 2,
+                            Id = 6,
                             Label = "Once",
                             FieldType = FieldType.RadioButton,
                             GroupId = 1
                         },
                         new SurveyField()
                         {
-                            Id = 3,
+                            Id = 7,
                             Label = "Twice",
                             FieldType = FieldType.RadioButton,
                             GroupId = 1
                         },
                         new SurveyField()
                         {
-                            Id = 3,
+                            Id =8,
                             Label = "Newer",
                             FieldType = FieldType.RadioButton,
                             GroupId = 1
                         },
                         new SurveyField()
                         {
-                            Id = 11,
+                            Id = 9,
                             Label = "Group box label. Select capital of Japan",
                                 FieldType = FieldType.GroupBox
                         },
                         new SurveyField()
                         {
-                            Id = 12,
+                            Id = 10,
                             Label = "",
-                            FieldType = FieldType.List,
+                            FieldType = FieldType.DropdownList,
                             DefaultValues = new string [] { "New York", "London", "Lima", "Cairo", "Moscow", "Kioto", "Osaka", "Okinawa", "Tokyo"},
-                            GroupId = 11
+                            GroupId = 9
                         },
                         new SurveyField()
                         {
-                            Id = 100,
+                            Id = 11,
                             Label = "Next",
                             FieldType = FieldType.Button
                         }
@@ -151,14 +151,14 @@ namespace DynamicSurvey.Server.DAL.Fakes
                 {
                     new SurveyField()
                     {
-                        Id = 1,
-                        FieldType = FieldType.List,
+                        Id = 12,
+                        FieldType = FieldType.DropdownList,
                         Label = "What is your favorite color?",
                         DefaultValues = new string[]{ "Red" , "Green" , "Blue", "Pink", "Violet", "White", "Brown", "Purple", "Black", "Gray", "Yellow", "Cyan" },
                     },
                     new SurveyField()
                     {
-                        Id = 100,
+                        Id = 13,
                         Label = "Submit",
                         FieldType = FieldType.Button
                     }
@@ -196,21 +196,21 @@ namespace DynamicSurvey.Server.DAL.Fakes
                                 {
                                     new SurveyField()
                                     {
-                                        Id = 1,
+                                        Id = 14,
                                         FieldType = FieldType.TextBox,
                                         DefaultValues = new string[] { "Enter textbox here" },
                                         Label = "Label for textbox"
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 2,
+                                        Id = 15,
                                         FieldType = FieldType.Email,
                                         DefaultValues = new string[] { "Enter Email here" },
                                         Label = "Label for Email"
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 3,
+                                        Id = 16,
                                         FieldType = FieldType.Button,
                                         Label = "Next"
                                     },
@@ -224,42 +224,42 @@ namespace DynamicSurvey.Server.DAL.Fakes
                                 {
 									new SurveyField()
 									{
-										Id = 1234,
+										Id = 17,
 										FieldType = FieldType.GroupBox,
 										Label = "Choose watched favorite Starwars episodes"
 									},
                                     new SurveyField()
                                     {
-                                        Id = 4,
+                                        Id = 18,
                                         FieldType = FieldType.Checkbox,
                                         DefaultValues = new string[] { "checked" },
                                         Label = "EPISODE 1",
-										GroupId = 1234
+										GroupId = 17
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 5,
+                                        Id = 19,
                                         FieldType = FieldType.Checkbox,
                                         Label = "EPISODE 2",
-										GroupId = 1234
+										GroupId = 17
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 6,
+                                        Id = 20,
                                         FieldType = FieldType.Checkbox,
                                         Label = "EPISODE 3",
-										GroupId = 1234
+										GroupId = 17
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 7,
+                                        Id = 21,
                                         FieldType = FieldType.Checkbox,
                                         Label = "All old episodes too",
-										GroupId = 1234
+										GroupId = 17
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 8,
+                                        Id = 22,
                                         FieldType = FieldType.Button,
                                         Label = "Submit"
                                     }
@@ -287,21 +287,21 @@ namespace DynamicSurvey.Server.DAL.Fakes
                                 {
                                     new SurveyField()
                                     {
-                                        Id = 11,
+                                        Id = 23,
                                         FieldType = FieldType.TextBox,
                                         DefaultValues = new string[] { "введите текстбокс" },
                                         Label = "надпись для текстбокса"
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 12,
+                                        Id = 24,
                                         FieldType = FieldType.Email,
                                         DefaultValues = new string[] { "введите почту" },
                                         Label = "надпись для почты:"
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 13,
+                                        Id = 25,
                                         FieldType = FieldType.Button,
                                         Label = "Дальше"
                                     },
@@ -315,42 +315,42 @@ namespace DynamicSurvey.Server.DAL.Fakes
                                 {
 									new SurveyField()
 									{
-										Id = 1234,
+										Id = 26,
 										FieldType = FieldType.GroupBox,
 										Label = "Какие части звездных войн вы смотрели?"
 									},
                                     new SurveyField()
                                     {
-                                        Id = 4,
+                                        Id = 27,
                                         FieldType = FieldType.Checkbox,
                                         DefaultValues = new string[] { "checked" },
                                         Label = "Эпизод 1",
-										GroupId = 1234
+										GroupId = 26
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 5,
+                                        Id = 28,
                                         FieldType = FieldType.Checkbox,
                                         Label = "Эпизод 2",
-										GroupId = 1234
+										GroupId = 26
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 6,
+                                        Id = 29,
                                         FieldType = FieldType.Checkbox,
                                         Label = "Эпизод 3",
-										GroupId = 1234
+										GroupId = 26
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 7,
+                                        Id = 30,
                                         FieldType = FieldType.Checkbox,
                                         Label = "Старые эпизоды тоже смотрел",
-										GroupId = 1234
+										GroupId = 26
                                     },
                                     new SurveyField()
                                     {
-                                        Id = 8,
+                                        Id = 31,
                                         FieldType = FieldType.Button,
                                         Label = "Отправить"
                                     }

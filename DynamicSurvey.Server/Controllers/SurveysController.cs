@@ -8,6 +8,9 @@ using DynamicSurvey.Server.Models;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
 using DynamicSurvey.Server.DAL.Repositories;
+using DynamicSurvey.Server.DAL.Fakes;
+using System;
+using Moq;
 
 
 namespace DynamicSurvey.Server.Controllers
@@ -23,14 +26,42 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult FreeFakes()
         {
-            var res = _surveysRepository.GetSurveys(null);
+			var mock = new Mock<ISurveysRepository>();
+			mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
+				.Returns(FakeSurveysFactory.CreateSurveyList());
+
+			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 1)))
+				.Returns(FakeSurveysFactory.CreateSurveyWithGroups());
+
+			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 2)))
+				.Returns(FakeSurveysFactory.CreateEnglishSurvey());
+
+			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 3)))
+				.Returns(FakeSurveysFactory.CreateRussianSurvey());
+
+			Func<int, bool> anyOther = i =>
+			{
+				var usedIndexes = new[] { 1, 2, 3 };
+				return usedIndexes.All(ui => ui != i);
+			};
+
+			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => anyOther(i))))
+				.Returns(FakeSurveysFactory.CreateRussianSurvey());
+
+			var res = mock.Object.GetSurveys(null);
             return Json(res, JsonRequestBehavior.AllowGet);
         }
+
+		public ActionResult FreeFakesFromDatabase()
+		{
+			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser(), true);
+			return Json(res, JsonRequestBehavior.AllowGet);
+		}
 
         public ActionResult Index(ReturnFormat returnFormat = ReturnFormat.Html)
         {
 
-            var res = _surveysRepository.GetSurveys(null);
+			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
             if (returnFormat == ReturnFormat.Json)
             {
                 return Json(res, JsonRequestBehavior.AllowGet);
@@ -43,7 +74,7 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult CopySurvey(int sourceId)
         {
-            var survey = _surveysRepository.GetSurveys(null).Single(s => s.Id == sourceId);
+			var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
             survey.Id = 0;
             survey.Title = survey.Title + "_Copy";
             var id = _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
