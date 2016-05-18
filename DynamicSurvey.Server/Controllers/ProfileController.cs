@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
+using DynamicSurvey.Server.DAL;
 
 namespace DynamicSurvey.Server.Controllers
 {
