@@ -108,5 +108,16 @@ namespace DynamicSurvey.Server.Areas.HelpPage
 
             return type.FullName;
         }
-    }
+
+
+		public string GetDocumentation(HttpControllerDescriptor controllerDescriptor)
+		{
+			throw new NotImplementedException();
+		}
+
+		public string GetResponseDocumentation(HttpActionDescriptor actionDescriptor)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
