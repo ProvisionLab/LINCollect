@@ -157,7 +157,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 
 						var field = new SurveyField();
 						field.Id = viewFields.FieldId ?? 0;
-						field.Label = viewFields.FieldLabel;
+						field.Label = !string.IsNullOrEmpty(viewFields.GroupLabel) ? viewFields.GroupLabel : viewFields.FieldLabel;
 						field.UserAnswer = viewFields.UserAnswer;
 						field.UserAnswerId = viewFields.UserAnswerId;
 

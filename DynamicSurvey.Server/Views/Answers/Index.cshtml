@@ -1,38 +1,69 @@
 ﻿@model List<DynamicSurvey.Server.DAL.Entities.SurveyReport>
-@{
-ViewBag.Title = "Index";
-Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    @{
+        ViewBag.Title = "Answers";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
 
+    <div class="surveyDetailsHeader">
+        <h2>@ViewBag.Title</h2>
+    </div>
 
-<table>
-    @*<tr>
-        <th> @Html.Label("Enumerator") </th>
-        <th> @Html.Label("Respondent") </th>
-        <th> @Html.Label("Answer") </th>
-        <th> @Html.Label("Pages count") </th>
-            <th> @Html.Label("Responds count") </th>
-    </tr>*@
-    @foreach (var surveyReport in Model)
-{
-    foreach(var reportPage in surveyReport.Report.Pages)
-    {
-        foreach (var field in reportPage.Fields)
+    <table class="commonTable">
+        @foreach (var surveyReport in Model)
         {
             <tr>
-                <td> @Html.Label(surveyReport.Enumerator.Username)</td>
-                <td> @Html.Label(surveyReport.Respondent.Username)</td>
-                <td> @Html.Label(surveyReport.Report.Language)</td>
-                <td> @Html.Label(surveyReport.Report.Title)</td>
-                <td> @Html.Label(reportPage.Title)</td>
-                @*<td> @Html.Label(field.FieldType)</td>*@
-                <td> @Html.Label(field.Label)</td>
-                <td> @Html.Label(field.UserAnswer)</td>
-                
-            
+                <th>
+                    @Html.Label(surveyReport.Enumerator.Username)
+                </th>
+                <th>
+                    @Html.Label(surveyReport.Respondent.Username)
+                </th>
+                <th>
+                    @Html.Label(surveyReport.Report.Language)
+                </th>
+                <th>
+                    @Html.Label(surveyReport.Report.Title)
+                </th>
             </tr>
+            <tr>
+                <td colspan="100%">
+                    <table class="commonTable">
+                        @foreach (var reportPage in surveyReport.Report.Pages)
+                        {
+                            <tr>
+                                <th> @Html.Label(reportPage.Title)</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table class="answerTable">
+                                        <tr>
+                                            <th>
+                                                Question
+                                            </th>
+                                            <th>
+                                                Answer
+                                            </th>
+                                        </tr>
+                                        @foreach (var field in reportPage.Fields)
+                                        {
+                                            <tr>
+                                                <td> @Html.Label(field.Label)</td>
+                                                <td> @Html.Label(field.UserAnswer)</td>
+
+
+                                            </tr>
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+
+
+                        }
+                    </table>
+                </td>
+            </tr>
+
         }
-    }
-}
-</table>
+    </table>
+
