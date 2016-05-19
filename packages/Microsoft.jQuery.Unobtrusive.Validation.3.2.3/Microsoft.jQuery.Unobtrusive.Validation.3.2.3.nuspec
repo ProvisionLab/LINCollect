@@ -9,7 +9,7 @@
     <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm</licenseUrl>
     <projectUrl>http://www.asp.net/</projectUrl>
     <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>jQuery plugin that unobtrusively sets up jQuery.Validation.</description>
     <summary>jQuery plugin that unobtrusively sets up jQuery.Validation.</summary>
     <releaseNotes>Please visit http://go.microsoft.com/fwlink/?LinkId=389866 to view the release notes.</releaseNotes>

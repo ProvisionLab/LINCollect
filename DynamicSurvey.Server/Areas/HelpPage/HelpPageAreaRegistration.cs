@@ -1,6 +1,5 @@
 using System.Web.Http;
 using System.Web.Mvc;
-using DynamicSurvey.Server.Areas.HelpPage.App_Start;
 
 namespace DynamicSurvey.Server.Areas.HelpPage
 {

@@ -9,7 +9,7 @@
     <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm</licenseUrl>
     <projectUrl>http://www.asp.net/mvc</projectUrl>
     <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This package contains the runtime assemblies for ASP.NET MVC. ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup.</description>
     <summary>This package contains the runtime assemblies for ASP.NET MVC.</summary>
     <releaseNotes>Please visit http://go.microsoft.com/fwlink/?LinkID=403009 to view the release notes.</releaseNotes>

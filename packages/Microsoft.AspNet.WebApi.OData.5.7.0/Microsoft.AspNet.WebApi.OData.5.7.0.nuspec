@@ -8,7 +8,7 @@
     <owners>Microsoft</owners>
     <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
-    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This package contains everything you need to create OData endpoints using ASP.NET Web API and to support OData query syntax for your web APIs.</description>
     <summary>This package contains everything you need to create OData endpoints using ASP.NET Web API.</summary>
     <releaseNotes>Please visit http://odata.github.io/WebApi/5.7/ to view the release notes.</releaseNotes>
