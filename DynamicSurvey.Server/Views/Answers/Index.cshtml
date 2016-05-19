@@ -1,10 +1,38 @@
-﻿@model DynamicSurvey.Server.DAL.Entities.SurveyReport
+﻿@model List<DynamicSurvey.Server.DAL.Entities.SurveyReport>
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+ViewBag.Title = "Index";
+Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
 
 
-
+<table>
+    @*<tr>
+        <th> @Html.Label("Enumerator") </th>
+        <th> @Html.Label("Respondent") </th>
+        <th> @Html.Label("Answer") </th>
+        <th> @Html.Label("Pages count") </th>
+            <th> @Html.Label("Responds count") </th>
+    </tr>*@
+    @foreach (var surveyReport in Model)
+{
+    foreach(var reportPage in surveyReport.Report.Pages)
+    {
+        foreach (var field in reportPage.Fields)
+        {
+            <tr>
+                <td> @Html.Label(surveyReport.Enumerator.Username)</td>
+                <td> @Html.Label(surveyReport.Respondent.Username)</td>
+                <td> @Html.Label(surveyReport.Report.Language)</td>
+                <td> @Html.Label(surveyReport.Report.Title)</td>
+                <td> @Html.Label(reportPage.Title)</td>
+                @*<td> @Html.Label(field.FieldType)</td>*@
+                <td> @Html.Label(field.Label)</td>
+                <td> @Html.Label(field.UserAnswer)</td>
+                
+            
+            </tr>
+        }
+    }
+}
+</table>

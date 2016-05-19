@@ -53,6 +53,8 @@ namespace DynamicSurvey.Server.DAL.Filters
 				{
 					sb.AppendFormat("AND ", clause);
 				}
+
+				return sb.ToString();
 			}
 			return "";
 		}
@@ -75,7 +77,7 @@ namespace DynamicSurvey.Server.DAL.Filters
 		public bool IsAnyNotNull()
 		{
 			// TODO: reflection
-			return SurveyId.HasValue;
+			return SurveyId.HasValue || PageId.HasValue || FieldId.HasValue;
 		}
 	}
 }

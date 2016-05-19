@@ -117,6 +117,8 @@ namespace DynamicSurvey.Server.DAL.Repositories
 						LanguageId = viewFields.LanguageId ?? 0,
 						Title = viewFields.PageTitle
 					};
+
+					result.Add(res);
 				},
 				whereClause: filter.ToWhereClause() + " GROUP BY SurveyId",
 				fillCommandAction: filter.FillCommand);
