@@ -15,9 +15,13 @@ namespace DynamicSurvey.Server.Controllers
 			this.answersRepository = answersRepository;
 		}
 
-        public ActionResult Index()
+		public ActionResult Index(ulong surveyId)
         {
-            return View();
+			var reports = answersRepository.GetReports(new DAL.Filters.SurveyReportFilter() 
+			{
+ 				 SurveyId = surveyId
+			});
+            return View(reports);
         }
 
     }

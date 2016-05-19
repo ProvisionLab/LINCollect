@@ -10,11 +10,11 @@ namespace DynamicSurvey.Server.DAL.Filters
 	public class SurveyReportFilter
 	{
 
-		public long? SurveyId { get; set; }
-		//long? SurveyTemplateId { get; set; }
+		public ulong? SurveyId { get; set; }
+		//ulong? SurveyTemplateId { get; set; }
 
-		//long? RespondentId { get; set; }
-		//long? EnumeratorId { get; set; }
+		//ulong? RespondentId { get; set; }
+		//ulong? EnumeratorId { get; set; }
 
 		
 		//string UserAnswerLike { get; set; } // like '%pattern%'
@@ -23,9 +23,9 @@ namespace DynamicSurvey.Server.DAL.Filters
 		//string CityLike { get; set; }
 
 		
-		public long? PageId { get; set; }
-		//long? GroupId { get; set; }
-		public long? FieldId { get; set; }
+		public ulong? PageId { get; set; }
+		//ulong? GroupId { get; set; }
+		public ulong? FieldId { get; set; }
 
 
 		// hack:

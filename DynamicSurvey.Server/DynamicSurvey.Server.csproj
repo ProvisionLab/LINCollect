@@ -322,6 +322,7 @@
     <Content Include="Views\Surveys\Index.cshtml" />
     <Content Include="Views\Surveys\AddSurvey.cshtml" />
     <Content Include="Views\Surveys\Details.cshtml" />
+    <Content Include="Views\Answers\Index.cshtml" />
     <None Include="Web.Debug_LocalDb.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

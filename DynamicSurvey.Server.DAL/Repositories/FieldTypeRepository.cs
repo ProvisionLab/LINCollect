@@ -4,7 +4,7 @@ using System;
 
 namespace DynamicSurvey.Server.DAL.Entities
 {
-	public interface IFieldTypeRepository
+	public  interface IFieldTypeRepository
 	{
 		string TextBox {get;}
 		string Email {get;}
@@ -16,12 +16,12 @@ namespace DynamicSurvey.Server.DAL.Entities
 		string DatePicker { get; }
 		string DropdownList { get; }
 
-		long GetIdOf(string value);
+		ulong GetIdOf(string value);
 	}
 
 	public class FieldTypeRepository : IFieldTypeRepository
 	{
-		private readonly Dictionary<long, string> fieldDict = new Dictionary<long, string>();
+		private readonly Dictionary<ulong, string> fieldDict = new Dictionary<ulong, string>();
 
 		public string TextBox { get { return GetFieldType("TextBox"); } }
 		public string Email { get { return GetFieldType("Email"); } }
@@ -40,7 +40,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 			DataEngine.Engine.SelectFromView(DataEngine.vw_field_type_view, (r) =>
 			{
-				var id = Convert.ToInt64(r["Id"]);
+				var id = (ulong)(r["Id"]);
 				var fieldType = (string)r["FieldType"];
 
 				fieldDict.Add(id, fieldType);
@@ -53,7 +53,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 				.Single();
 		}
 
-		public long GetIdOf(string value)
+		public ulong GetIdOf(string value)
 		{
 			return fieldDict
 				.Where(d => d.Value.Equals(value))

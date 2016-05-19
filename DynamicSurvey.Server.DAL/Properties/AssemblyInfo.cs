@@ -35,4 +35,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 #warning Function cant be imported from database. great. https://programmaticponderings.wordpress.com/2012/11/22/first-impressions-of-database-first-development-with-entity-framework-5-in-visual-studio-2012/
-[assembly: InternalsVisibleTo("DynamicSurvey.Server.Tests")]
