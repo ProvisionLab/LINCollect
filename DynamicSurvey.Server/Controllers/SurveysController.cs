@@ -1,17 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
-using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Fakes;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.Models;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
-using DynamicSurvey.Server.DAL.Repositories;
-using DynamicSurvey.Server.DAL.Fakes;
-using System;
 using Moq;
-
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -26,42 +23,42 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult FreeFakes()
         {
-			var mock = new Mock<ISurveysRepository>();
-			mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
-				.Returns(FakeSurveysFactory.CreateSurveyList());
+            var mock = new Mock<ISurveysRepository>();
+            mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
+                .Returns(FakeSurveysFactory.CreateSurveyList());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 1)))
-				.Returns(FakeSurveysFactory.CreateSurveyWithGroups());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 1)))
+                .Returns(FakeSurveysFactory.CreateSurveyWithGroups());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
-				.Returns(FakeSurveysFactory.CreateEnglishSurvey());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
+                .Returns(FakeSurveysFactory.CreateEnglishSurvey());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 3)))
-				.Returns(FakeSurveysFactory.CreateRussianSurvey());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 3)))
+                .Returns(FakeSurveysFactory.CreateRussianSurvey());
 
-			Func<ulong, bool> anyOther = i =>
-			{
-				var usedIndexes = new ulong[] { 1, 2, 3 };
-				return usedIndexes.All(ui => ui != i);
-			};
+            Func<ulong, bool> anyOther = i =>
+            {
+                var usedIndexes = new ulong[] {1, 2, 3};
+                return usedIndexes.All(ui => ui != i);
+            };
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => anyOther(i))))
-				.Returns(FakeSurveysFactory.CreateRussianSurvey());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => anyOther(i))))
+                .Returns(FakeSurveysFactory.CreateRussianSurvey());
 
-			var res = mock.Object.GetSurveys(null);
+            var res = mock.Object.GetSurveys(null);
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
-		public ActionResult FreeFakesFromDatabase()
-		{
-			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser(), true);
-			return Json(res, JsonRequestBehavior.AllowGet);
-		}
+        public ActionResult FreeFakesFromDatabase()
+        {
+            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser(), true);
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult Index(ReturnFormat returnFormat = ReturnFormat.Html)
         {
 
-			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
+            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
             if (returnFormat == ReturnFormat.Json)
             {
                 return Json(res, JsonRequestBehavior.AllowGet);
@@ -74,14 +71,14 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult CopySurvey(ulong sourceId)
         {
-			var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
+            var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
             survey.Id = 0;
             survey.Title = survey.Title + "_Copy";
             var id = _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
             return View("AddSurvey", id);
         }
 
-		public ActionResult AddSurvey(ulong sourceId)
+        public ActionResult AddSurvey(ulong sourceId)
         {
             var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
 
@@ -98,7 +95,7 @@ namespace DynamicSurvey.Server.Controllers
             return View();
         }
 
-		public ActionResult Details(ulong sourceId)
+        public ActionResult Details(ulong sourceId)
         {
             var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
 
@@ -118,31 +115,37 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditSurvey()
         {
-			var editSurveyViewModel = new EditSurveyViewModel();
+            var editSurveyViewModel = new EditSurveyViewModel();
 
-			editSurveyViewModel.Languages = new LanguageItemViewModel[] 
-			{ 
-				new LanguageItemViewModel()
-				{
-					Id = 1,
-					Name = "English"
-				}
-			};
+            editSurveyViewModel.Languages = new LanguageItemViewModel[]
+            {
+                new LanguageItemViewModel()
+                {
+                    Id = 1,
+                    Name = "English"
+                }
+            };
 
-			//using (var dbContext = new DbSurveysContext())
-			//{
-			//	var languages = dbContext.language.OrderBy(l => l.name)
-			//		.Select(l => new LanguageItemViewModel
-			//		{
-			//			Id = l.id,
-			//			Name = l.name
-			//		})
-			//		.ToList();
+            //using (var dbContext = new DbSurveysContext())
+            //{
+            //	var languages = dbContext.language.OrderBy(l => l.name)
+            //		.Select(l => new LanguageItemViewModel
+            //		{
+            //			Id = l.id,
+            //			Name = l.name
+            //		})
+            //		.ToList();
 
-			//	editSurveyViewModel.Languages = languages;
-			//}
+            //	editSurveyViewModel.Languages = languages;
+            //}
 
             return View(editSurveyViewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditSurvey(EditSurveyViewModel editSurveyViewModel)
+        {
+            throw new NotImplementedException();
         }
 
         public ActionResult AboutRespondent()
