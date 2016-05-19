@@ -1,6 +1,6 @@
 ﻿namespace DynamicSurvey.Server.DAL.Repositories
 {
-	internal class VocabularyRepository
+	 internal class VocabularyRepository
 	{
 		//public vocabulary AddWord(string word, string language, DbSurveysContext dbContext = null)
 		//{

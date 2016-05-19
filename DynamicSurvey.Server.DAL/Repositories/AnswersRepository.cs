@@ -13,10 +13,10 @@ namespace DynamicSurvey.Server.DAL.Repositories
 	{
 		List<SurveyReport> GetReports(SurveyReportFilter filter);
 
-		void AddReport(User caller, int respondentId, int companyId, DateTime timestamp);
+		void AddReport(User caller, ulong respondentId, ulong companyId, DateTime timestamp);
 
-		void UpdateAnswer(User caller, int answerId, string newAnswer);
-		void RemoveAnswer(User caller, int answerId);
+		void UpdateAnswer(User caller, ulong answerId, string newAnswer);
+		void RemoveAnswer(User caller, ulong answerId);
 	}
 	public class AnswersRepository : IAnswersRepository
 	{
@@ -24,31 +24,31 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		// todo: 
 		private class vw_survey_report_select_result
 		{
-			public long? EnumeratorId;
+			public ulong? EnumeratorId;
 			public string Enumerator;
-			public long? RespondentId;
+			public ulong? RespondentId;
 			public string RespondentLogin;
-			public long? SurveyTemplateId;
+			public ulong? SurveyTemplateId;
 			public string SurveyTemplateName;
-			public long? PageId;
+			public ulong? PageId;
 			public string PageTitle;
-			public long? GroupId;
+			public ulong? GroupId;
 			public string GroupLabel;
-			public long? FieldId;
+			public ulong? FieldId;
 			public string FieldLabel;
-			public long? UserAnswerId;
+			public ulong? UserAnswerId;
 			public string UserAnswer;
-			public long? SurveyId;
-			public long? LanguageId;
+			public ulong? SurveyId;
+			public ulong? LanguageId;
 			public string LanguageName;
-			public long? CompanyId;
+			public ulong? CompanyId;
 			public string CompanyName;
 			public string CompanyAddress;
 			public string CompanyPhoneNumber;
 			public string CompanyPostalCode;
-			public long? CityId;
+			public ulong? CityId;
 			public string CityName;
-			public long? CountryId;
+			public ulong? CountryId;
 			public string CountryName;
 
 			public vw_survey_report_select_result(DataRow r)
@@ -58,32 +58,32 @@ namespace DynamicSurvey.Server.DAL.Repositories
 
 			public void Fill(DataRow r)
 			{
-				EnumeratorId = (long?)r["EnumeratorId"];
-				Enumerator = (string)r["Enumerator"];
-				RespondentId = (long?)r["RespondentId"];
-				RespondentLogin = (string)r["RespondentLogin"];
-				SurveyTemplateId = (long?)r["SurveyTemplateId"];
-				SurveyTemplateName = (string)r["SurveyTemplateName"];
-				PageId = (long?)r["PageId"];
-				PageTitle = (string)r["PageTitle"];
-				GroupId = (long?)r["GroupId"];
-				GroupLabel = (string)r["GroupLabel"];
-				FieldId = (long?)r["FieldId"];
-				FieldLabel = (string)r["FieldLabel"];
-				UserAnswerId = (long?)r["UserAnswerId"];
-				UserAnswer = (string)r["UserAnswer"];
-				SurveyId = (long?)r["SurveyId"];
-				LanguageId = (long?)r["LanguageId"];
-				LanguageName = (string)r["LanguageName"];
-				CompanyId = (long?)r["CompanyId"];
-				CompanyName = (string)r["CompanyName"];
-				CompanyAddress = (string)r["CompanyAddress"];
-				CompanyPhoneNumber = (string)r["CompanyPhoneNumber"];
-				CompanyPostalCode = (string)r["CompanyPostalCode"];
-				CityId = (long?)r["CityId"];
-				CityName = (string)r["CityName"];
-				CountryId = (long?)r["CountryId"];
-				CountryName = (string)r["CountryName"];
+				EnumeratorId = r["EnumeratorId"] as ulong?;
+				Enumerator = r["Enumerator"] as string;
+				RespondentId = r["RespondentId"] as ulong?;
+				RespondentLogin = r["RespondentLogin"] as string;
+				SurveyTemplateId = r["SurveyTemplateId"] as ulong?;
+				SurveyTemplateName = r["SurveyTemplateName"] as string;
+				PageId = r["PageId"] as ulong?;
+				PageTitle = r["PageTitle"] as string;
+				GroupId = r["GroupId"] as ulong?;
+				GroupLabel = r["GroupLabel"] as string;
+				FieldId = r["FieldId"] as ulong?;
+				FieldLabel = r["FieldLabel"] as string;
+				UserAnswerId = r["UserAnswerId"] as ulong?;
+				UserAnswer = r["UserAnswer"] as string;
+				SurveyId = r["SurveyId"] as ulong?;
+				LanguageId = r["LanguageId"] as ulong?;
+				LanguageName = r["LanguageName"] as string;
+				CompanyId = r["CompanyId"] as ulong?;
+				CompanyName = r["CompanyName"] as string;
+				CompanyAddress = r["CompanyAddress"] as string;
+				CompanyPhoneNumber = r["CompanyPhoneNumber"] as string;
+				CompanyPostalCode = r["CompanyPostalCode"] as string;
+				CityId = r["CityId"] as ulong?;
+				CityName = r["CityName"] as string;
+				CountryId = r["CountryId"] as ulong?;
+				CountryName = r["CountryName"] as string;
 			}
 		}
 		#endregion
@@ -92,8 +92,9 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			List<SurveyReport> result = new List<SurveyReport>();
 
 			// fill with common info
-			DataEngine.Engine.SelectFromView(DataEngine.vw_survey_report, 
-				r => {
+			DataEngine.Engine.SelectFromView(DataEngine.vw_survey_report,
+				r =>
+				{
 
 					var res = new SurveyReport();
 
@@ -116,8 +117,10 @@ namespace DynamicSurvey.Server.DAL.Repositories
 						LanguageId = viewFields.LanguageId ?? 0,
 						Title = viewFields.PageTitle
 					};
+
+					result.Add(res);
 				},
-				filter.ToWhereClause() + " GROUP BY SurveyId",
+				whereClause: filter.ToWhereClause() + " GROUP BY SurveyId",
 				fillCommandAction: filter.FillCommand);
 
 			// TODO: HACK: low performance...
@@ -129,8 +132,8 @@ namespace DynamicSurvey.Server.DAL.Repositories
 					SurveyId = survey.Report.Id
 
 				};
-				DataEngine.Engine.SelectFromView(DataEngine.vw_survey_report, 
-					r => 
+				DataEngine.Engine.SelectFromView(DataEngine.vw_survey_report,
+					r =>
 					{
 						var viewFields = new vw_survey_report_select_result(r);
 
@@ -170,17 +173,17 @@ namespace DynamicSurvey.Server.DAL.Repositories
 
 		}
 
-		public void AddReport(User caller, int respondentId, int companyId, DateTime timestamp)
+		public void AddReport(User caller, ulong respondentId, ulong companyId, DateTime timestamp)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void UpdateAnswer(User caller, int answerId, string newAnswer)
+		public void UpdateAnswer(User caller, ulong answerId, string newAnswer)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void RemoveAnswer(User caller, int answerId)
+		public void RemoveAnswer(User caller, ulong answerId)
 		{
 			throw new NotImplementedException();
 		}

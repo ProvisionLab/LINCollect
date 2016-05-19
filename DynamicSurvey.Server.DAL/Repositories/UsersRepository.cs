@@ -10,7 +10,7 @@ using System.Data;
 namespace DynamicSurvey.Server.DAL
 {
 
-	public interface IUsersRepository
+	public  interface IUsersRepository
 	{
 		void AddOrUpdate(User caller, User target);
 		void Remove(User caller, string username);
@@ -65,7 +65,7 @@ namespace DynamicSurvey.Server.DAL
 			byte[] hash = md5.ComputeHash(inputBytes);
 
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < hash.Length; i++)
+			for ( int  i = 0; i < hash.Length; i++)
 			{
 				sb.Append(hash[i].ToString("X2"));
 			}
@@ -84,14 +84,14 @@ namespace DynamicSurvey.Server.DAL
 			user = new User()
 			{
 				Salt = Convert.ToString(row["Salt"]),
-				Id = Convert.ToInt64(row["Id"]),
+				Id = (ulong)(row["Id"]),
 				Password = Convert.ToString(row["Password"]),
 				Username = Convert.ToString(row["Login"]),
 				AccessRight = new AccessRight()
 				{
 					Name = Convert.ToString(row["UserRight"]),
 					AccessLevel = (AccessLevel)(row["AccessLevel"]),
-					Id = Convert.ToInt64(row["UserRightId"])
+					Id = (ulong)(row["UserRightId"])
 				}
 
 				// TODO: Language

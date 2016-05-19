@@ -23,6 +23,7 @@
             <td> @Html.Label(u.Title)</td>
             <td> @Html.ActionLink("Details", "Details", new { sourceId = u.Id })</td>
             <td> @Html.ActionLink("Copy", "CopySurvey", new { sourceId = u.Id })</td>
+            <td> @Html.ActionLink("Answers", "Index", "Answers", new { surveyId = u.Id }, null)</td>
         </tr>
     }
 </table>

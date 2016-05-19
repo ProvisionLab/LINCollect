@@ -1,6 +1,6 @@
 ﻿namespace DynamicSurvey.Server.DAL.Entities
 {
-	public enum AccessLevel : int
+	public enum AccessLevel :  ulong 
 	{
 		Administrator = 0,
 		Enumerator = 1,

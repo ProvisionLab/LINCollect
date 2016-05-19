@@ -87,22 +87,22 @@ namespace DynamicSurvey.Server.DAL
 			{
 				return;
 			}
-			var val = Convert.ToInt32(errorCodeParameter.Value);
+			var val = (ulong)(errorCodeParameter.Value);
 			if (val != 0)
 			{
 				throw new InvalidOperationException(string.Format("Failed to perform operation. Error code = {0}", val));
 			}
 		}
 
-		private long GetLastInsertId()
+		private ulong GetLastInsertId()
 		{
 			if (resultIdParameter.Value == null || resultIdParameter.Value.GetType() == typeof(DBNull))
 				return 0;
 
-			return Convert.ToInt64(resultIdParameter.Value);
+			return (ulong)(resultIdParameter.Value);
 		}
 
-		public long ExecuteStoredProcedure(string procedureName, Action<MySqlCommand> fillParamsAction)
+		public ulong ExecuteStoredProcedure(string procedureName, Action<MySqlCommand> fillParamsAction)
 		{
 			using (var connection = new MySqlConnection(connectionString))
 			using (var cmd = new MySqlCommand(procedureName, connection))
@@ -168,7 +168,7 @@ namespace DynamicSurvey.Server.DAL
 				}
 				catch (Exception ex)
 				{
-					throw; // place breakpoint here
+					throw; // place breakpo ulong  here
 				}
 			}
 		}

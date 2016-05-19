@@ -3,20 +3,20 @@ namespace DynamicSurvey.Server.DAL.Entities
 {
 	public class SurveyField
 	{
-		public long Id { get; set; }
+		public ulong Id { get; set; }
 		public string Label { get; set; }
 
 		public string FieldType { get; set; }
 
-		public long FieldTypeId { get; set; }
+		public ulong FieldTypeId { get; set; }
 
 		public IEnumerable<string> DefaultValues { get; set; }
 
-		public long? GroupId { get; set; }
+		public ulong? GroupId { get; set; }
 
 		public string UserAnswer { get; set; }
 
-		public long? UserAnswerId { get; set; }
+		public ulong? UserAnswerId { get; set; }
 
 		public SurveyField()
 		{

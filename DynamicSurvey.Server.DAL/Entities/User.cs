@@ -2,7 +2,7 @@
 {
 	public class User
 	{
-		public long Id { get; set; }
+		public ulong Id { get; set; }
 		public string Username { get; set; }
 		public string Password { get; set; }
 		public string Salt { get; set; }
@@ -21,7 +21,7 @@
 	//	{
 	//		return new User
 	//		{
-	//			Id = (int)user.id,
+	//			Id = ( ulong )user.id,
 	//			Username = user.login,
 	//			Password = user.password,
 	//			AccessRight = new AccessRight()

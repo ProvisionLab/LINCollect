@@ -2,7 +2,7 @@
 {
 	public class Language
 	{
-		public long Id { get; set; }
+		public ulong Id { get; set; }
 		public string LanguageName { get; set; }
 	}
 }

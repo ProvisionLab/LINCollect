@@ -12,29 +12,29 @@ using System.Collections.Generic;
 
 namespace DynamicSurvey.Server.DAL.Repositories
 {
-	public interface ISurveysRepository
+	public  interface ISurveysRepository
 	{
 		Survey[] GetSurveys(User admin, bool fullInfo = false);
-		Survey GetSurveyById(User admin, int id);
-		long AddSurvey(User admin, Survey survey);
+		Survey GetSurveyById(User admin,  ulong  id);
+		ulong AddSurvey(User admin, Survey survey);
 		void UpdateSurvey(User admin, Survey survey);
-		void RemoveSurvey(User admin, int surveyId);
+		void RemoveSurvey(User admin,  ulong  surveyId);
 
-		long AddPage(User admin, int surveyId, SurveyPage page);
+		ulong AddPage(User admin,  ulong  surveyId, SurveyPage page);
 		void UpdatePage(User admin, SurveyPage page);
-		void RemovePage(User admin, int pageId);
+		void RemovePage(User admin,  ulong  pageId);
 
-		long AddField(User admin, int surveyPageId, SurveyField field);
+		ulong AddField(User admin,  ulong  surveyPageId, SurveyField field);
 		void UpdateField(User admin, SurveyField field);
-		void RemoveField(User admin, int fieldId);
+		void RemoveField(User admin,  ulong  fieldId);
 
-		long AddDefaultValue(User admin, int surveyFieldId, int languageId, string defaultValue);
-		void UpdateDefaultValue(User admin, long surveyFieldId, long languageId, string oldValue, string newValue);
-		void RemoveDefaultValue(User admin, int surveyFieldId, string value);
+		ulong AddDefaultValue(User admin,  ulong  surveyFieldId,  ulong  languageId, string defaultValue);
+		void UpdateDefaultValue(User admin, ulong surveyFieldId, ulong languageId, string oldValue, string newValue);
+		void RemoveDefaultValue(User admin,  ulong  surveyFieldId, string value);
 
-		//long AddSection(User admin, int surveyPageId, SurveyField[] fieldsStartingWithGroupBox);
+		//ulong AddSection(User admin,  ulong  surveyPageId, SurveyField[] fieldsStartingWithGroupBox);
 		//void UpdateSection(User admin, SurveyField[] fieldsStartingWithGroupBox);
-		//void RemoveSection(User admin, int groupBoxFieldId);
+		//void RemoveSection(User admin,  ulong  groupBoxFieldId);
 	}
 
 	public class SurveysRepository : ISurveysRepository
@@ -63,9 +63,9 @@ namespace DynamicSurvey.Server.DAL.Repositories
 				//SELECT `id`, `title`, `language`, `languageId`, `date_created`, `user_created`, `date_modified`, `user_modified` FROM `dbsurveys`.`vw_survey_template`;
 				surveyList.Add(new Survey()
 				{
-					Id = Convert.ToInt64(r["id"]),
+					Id = (ulong)(r["id"]),
 					Language = Convert.ToString(r["language"]),
-					LanguageId = Convert.ToInt64(r["languageId"]),
+					LanguageId = (ulong)(r["languageId"]),
 					Title = Convert.ToString(r["title"])
 				});
 			});
@@ -81,9 +81,9 @@ namespace DynamicSurvey.Server.DAL.Repositories
 					// SELECT `TemplateId`, `PageId`, `PageIndex`, `PageLabel` FROM `dbsurveys`.`vw_survey_template_pages`;
 					survey.Pages.Add(new SurveyPage()
 					{
-						PageIndex = Convert.ToInt64(r["PageIndex"]),
+						PageIndex = (ulong)(r["PageIndex"]),
 						Title = Convert.ToString(r["PageLabel"]),
-						Id = Convert.ToInt64(r["PageId"])
+						Id = (ulong)(r["PageId"])
 					});
 				},
 				whereClause: "WHERE TemplateId=" + templateIdClause,
@@ -102,18 +102,18 @@ namespace DynamicSurvey.Server.DAL.Repositories
 							label = r["FieldLabel"],
 							fieldType = r["FieldType"],
 							fieldTypeId = r["FieldTypeId"],
-							groupId = r["ParentGroupBoxIndex"],
+							groupId = r["ParentGroupBoxIndex"] as ulong?,
 							id = r["FieldId"]
 						};
 						
 						page.Fields.Add(new SurveyField()
 						{
 							// SELECT `TemplateId`, `PageId`, `FieldLabel`, `FieldId`, `FieldIndex`, `ParentGroupBoxIndex`, `FieldType`, `FieldTypeId` FROM `dbsurveys`.`vw_survey_template_fields`;
-							Id = Convert.ToInt64(f.id),
+							Id = (ulong)(f.id),
 							Label = Convert.ToString(f.label),
 							FieldType = Convert.ToString(f.fieldType),
-							FieldTypeId = Convert.ToInt64(f.fieldTypeId),
-							GroupId = f.groupId.IsNull() ? (long?)null : Convert.ToInt64(f.groupId)
+							FieldTypeId = (ulong)(f.fieldTypeId),
+							GroupId = f.groupId
 							
 						});
 					},
@@ -148,18 +148,18 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			return surveyList.ToArray();
 		}
 
-		public Survey GetSurveyById(User admin, int id)
+		public Survey GetSurveyById(User admin,  ulong  id)
 		{
 			// TODO: rework this approach. 
 			// Basically there is no need in GetSurveys(bool) parameter - 
 			// it always should return non-detailed info
 			// While GetSurveyById pulls full info with cross-join.
-			return GetSurveys(admin, fullInfo: true).Single(s => s.Id == id);
+			return GetSurveys(admin, fullInfo: true).Single(s => s.Id == (ulong)id);
 		}
 
 		#region Survey
 		// TODO: extract db-related code
-		public long AddSurvey(User admin, Survey survey)
+		public ulong AddSurvey(User admin, Survey survey)
 		{
 			survey.Id = DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_survey_template, (cmd) =>
 			{
@@ -169,15 +169,15 @@ namespace DynamicSurvey.Server.DAL.Repositories
 				cmd.Parameters.Add(new MySqlParameter("language_id", survey.LanguageId));
 			});
 
-			for (int iPage = 0; iPage < survey.Pages.Count; iPage++)
+			for ( int  iPage = 0; iPage < survey.Pages.Count; iPage++)
 			{
 				var page = survey.Pages[iPage];
-				page.Id = AddPage(admin, (int)survey.Id, page);
-				for (int iField = 0; iField < page.Fields.Count; iField++)
+				page.Id = AddPage(admin, ( ulong )survey.Id, page);
+				for ( int  iField = 0; iField < page.Fields.Count; iField++)
 				{
 					var field = page.Fields[iField];
 					var oldGroupId = field.Id;
-					field.Id = AddField(admin, (int)page.Id, field);
+					field.Id = AddField(admin, ( ulong )page.Id, field);
 
 					if (field.FieldType == fieldTypeRepository.GroupBox)
 					{
@@ -188,7 +188,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 					{
 						if (!string.IsNullOrEmpty(defaultValue))
 						{
-							AddDefaultValue(admin, (int)field.Id, (int)survey.LanguageId, defaultValue);
+							AddDefaultValue(admin, ( ulong )field.Id, ( ulong )survey.LanguageId, defaultValue);
 						}
 					}
 				}
@@ -209,7 +209,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			});
 		}
 
-		public void RemoveSurvey(User admin, int surveyId)
+		public void RemoveSurvey(User admin,  ulong  surveyId)
 		{
 			DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_remove_survey_template, (cmd) =>
 			{
@@ -219,9 +219,9 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			});
 		}
 
-		private void UpdateGroupId(List<SurveyField> fields, long oldGroupId, long newGroupId)
+		private void UpdateGroupId(List<SurveyField> fields, ulong oldGroupId, ulong newGroupId)
 		{
-			for (int i = 0; i < fields.Count; i++)
+			for ( int  i = 0; i < fields.Count; i++)
 			{
 				var field = fields[i];
 				if (field.GroupId.HasValue && field.GroupId.Value == oldGroupId)
@@ -234,7 +234,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		#endregion // survey
 
 		#region page
-		public long AddPage(User admin, int surveyId, SurveyPage page)
+		public ulong AddPage(User admin,  ulong  surveyId, SurveyPage page)
 		{
 			return DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_survey_template_page, (cmd) =>
 			{
@@ -258,7 +258,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			});
 		}
 
-		public void RemovePage(User admin, int pageId)
+		public void RemovePage(User admin,  ulong  pageId)
 		{
 			DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_remove_survey_template_page, (cmd) =>
 			{
@@ -271,7 +271,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		
 		#region Field
 
-		public long AddField(User admin, int surveyPageId, SurveyField field)
+		public ulong AddField(User admin,  ulong  surveyPageId, SurveyField field)
 		{
 
 			return DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_survey_template_field, (cmd) =>
@@ -296,7 +296,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			});
 		}
 
-		public void RemoveField(User admin, int fieldId)
+		public void RemoveField(User admin,  ulong  fieldId)
 		{
 			DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_remove_survey_template_field, cmd =>
 			{
@@ -310,7 +310,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		
 		#region Default Value
 
-		public long AddDefaultValue(User admin, int surveyFieldId, int languageId, string defaultValue)
+		public ulong AddDefaultValue(User admin,  ulong  surveyFieldId,  ulong  languageId, string defaultValue)
 		{
 			return DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_field_default_value, cmd =>
 			{
@@ -322,7 +322,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			});
 		}
 
-		public void UpdateDefaultValue(User admin, long surveyFieldId, long languageId, string oldValue, string newValue)
+		public void UpdateDefaultValue(User admin, ulong surveyFieldId, ulong languageId, string oldValue, string newValue)
 		{
 			DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_update_field_default_value, cmd => 
 			{
@@ -335,7 +335,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			});
 		}
 
-		public void RemoveDefaultValue(User admin, int surveyFieldId, string value)
+		public void RemoveDefaultValue(User admin,  ulong  surveyFieldId, string value)
 		{
 			DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_remove_field_default_value, cmd => 
 			{

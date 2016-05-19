@@ -30,22 +30,22 @@ namespace DynamicSurvey.Server.Controllers
 			mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
 				.Returns(FakeSurveysFactory.CreateSurveyList());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 1)))
+			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 1)))
 				.Returns(FakeSurveysFactory.CreateSurveyWithGroups());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 2)))
+			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
 				.Returns(FakeSurveysFactory.CreateEnglishSurvey());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => i == 3)))
+			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 3)))
 				.Returns(FakeSurveysFactory.CreateRussianSurvey());
 
-			Func<int, bool> anyOther = i =>
+			Func<ulong, bool> anyOther = i =>
 			{
-				var usedIndexes = new[] { 1, 2, 3 };
+				var usedIndexes = new ulong[] { 1, 2, 3 };
 				return usedIndexes.All(ui => ui != i);
 			};
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<int>(i => anyOther(i))))
+			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => anyOther(i))))
 				.Returns(FakeSurveysFactory.CreateRussianSurvey());
 
 			var res = mock.Object.GetSurveys(null);
@@ -72,7 +72,7 @@ namespace DynamicSurvey.Server.Controllers
             });
         }
 
-        public ActionResult CopySurvey(int sourceId)
+        public ActionResult CopySurvey(ulong sourceId)
         {
 			var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
             survey.Id = 0;
@@ -81,7 +81,7 @@ namespace DynamicSurvey.Server.Controllers
             return View("AddSurvey", id);
         }
 
-        public ActionResult AddSurvey(int sourceId)
+		public ActionResult AddSurvey(ulong sourceId)
         {
             var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
 
@@ -98,7 +98,7 @@ namespace DynamicSurvey.Server.Controllers
             return View();
         }
 
-        public ActionResult Details(int sourceId)
+		public ActionResult Details(ulong sourceId)
         {
             var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
 
