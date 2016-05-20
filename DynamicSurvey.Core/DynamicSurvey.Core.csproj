@@ -54,12 +54,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessLevel.cs" />
     <Compile Include="Entities\City.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Country.cs" />
+    <Compile Include="Entities\Survey.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UserLanguage.cs" />
+    <Compile Include="Entities\UserLanguageCross.cs" />
+    <Compile Include="Entities\UserRight.cs" />
+    <Compile Include="Entities\Vocabulary.cs" />
     <Compile Include="Mappings\CityMap.cs" />
     <Compile Include="Mappings\CompanyMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\UserLanguageCrossMap.cs" />
+    <Compile Include="Mappings\UserLanguageMap.cs" />
+    <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Mappings\UserRightMap.cs" />
+    <Compile Include="Mappings\VocabularyMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionStorage\HttpSessionStorageContainer.cs" />
     <Compile Include="SessionStorage\ISessionStorageContainer.cs" />

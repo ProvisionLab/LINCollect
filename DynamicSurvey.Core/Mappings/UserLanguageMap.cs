@@ -3,12 +3,12 @@ using FluentNHibernate.Mapping;
 
 namespace DynamicSurvey.Core.Mappings
 {
-    public class CountryMap : ClassMap<Country>
+    public class UserLanguageMap : ClassMap<UserLanguage>
     {
-        public CountryMap()
+        public UserLanguageMap()
         {
             Id(it => it.Id);
-            Map(it => it.Name).Not.Nullable().Unique();
+            Map(it => it.Name);
         }
     }
 }

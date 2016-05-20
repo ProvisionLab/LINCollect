@@ -8,11 +8,11 @@ namespace DynamicSurvey.Core.Mappings
         public CompanyMap()
         {
             Id(it => it.Id);
-            Map(it => it.Name);
-            Map(it => it.Address);
-            Map(it => it.PhoneNumber);
-            Map(it => it.PostalCode);
-            References(it => it.City).Column("City_Id");
+            Map(it => it.Name).Unique();
+            Map(it => it.Address).Not.Nullable();
+            Map(it => it.PhoneNumber).Not.Nullable();
+            Map(it => it.PostalCode).Not.Nullable();
+            References(it => it.City).Not.Nullable().Column("City_Id");
         }
     }
 }

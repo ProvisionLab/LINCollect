@@ -8,8 +8,8 @@ namespace DynamicSurvey.Core.Mappings
         public CityMap()
         {
             Id(it => it.Id);
-            Map(it => it.Name);
-            References(it => it.Country).Column("Country_Id");
+            Map(it => it.Name).Not.Nullable();
+            References(it => it.Country).Not.Nullable().Column("Country_Id");
         }
     }
 }
