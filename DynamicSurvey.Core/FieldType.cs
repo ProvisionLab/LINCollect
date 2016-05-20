@@ -9,6 +9,6 @@
         RadioButton,
         GroupBox,
         DatePicker,
-        DropdownList,
+        DropdownList
     }
 }

@@ -59,7 +59,10 @@
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\Country.cs" />
     <Compile Include="Entities\Survey.cs" />
+    <Compile Include="Entities\SurveyDetail.cs" />
+    <Compile Include="Entities\SurveyField.cs" />
     <Compile Include="Entities\SurveyFieldType.cs" />
+    <Compile Include="Entities\SurveyFieldVocabularyCross.cs" />
     <Compile Include="Entities\SurveyPage.cs" />
     <Compile Include="Entities\SurveyTemplate.cs" />
     <Compile Include="Entities\User.cs" />
@@ -71,7 +74,11 @@
     <Compile Include="Mappings\CityMap.cs" />
     <Compile Include="Mappings\CompanyMap.cs" />
     <Compile Include="Mappings\CountryMap.cs" />
+    <Compile Include="Mappings\SurveyDetailMap.cs" />
+    <Compile Include="Mappings\SurveyFieldMap.cs" />
     <Compile Include="Mappings\SurveyFieldTypeMap.cs" />
+    <Compile Include="Mappings\SurveyFieldVocabularyCrossMap.cs" />
+    <Compile Include="Mappings\SurveyMap.cs" />
     <Compile Include="Mappings\SurveyPageMap.cs" />
     <Compile Include="Mappings\SurveyTemplateMap.cs" />
     <Compile Include="Mappings\UserLanguageCrossMap.cs" />
