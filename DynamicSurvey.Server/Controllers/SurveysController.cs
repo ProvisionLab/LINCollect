@@ -145,6 +145,19 @@ namespace DynamicSurvey.Server.Controllers
         [HttpPost]
         public ActionResult EditSurvey(EditSurveyViewModel editSurveyViewModel)
         {
+            if (editSurveyViewModel.Id == null)
+            {
+                var survey = new Survey
+                {
+                    Title = editSurveyViewModel.Name,
+                    IntroductionText = editSurveyViewModel.IntroductionText,
+                    ThankYouText = editSurveyViewModel.ThankYouText,
+                    LandingPageText = editSurveyViewModel.LandingPageText
+                };
+
+                _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
+            }
+
             throw new NotImplementedException();
         }
 
