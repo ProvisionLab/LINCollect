@@ -1,0 +1,12 @@
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\DynamicSurvey.Core.dll
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\DynamicSurvey.Core.pdb
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\obj\Debug\DynamicSurvey.Core.dll
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\obj\Debug\DynamicSurvey.Core.pdb
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\FluentNHibernate.dll
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\Iesi.Collections.dll
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\NHibernate.dll
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\FluentNHibernate.pdb
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\FluentNHibernate.xml
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\Iesi.Collections.xml
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\bin\Debug\NHibernate.xml
+C:\Users\Oleg\Desktop\LINCollect\DynamicSurvey.Core\obj\Debug\DynamicSurvey.Core.csprojResolveAssemblyReference.cache
