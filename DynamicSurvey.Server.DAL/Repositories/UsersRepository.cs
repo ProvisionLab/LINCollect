@@ -90,7 +90,7 @@ namespace DynamicSurvey.Server.DAL
 				AccessRight = new AccessRight()
 				{
 					Name = Convert.ToString(row["UserRight"]),
-					AccessLevel = (AccessLevel)(row["AccessLevel"]),
+					AccessLevel = (AccessLevel)(Int32)(row["AccessLevel"]),
 					Id = (ulong)(row["UserRightId"])
 				}
 

@@ -39,5 +39,7 @@ namespace DynamicSurvey.Server.Infrastructure
         {
             return _kernel.GetAll(serviceType);
         }
+
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using DynamicSurvey.Server.DAL.Entities;
+using System.Web.SessionState;
 
 namespace DynamicSurvey.Server.Helpers
 {
@@ -28,5 +29,29 @@ namespace DynamicSurvey.Server.Helpers
 		{
 			return session[userKey] != null;
 		}
+
+		public static User GetCurrentUser(this HttpSessionState session)
+		{
+			var res = session[userKey];
+			if (res == null)
+			{
+				return null;
+			}
+			else
+			{
+				return (User)session[userKey];
+			}
+		}
+
+		public static void SetCurrentUser(this HttpSessionState session, User user)
+		{
+			session[userKey] = user;
+		}
+
+		public static bool IsCurrentUserSet(this HttpSessionState session)
+		{
+			return session[userKey] != null;
+		}
+
 	}
 }

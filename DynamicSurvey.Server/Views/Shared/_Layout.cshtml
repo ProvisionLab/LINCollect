@@ -2999,8 +2999,10 @@
                     <ul id="menu">
                         <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, null)</li>
                         <li>@Html.ActionLink("Surveys", "Index", "Surveys", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("Fake surveys!", "FreeFakes", "Surveys", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("DB - Fake surveys!", "FreeFakesFromDatabase", "Surveys", new { area = "" }, null)</li>                        
+                        <li><a href="api/fakes/FreeFakes" > Fake surveys! </a></li>
+                        <li><a href="api/fakes/FreeFakesFromDatabase"> DB - Fake surveys! </a></li>
+                        @*<li>@Html.ActionLink("Fake surveys!", "FreeFakes", "Fakes", new { area = "" }, null)</li>
+                        <li>@Html.ActionLink("DB - Fake surveys!", "", "Fakes", new { area = "" }, null)</li>                    
                     </ul>
                 </nav>
             </div>

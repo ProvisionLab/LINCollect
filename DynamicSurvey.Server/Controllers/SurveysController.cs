@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
-using DynamicSurvey.Server.DAL.Entities;
+﻿using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Fakes;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
-using DynamicSurvey.Server.Models;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
 using Moq;
+using System;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -21,48 +20,10 @@ namespace DynamicSurvey.Server.Controllers
             _surveysRepository = surveysRepository;
         }
 
-        public ActionResult FreeFakes()
-        {
-            var mock = new Mock<ISurveysRepository>();
-            mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
-                .Returns(FakeSurveysFactory.CreateSurveyList());
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 1)))
-                .Returns(FakeSurveysFactory.CreateSurveyWithGroups());
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
-                .Returns(FakeSurveysFactory.CreateEnglishSurvey());
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 3)))
-                .Returns(FakeSurveysFactory.CreateRussianSurvey());
-
-            Func<ulong, bool> anyOther = i =>
-            {
-                var usedIndexes = new ulong[] {1, 2, 3};
-                return usedIndexes.All(ui => ui != i);
-            };
-
-            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => anyOther(i))))
-                .Returns(FakeSurveysFactory.CreateRussianSurvey());
-
-            var res = mock.Object.GetSurveys(null);
-            return Json(res, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult FreeFakesFromDatabase()
-        {
-            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser(), true);
-            return Json(res, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Index(ReturnFormat returnFormat = ReturnFormat.Html)
+        public ActionResult Index()
         {
 
-            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
-            if (returnFormat == ReturnFormat.Json)
-            {
-                return Json(res, JsonRequestBehavior.AllowGet);
-            }
+			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
             return View(new SurveysViewModel
             {
                 Surveys = res
