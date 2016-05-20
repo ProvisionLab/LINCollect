@@ -8,17 +8,32 @@ namespace DynamicSurvey.Server
 	{
 		public static void Register(HttpConfiguration config)
 		{
-
 			config.Routes.MapHttpRoute(
-				name: "DefaultApi",
-				routeTemplate: "api/{controller}");
+				name: "DefaultApiLookup",
+				routeTemplate: "api/Lookup/{action}",
+				defaults: new
+				{
+					controller = "Lookup"
+
+				});
+
 			config.Routes.MapHttpRoute(
 				name: "DefaultApiFreeFakes",
 				routeTemplate: "api/Fakes/{action}",
 				defaults: new
 				{
 					controller = "Fakes"
+
 				});
+
+			config.Routes.MapHttpRoute(
+				name: "DefaultApi",
+				routeTemplate: "api/{controller}/{id}",
+				defaults: new 
+				{
+					id = RouteParameter.Optional
+				});
+			
 
 
 			// Uncomment the following line of code to enable query support for actions with an IQueryable or IQueryable<T> return type.
