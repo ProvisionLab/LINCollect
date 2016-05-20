@@ -99,7 +99,7 @@ namespace DynamicSurvey.Server.DAL
 			if (resultIdParameter.Value == null || resultIdParameter.Value.GetType() == typeof(DBNull))
 				return 0;
 
-			return (ulong)(resultIdParameter.Value);
+			return (ulong) (Int64)(resultIdParameter.Value);
 		}
 
 		public ulong ExecuteStoredProcedure(string procedureName, Action<MySqlCommand> fillParamsAction)
