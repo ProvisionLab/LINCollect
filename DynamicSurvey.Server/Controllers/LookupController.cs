@@ -9,8 +9,13 @@ namespace DynamicSurvey.Server.Controllers
 {
     public class LookupController : ApiController
     {
-        // GET api/lookup
-        public IEnumerable<string> Get()
+
+		public LookupController()
+		{
+
+		}
+
+        public IEnumerable<string> Country()
         {
             return new string[] { "value1", "value2" };
         }
