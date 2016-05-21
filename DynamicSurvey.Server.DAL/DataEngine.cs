@@ -14,7 +14,7 @@ namespace DynamicSurvey.Server.DAL
 	{
 
 #if LOCAL_DB
-		private readonly string connectionString = "server=localhost;user id=CodeClient;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
+		private readonly string connectionString = "server=localhost;user id=root;password=00000;persistsecurityinfo=True;database=dbsurveys;";
 #else
 		// gear.host deny access to create user
 		private readonly string connectionString = "server=mysql2.gear.host;user id=dbsurveys;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";

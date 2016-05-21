@@ -42,14 +42,12 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			{
 				cmd.Parameters.AddWithValue("creator_login", caller.Username);
 				cmd.Parameters.AddWithValue("creator_password", caller.Password);
-				cmd.Parameters.AddWithValue("company_id", company.Id);
-
-				cmd.Parameters.AddWithValue("company_address", company.Address);
-				cmd.Parameters.AddWithValue("company_postal_code", company.PostalCode);
-				cmd.Parameters.AddWithValue("company_id", company.PhoneNumber);
-				cmd.Parameters.AddWithValue("city_id", company.CityId);
+				cmd.Parameters.AddWithValue("id", company.Id);
+				cmd.Parameters.AddWithValue("name", company.Name);
+				cmd.Parameters.AddWithValue("address", company.Address);
+				cmd.Parameters.AddWithValue("phone_number", company.PostalCode);
+				cmd.Parameters.AddWithValue("postal_code", company.PhoneNumber);
 				cmd.Parameters.AddWithValue("city_name", company.City);
-				cmd.Parameters.AddWithValue("country_id", company.CountryId);
 				cmd.Parameters.AddWithValue("country_name", company.Country); 
 			});
 		}

@@ -18,6 +18,8 @@ namespace DynamicSurvey.Server.ControllersApi
 			lookupRepository = new LookupRepository();
 		}
 
+		[HttpGet]
+
 		public OperationResultBase Country()
 		{
 			try
@@ -35,6 +37,7 @@ namespace DynamicSurvey.Server.ControllersApi
 			
 		}
 
+		[HttpGet]
 		public OperationResultBase City()
 		{
 			try
@@ -52,6 +55,7 @@ namespace DynamicSurvey.Server.ControllersApi
 
 		}
 
+		[HttpGet]
 		public OperationResultBase Company()
 		{
 			try
@@ -69,6 +73,7 @@ namespace DynamicSurvey.Server.ControllersApi
 
 		}
 
+		[HttpGet]
 		public OperationResultBase Company(ulong id)
 		{
 			try
@@ -83,6 +88,7 @@ namespace DynamicSurvey.Server.ControllersApi
 
 		}
 
+		[HttpGet]
 		public OperationResultBase CompanyPost([FromBody]Company[] values)
 		{
 			try
