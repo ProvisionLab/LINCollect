@@ -29,16 +29,24 @@ namespace DynamicSurvey.Server.ControllersApi
 		// PUT api/login
 		public OperationResultBase Put([FromBody] User user)
 		{
-			if (!usersRepository.Authorize(user.Username, user.Password))
+			try
 			{
-				ResponseMessage(new HttpResponseMessage(HttpStatusCode.Unauthorized));
-				return OperationResultBase.Unauthorized;
+				HttpContext.Current.Session.ThrowIfNotAuthorized();
+				if (!usersRepository.Authorize(user.Username, user.Password))
+				{
+					ResponseMessage(new HttpResponseMessage(HttpStatusCode.Unauthorized));
+					return FailedOperationResult.Unauthorized;
+				}
+
+				var currentUser = usersRepository.GetUserByName(user.Username);
+
+				HttpContext.Current.Session.SetCurrentUser(user);
+				return OperationResultBase.Success;
 			}
-
-			var currentUser = usersRepository.GetUserByName(user.Username);
-
-			HttpContext.Current.Session.SetCurrentUser(user);
-			return OperationResultBase.Success;
+			catch (Exception ex)
+			{
+				return new FailedOperationResult(500, ex);
+			}
 		}
 
 	}

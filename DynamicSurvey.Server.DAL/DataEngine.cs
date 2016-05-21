@@ -36,6 +36,7 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string sp_add_survey_template_field = "sp_add_survey_template_field";
 		public static readonly string sp_add_survey_template_page = "sp_add_survey_template_page";
 		public static readonly string sp_add_user = "sp_add_user";
+		public static readonly string sp_add_company = "sp_add_company";
 		public static readonly string sp_add_field_default_value = "sp_add_field_default_value";
 
 		public static readonly string sp_update_field_default_value = "sp_update_field_default_value";
@@ -50,7 +51,6 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string sp_remove_survey_template = "sp_remove_survey_template";
 		public static readonly string sp_remove_user = "sp_remove_user";
 
-
 		public static readonly string vw_field_type_view = "vw_field_type_view";
 		public static readonly string vw_survey_template = "vw_survey_template";
 		public static readonly string vw_survey_template_field_default_values = "vw_survey_template_field_default_values";
@@ -58,7 +58,11 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string vw_survey_template_pages = "vw_survey_template_pages";
 		public static readonly string vw_user = "vw_user";
 		public static readonly string vw_survey_report = "vw_survey_report";
-		
+
+		public static readonly string vw_company_lookup = "vw_company_lookup";
+		public static readonly string vw_country_lookup = "vw_country_lookup";
+		public static readonly string vw_city_lookup = "vw_city_lookup";
+		public static readonly string vw_company = "vw_company";
 
 		public static readonly string sp_is_user_exists = "sp_is_user_exists";
 		public static readonly string sp_is_user_admin = "sp_is_user_admin";
@@ -99,7 +103,7 @@ namespace DynamicSurvey.Server.DAL
 			if (resultIdParameter.Value == null || resultIdParameter.Value.GetType() == typeof(DBNull))
 				return 0;
 
-			return (ulong) (Int64)(resultIdParameter.Value);
+			return (ulong)(Int64)(resultIdParameter.Value);
 		}
 
 		public ulong ExecuteStoredProcedure(string procedureName, Action<MySqlCommand> fillParamsAction)
