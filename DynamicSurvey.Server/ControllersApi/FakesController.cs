@@ -10,50 +10,50 @@ using Moq;
 
 namespace DynamicSurvey.Server.ControllersApi
 {
-	public class FakesController : ApiController
-	{
-		private readonly ISurveysRepository surveysRepository;
+    public class FakesController : ApiController
+    {
+        private readonly ISurveysRepository _surveysRepository;
 
-		public FakesController()
-		{
-			surveysRepository = new SurveysRepository();
-		}
+        public FakesController()
+        {
+            _surveysRepository = new SurveysRepository();
+        }
 
-		[HttpGet]
-		public IHttpActionResult FreeFakes()
-		{
-			var mock = new Mock<ISurveysRepository>();
-			mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
-				.Returns(FakeSurveysFactory.CreateSurveyList());
+        [HttpGet]
+        public IHttpActionResult FreeFakes()
+        {
+            var mock = new Mock<ISurveysRepository>();
+            mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
+                .Returns(FakeSurveysFactory.CreateSurveyList());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 1)))
-				.Returns(FakeSurveysFactory.CreateSurveyWithGroups());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 1)))
+                .Returns(FakeSurveysFactory.CreateSurveyWithGroups());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
-				.Returns(FakeSurveysFactory.CreateEnglishSurvey());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
+                .Returns(FakeSurveysFactory.CreateEnglishSurvey());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 3)))
-				.Returns(FakeSurveysFactory.CreateRussianSurvey());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 3)))
+                .Returns(FakeSurveysFactory.CreateRussianSurvey());
 
-			Func<ulong, bool> anyOther = i =>
-			{
-				var usedIndexes = new ulong[] { 1, 2, 3 };
-				return usedIndexes.All(ui => ui != i);
-			};
+            Func<ulong, bool> anyOther = i =>
+            {
+                var usedIndexes = new ulong[] {1, 2, 3};
+                return usedIndexes.All(ui => ui != i);
+            };
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => anyOther(i))))
-				.Returns(FakeSurveysFactory.CreateRussianSurvey());
+            mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => anyOther(i))))
+                .Returns(FakeSurveysFactory.CreateRussianSurvey());
 
-			var res = mock.Object.GetSurveys(null);
-			return Json(res);
-		}
+            var res = mock.Object.GetSurveys(null);
+            return Json(res);
+        }
 
-		[HttpGet]
-		public IHttpActionResult FreeFakesFromDatabase()
-		{
-			var res = surveysRepository.GetSurveys(HttpContext.Current.Session.GetCurrentUser(), true);
-			return Json(res);
-		}
+        [HttpGet]
+        public IHttpActionResult FreeFakesFromDatabase()
+        {
+            var res = _surveysRepository.GetSurveys(HttpContext.Current.Session.GetCurrentUser(), true);
+            return Json(res);
+        }
 
-	}
+    }
 }
