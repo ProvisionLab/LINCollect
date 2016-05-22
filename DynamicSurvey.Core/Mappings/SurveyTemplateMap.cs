@@ -9,6 +9,9 @@ namespace DynamicSurvey.Core.Mappings
         {
             Id(it => it.Id);
             Map(it => it.TemplateName).Unique();
+            Map(it => it.IntroductionText).Length(256);
+            Map(it => it.ThankYouText).Length(256);
+            Map(it => it.LandingPageText).Length(256);
             Map(it => it.Created).Not.Nullable();
             Map(it => it.LastModified);
             References(it => it.UserCreated).Column("UserCreated_Id");

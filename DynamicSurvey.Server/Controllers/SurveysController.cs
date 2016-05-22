@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
+using DynamicSurvey.Server.Services;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
 
@@ -11,10 +12,12 @@ namespace DynamicSurvey.Server.Controllers
 {
     public class SurveysController : Controller
     {
+        private readonly SurveyService _surveyService;
         private readonly ISurveysRepository _surveysRepository;
 
         public SurveysController(ISurveysRepository surveysRepository)
         {
+            _surveyService = new SurveyService();
             _surveysRepository = surveysRepository;
         }
 

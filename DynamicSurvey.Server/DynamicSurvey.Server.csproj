@@ -238,6 +238,7 @@
     <Compile Include="Infrastructure\ApiSession\SessionableControllerHandler.cs" />
     <Compile Include="Models\SurveysSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\SurveyService.cs" />
     <Compile Include="ViewModels\EditSurveyMenu.cs" />
     <Compile Include="ViewModels\SurveysViewModel.cs" />
     <Compile Include="ViewModels\Surveys\EditSurveyViewModel.cs" />
