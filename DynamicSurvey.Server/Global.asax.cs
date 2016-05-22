@@ -2,8 +2,8 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using DynamicSurvey.Server.DAL;
-using DynamicSurvey.Server.DAL.Repositories;
+using DynamicSurvey.Core;
+using DynamicSurvey.Core.SessionStorage;
 using DynamicSurvey.Server.Infrastructure;
 
 namespace DynamicSurvey.Server
@@ -15,6 +15,7 @@ namespace DynamicSurvey.Server
     {
         protected void Application_Start()
         {
+            PersistenceContext.SetConnectionString(SurveysConfig.ConnectionString);
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
@@ -24,10 +25,14 @@ namespace DynamicSurvey.Server
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-		protected void Application_PostAuthorizeRequest()
-		{
-			System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
-		}
+        protected void Application_EndRequest()
+        {
+            PersistenceContext.DisposeCurrentSession();
+        }
 
+        protected void Application_PostAuthorizeRequest()
+        {
+            System.Web.HttpContext.Current.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
+        }
     }
 }

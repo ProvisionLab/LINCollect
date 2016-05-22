@@ -880,15 +880,18 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\DynamicSurvey.Core\DynamicSurvey.Core.csproj">
+      <Project>{12ed3e8f-c673-413b-b73f-bc51748a09f4}</Project>
+      <Name>DynamicSurvey.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DynamicSurvey.Server.DAL\DynamicSurvey.Server.DAL.csproj">
       <Project>{db1cc1a2-130a-42a1-a44d-baef85348892}</Project>
       <Name>DynamicSurvey.Server.DAL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
