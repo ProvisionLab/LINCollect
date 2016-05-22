@@ -15,7 +15,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		Company GetCompanyById(ulong id);
 		StringEntity[] GetCities();
 		StringEntity[] GetCountries();
-		void AddOrUpdateCompany(User caller, Company company);
+		ulong AddOrUpdateCompany(User caller, Company company);
 	}
 	public class LookupRepository : ILookupRepository
 	{
@@ -36,9 +36,9 @@ namespace DynamicSurvey.Server.DAL.Repositories
 			return result;
 		}
 
-		public void AddOrUpdateCompany(User caller, Company company)
+		public ulong AddOrUpdateCompany(User caller, Company company)
 		{
-			DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_company, cmd => 
+			return DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_company, cmd => 
 			{
 				cmd.Parameters.AddWithValue("creator_login", caller.Username);
 				cmd.Parameters.AddWithValue("creator_password", caller.Password);

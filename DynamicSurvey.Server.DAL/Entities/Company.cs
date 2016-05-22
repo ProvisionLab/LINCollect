@@ -17,7 +17,12 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 
 		private static readonly string IdClause = "@Id";
-		
+
+		public Company()
+		{
+
+		}
+
 		public Company(DataRow row)
 		{
 			Id = (ulong)row["Id"];

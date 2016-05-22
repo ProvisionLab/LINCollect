@@ -215,6 +215,7 @@
     <Compile Include="ControllersApi\FakesController.cs" />
     <Compile Include="ControllersApi\LoginController.cs" />
     <Compile Include="ControllersApi\LookupController.cs" />
+    <Compile Include="ControllersApi\ReportController.cs" />
     <Compile Include="ControllersApi\Result\DataOperationResult.cs" />
     <Compile Include="ControllersApi\Result\OperationResultBase.cs" />
     <Compile Include="ControllersApi\SurveyController.cs" />

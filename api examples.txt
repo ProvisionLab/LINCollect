@@ -1,0 +1,45 @@
+PUT 
+http://localhost:32106/api/login
+{ "Username":"Admin", "Password":"Password" }
+
+# стараемся обходиться айдишками.
+POST
+http://localhost:32106/api/report
+[
+    {
+        "Company":
+        {
+            "Name":"Company4 for rest api test call",
+            "City":"Madrid",
+            "Country":"Spain",
+            "Address":"Torro street",
+            "PhoneNumber":"112355-823-74",
+            "PostalCode":123544
+        },
+        "Report":
+        {
+            "Id":2,
+            "LanguageId":1,
+            "Pages":[
+            {
+                "id":3,
+                "PageIndex":1,
+                "Title":"ST2 - Page Title_1 (not unique)",
+                "Fields":[
+                    {
+                        "Id":8,
+                        "UserAnswer":"TextBoxAnswer1"
+                    },
+                    {
+                        "Id":9
+                    },
+                    {
+                        "Id":10,
+                        "UserAnswer":"with milk"
+                    }
+                ]
+            }
+            ]
+        }
+    }
+]

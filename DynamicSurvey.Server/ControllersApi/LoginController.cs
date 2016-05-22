@@ -31,7 +31,6 @@ namespace DynamicSurvey.Server.ControllersApi
 		{
 			try
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
 				if (!usersRepository.Authorize(user.Username, user.Password))
 				{
 					ResponseMessage(new HttpResponseMessage(HttpStatusCode.Unauthorized));
@@ -40,7 +39,7 @@ namespace DynamicSurvey.Server.ControllersApi
 
 				var currentUser = usersRepository.GetUserByName(user.Username);
 
-				HttpContext.Current.Session.SetCurrentUser(user);
+				HttpContext.Current.Session.SetCurrentUser(currentUser);
 				return OperationResultBase.Success;
 			}
 			catch (Exception ex)

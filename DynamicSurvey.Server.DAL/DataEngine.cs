@@ -38,6 +38,8 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string sp_add_user = "sp_add_user";
 		public static readonly string sp_add_company = "sp_add_company";
 		public static readonly string sp_add_field_default_value = "sp_add_field_default_value";
+		public static readonly string sp_add_survey = "sp_add_survey";
+		public static readonly string sp_add_survey_detail = "sp_add_survey_detail";
 
 		public static readonly string sp_update_field_default_value = "sp_update_field_default_value";
 		public static readonly string sp_update_survey_template = "sp_update_survey_template";
@@ -91,7 +93,7 @@ namespace DynamicSurvey.Server.DAL
 			{
 				return;
 			}
-			var val = (ulong)(errorCodeParameter.Value);
+			var val = (ulong)(Int64)(errorCodeParameter.Value);
 			if (val != 0)
 			{
 				throw new InvalidOperationException(string.Format("Failed to perform operation. Error code = {0}", val));

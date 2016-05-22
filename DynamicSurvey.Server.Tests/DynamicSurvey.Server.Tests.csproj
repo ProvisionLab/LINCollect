@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="HelpersTests\PagerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\AnswersRepositoryTests\UnitTest1.cs" />
     <Compile Include="Repositories\SurveysRepositoryTests\Add\Duplicates_Test.cs" />
     <Compile Include="Repositories\SurveysRepositoryTests\Add\Add_Test.cs" />
     <Compile Include="Repositories\SurveysRepositoryTests\UnitTest1.cs" />
