@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-3">Survey Name *:</label>
                     <div class="col-md-9">
-                        <input name="Name" type="text" placeholder="small" class="form-control" />
+                        <input name="TemplateName" type="text" placeholder="small" class="form-control" value="@Model.TemplateName" />
                         <span class="help-block"> This is inline help </span>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         <select name="LanguageId" class="form-control">
                             @foreach (var language in Model.Languages)
                             {
-                                <option value="@language.Id" @if (language.Id == Model.LanguageId) { <text> selected="selected" </text>   }>@language.Name</option>
+                                <option value="@language.Id" @if (language.Id == Model.LanguageId) { <text> selected="selected" </text>  }>@language.Name</option>
                             }
                         </select>
                         <span class="help-block"> Select your gender. </span>
@@ -49,19 +49,19 @@
                 <div class="form-group">
                     <label class="control-label col-md-3">Survey introduction (optional):</label>
                     <div class="col-md-9">
-                        <textarea id="surveyIntroduction" class="form-control" rows="5"></textarea>
+                        <textarea name="IntroductionText" id="surveyIntroduction" class="form-control" rows="5">@Model.IntroductionText</textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3">Thank you text (optional):</label>
                     <div class="col-md-9">
-                        <textarea id="surveyThankYouText" class="form-control" rows="5"></textarea>
+                        <textarea name="ThankYouText" id="surveyThankYouText" class="form-control" rows="5">@Model.ThankYouText</textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3">Landing page text:</label>
                     <div class="col-md-9">
-                        <textarea id="surveyLandingPageText" class="form-control" rows="5"></textarea>
+                        <textarea name="LandingPageText" id="surveyLandingPageText" class="form-control" rows="5">@Model.LandingPageText</textarea>
                     </div>
                 </div>
             </div>

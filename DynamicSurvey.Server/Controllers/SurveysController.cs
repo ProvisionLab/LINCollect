@@ -1,14 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using DynamicSurvey.Core.Entities;
-using DynamicSurvey.Core.SessionStorage;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.Services;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
-using NHibernate.Linq;
 using Survey = DynamicSurvey.Server.DAL.Entities.Survey;
 
 namespace DynamicSurvey.Server.Controllers
@@ -78,26 +75,9 @@ namespace DynamicSurvey.Server.Controllers
             return View();
         }
 
-        public ActionResult EditSurvey()
+        public ActionResult EditSurvey(int? surveyTemplateId)
         {
-            var editSurveyViewModel = new EditSurveyViewModel();
-
-            var session = PersistenceContext.GetCurrentSession();
-            using (var transaction = session.BeginTransaction())
-            {
-                var languages = session.Query<UserLanguage>()
-                    .OrderBy(ul => ul.Name)
-                    .Select(ul => new LanguageItemViewModel
-                    {
-                        Id = ul.Id,
-                        Name = ul.Name
-                    })
-                    .ToList();
-
-                editSurveyViewModel.Languages = languages;
-
-                transaction.Commit();
-            }
+            var editSurveyViewModel = _surveyService.GetEditSurveyViewModel(surveyTemplateId);
 
             return View(editSurveyViewModel);
         }
@@ -105,20 +85,18 @@ namespace DynamicSurvey.Server.Controllers
         [HttpPost]
         public ActionResult EditSurvey(EditSurveyViewModel editSurveyViewModel)
         {
+            SurveyTemplate surveyTemplate;
+
             if (editSurveyViewModel.Id == null)
             {
-                var survey = new Survey
-                {
-                    Title = editSurveyViewModel.Name,
-                    IntroductionText = editSurveyViewModel.IntroductionText,
-                    ThankYouText = editSurveyViewModel.ThankYouText,
-                    LandingPageText = editSurveyViewModel.LandingPageText
-                };
-
-                _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
+                surveyTemplate = _surveyService.CreateSurveyTemplate(editSurveyViewModel);
+            }
+            else
+            {
+                surveyTemplate = _surveyService.EditSurveyTemplate(editSurveyViewModel);
             }
 
-            throw new NotImplementedException();
+            return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
         }
 
         public ActionResult AboutRespondent()
