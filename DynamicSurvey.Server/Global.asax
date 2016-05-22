@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="DynamicSurvey.Server.Global" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="DynamicSurvey.Server.WebApiApplication" Language="C#" %>

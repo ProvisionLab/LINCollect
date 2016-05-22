@@ -4,7 +4,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.SessionState;
+using DynamicSurvey.Core;
 using DynamicSurvey.Core.SessionStorage;
+using DynamicSurvey.Server.Infrastructure;
 
 namespace DynamicSurvey.Server
 {
@@ -12,9 +14,12 @@ namespace DynamicSurvey.Server
     {
         protected void Application_Start(object sender, EventArgs e)
         {
-            // Code that runs on application startup
+            PersistenceContext.SetConnectionString(SurveysConfig.ConnectionString);
+            DependencyResolver.SetResolver(new NinjectDependencyResolver());
+
             AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
 
