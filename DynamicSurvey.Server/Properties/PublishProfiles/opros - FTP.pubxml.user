@@ -6,6 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAvOIujFMkf0eo67nYy8ySUgAAAAACAAAAAAAQZgAAAAEAACAAAAB/6u+6woei0+g83t2Pi1U0myzwKUYAnCJ67qJl+bt71gAAAAAOgAAAAAIAACAAAADqMmsu7dN2TXZTjTBjiUM4jXJEX/TuLOQBuHnB2hu+9YAAAACe07LhClz/5SqzFHCULZdGUEbjNL535CvssYAs0Xeg5nSIGlVzgVIPyKHN1u2sn0oSP32Lc6anegET1bDJru1svPUsO2h7sTmRZxqo8itnEPP0uztEy4q3aTTIc64iHJ+b29aOidSawmgAMNa5gOj1y4I51Cq5pvAJzvFy+63l8kAAAAALHVdsp0AtjiQSyBmMNM2yFi+H17kXlGfLEFxRO4KCkyvWJ+D3ppaPT1+922OlKYZ33SGh1msR45kpJVh5wvHn</EncryptedPassword>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAvOIujFMkf0eo67nYy8ySUgAAAAACAAAAAAAQZgAAAAEAACAAAADEfTbRLYpjVHlCKyC7kefB8yZNzPJkNnkHkI5OHhrmGAAAAAAOgAAAAAIAACAAAADR5euNFUS2FLg6BCPqIF1IsGqsPpNPnra5XqeqUZTC74AAAADhSZB8wtWDkhRSlWTqQNtUhX4gvR9j7OgqTH4As2VqKz3f5YMsVo7gnJwEdq5t/TbP44GosM2esP0pcg+nMRSIWq9W6cr3gkP2i9roedaCP/p3g5UMFU28A0h7ccYSn2YKYb3eU2YBj+47VoHGdTUCa3hbAsXgzoqgkSOuHL8UcUAAAAB+UjwbcoRb7zkUR2YOT6Ep6elqRR+y52bG5KhXx25wu0AeUbeNrC+B7SDP9BVKdw5HZgi0nNZfBTY4cQsiCOyt</EncryptedPassword>
+    <_PublishTargetUrl>ftp://ftp.gear.host/site/wwwroot</_PublishTargetUrl>
   </PropertyGroup>
 </Project>
