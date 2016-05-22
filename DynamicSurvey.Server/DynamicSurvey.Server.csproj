@@ -38,7 +38,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.4.0.4.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -549,11 +561,15 @@
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.js" />
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.min.js" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\EditSurvey.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="ControllersApi\FakesController.cs" />
+    <Compile Include="ControllersApi\LoginController.cs" />
+    <Compile Include="ControllersApi\OperationResultBase.cs" />
     <Compile Include="Controllers\AnswersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
@@ -562,7 +578,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HtmlPagingHelper.cs" />
+    <Compile Include="Helpers\SessionHelper.cs" />
+    <Compile Include="Models\SurveysSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\SurveyService.cs" />
+    <Compile Include="ViewModels\EditSurveyMenu.cs" />
+    <Compile Include="ViewModels\SurveysViewModel.cs" />
+    <Compile Include="ViewModels\Surveys\EditSurveyViewModel.cs" />
+    <Compile Include="ViewModels\Surveys\LanguageItemViewModel.cs" />
+    <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -599,6 +624,20 @@
     <Content Include="Content\theme\assets\global\plugins\uniform\css\uniform.default.scss" />
     <Content Include="Content\theme\assets\global\plugins\uniform\README.md" />
     <Content Include="Content\theme\assets\global\plugins\jquery.min.map" />
+    <Content Include="Views\Answers\Index.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Profile\Login.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Surveys\AboutRespondent.cshtml" />
+    <Content Include="Views\Surveys\AddSurvey.cshtml" />
+    <Content Include="Views\Surveys\Details.cshtml" />
+    <Content Include="Views\Surveys\EditSurvey.cshtml" />
+    <Content Include="Views\Surveys\Index.cshtml" />
+    <Content Include="Views\Surveys\PreviewSurvey.cshtml" />
+    <Content Include="Views\Surveys\Relationships.cshtml" />
+    <Content Include="Views\Surveys\_EditSurveyMenu.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -606,8 +645,16 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\DynamicSurvey.Core\DynamicSurvey.Core.csproj">
+      <Project>{12ed3e8f-c673-413b-b73f-bc51748a09f4}</Project>
+      <Name>DynamicSurvey.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicSurvey.Server.DAL\DynamicSurvey.Server.DAL.csproj">
+      <Project>{db1cc1a2-130a-42a1-a44d-baef85348892}</Project>
+      <Name>DynamicSurvey.Server.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

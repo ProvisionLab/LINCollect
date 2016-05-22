@@ -1,0 +1,54 @@
+﻿@model DynamicSurvey.Server.DAL.Entities.Survey
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="surveyDetailsHeader">
+    <h2>@Model.Title</h2>
+</div>
+
+@foreach (var page in Model.Pages)
+{
+    <div class="surveyPage">
+        <h2>@page.Title</h2>
+
+        <table class="commonTable">
+            <tr>
+                <th class="fieldTypeCell">
+                    FieldType
+                </th>
+                <th>
+                    Id
+                </th>
+                <th>
+                    GroupId
+                </th>
+                <th>
+                    Label
+                </th>
+
+            </tr>
+            @foreach (var pageItem in page.Fields)
+            {
+                <tr>
+                    <td class="fieldTypeCell">
+                        @pageItem.FieldType
+                    </td>
+                    <td>
+                        @pageItem.Id
+                    </td>
+                    <td>
+                        @pageItem.GroupId
+                    </td>
+                    <td>
+                        @pageItem.Label
+                    </td>
+
+                </tr>
+            }
+        </table>
+    </div>
+}

@@ -1,0 +1,52 @@
+﻿@model DynamicSurvey.Server.DAL.Entities.User
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<style>
+    #loginForm {
+        /* background-color: #ffcc99; */
+        width: 280px;
+        height: 200px;
+        margin-top: 10%;
+        margin-left: 0;
+        padding-top: 20px;
+        padding-left: 40px;
+        padding-right: 40px;
+        border: dashed 2px;
+        /* border-image: url("content/images/yellow-stripes.png") 30 round; */
+    }
+    
+    #loginHeader
+    {
+        display:block;
+        margin-top: 0px;
+    }
+
+    #saveButton {
+        /* background-color: #804000; */
+        /* color: #ffcc99; */
+        display: inline;
+        float: right;
+        margin-top: 20px;
+        width: 100% !important;
+    }
+
+
+</style>*@
+
+<div id="loginForm" >
+    
+
+    @using (Html.BeginForm("Login", "Profile", FormMethod.Post))
+    {
+        @Html.LabelFor(m => m.Username)
+        @Html.TextBoxFor(m => m.Username)
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password)
+    
+        <input type="submit" name="SaveButton" id="saveButton" value="Login" />
+    }
+</div>
