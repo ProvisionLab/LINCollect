@@ -1,6 +1,5 @@
-﻿using System.Linq;
+﻿using System;
 using DynamicSurvey.Server.DAL.Entities;
-using System;
 
 namespace DynamicSurvey.Server.DAL.Helpers
 {

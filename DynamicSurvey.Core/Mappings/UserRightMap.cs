@@ -7,10 +7,11 @@ namespace DynamicSurvey.Core.Mappings
     {
         public UserRightMap()
         {
-            Id(it => it.Id);
-            Map(it => it.Name).Not.Nullable().Unique();
-            Map(it => it.AccessLevel).Not.Nullable().Unique();
-            Map(it => it.LastModified);
+            Id(it => it.Id).Column("id");
+            Map(it => it.Name).Not.Nullable().Unique().Column("name");
+            Map(it => it.AccessLevel).Not.Nullable().Unique().Column("access_level");
+            Map(it => it.LastModified).Column("last_modified");
+            Table("user_right");
         }
     }
 }
