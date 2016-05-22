@@ -646,6 +646,7 @@
     <Content Include="Views\Surveys\Relationships.cshtml" />
     <Content Include="Views\Surveys\_EditSurveyMenu.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
