@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSurvey.Server", "DynamicSurvey.Server\DynamicSurvey.Server.csproj", "{8E948EF3-E862-4909-8E64-3E3849F9E297}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSurvey.Server.Tests", "DynamicSurvey.Server.Tests\DynamicSurvey.Server.Tests.csproj", "{BB8765F6-EEC0-459F-BB06-8B7C230D0B12}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSurvey.Server.DAL", "DynamicSurvey.Server.DAL\DynamicSurvey.Server.DAL.csproj", "{DB1CC1A2-130A-42A1-A44D-BAEF85348892}"
@@ -13,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSurvey.Core", "Dynam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSurvey.Bootstrapper", "DynamicSurvey.Bootstrapper\DynamicSurvey.Bootstrapper.csproj", "{BFD67CEE-9740-4706-8759-924BC0590C15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSurvey.Server", "DynamicSurvey.Server\DynamicSurvey.Server.csproj", "{40CE3650-8D15-43CE-9569-A1C8609DB266}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_LocalDb|Any CPU = Debug_LocalDb|Any CPU
@@ -20,12 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8E948EF3-E862-4909-8E64-3E3849F9E297}.Debug_LocalDb|Any CPU.ActiveCfg = Debug_LocalDb|Any CPU
-		{8E948EF3-E862-4909-8E64-3E3849F9E297}.Debug_LocalDb|Any CPU.Build.0 = Debug_LocalDb|Any CPU
-		{8E948EF3-E862-4909-8E64-3E3849F9E297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E948EF3-E862-4909-8E64-3E3849F9E297}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E948EF3-E862-4909-8E64-3E3849F9E297}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E948EF3-E862-4909-8E64-3E3849F9E297}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BB8765F6-EEC0-459F-BB06-8B7C230D0B12}.Debug_LocalDb|Any CPU.ActiveCfg = Debug_LocalDb|Any CPU
 		{BB8765F6-EEC0-459F-BB06-8B7C230D0B12}.Debug_LocalDb|Any CPU.Build.0 = Debug_LocalDb|Any CPU
 		{BB8765F6-EEC0-459F-BB06-8B7C230D0B12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,6 +44,12 @@ Global
 		{BFD67CEE-9740-4706-8759-924BC0590C15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFD67CEE-9740-4706-8759-924BC0590C15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFD67CEE-9740-4706-8759-924BC0590C15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40CE3650-8D15-43CE-9569-A1C8609DB266}.Debug_LocalDb|Any CPU.ActiveCfg = Debug|Any CPU
+		{40CE3650-8D15-43CE-9569-A1C8609DB266}.Debug_LocalDb|Any CPU.Build.0 = Debug|Any CPU
+		{40CE3650-8D15-43CE-9569-A1C8609DB266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40CE3650-8D15-43CE-9569-A1C8609DB266}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40CE3650-8D15-43CE-9569-A1C8609DB266}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40CE3650-8D15-43CE-9569-A1C8609DB266}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -97,10 +97,6 @@
       <Project>{db1cc1a2-130a-42a1-a44d-baef85348892}</Project>
       <Name>DynamicSurvey.Server.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSurvey.Server\DynamicSurvey.Server.csproj">
-      <Project>{8E948EF3-E862-4909-8E64-3E3849F9E297}</Project>
-      <Name>DynamicSurvey.Server</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
