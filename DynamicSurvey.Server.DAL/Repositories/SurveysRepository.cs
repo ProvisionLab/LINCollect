@@ -1,13 +1,9 @@
-﻿using DynamicSurvey.Server.DAL.Entities;
-using System;
-using DynamicSurvey.Server.DAL.Helpers;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
+using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Helpers;
 using MySql.Data.MySqlClient;
-using System.Data;
 
 namespace DynamicSurvey.Server.DAL.Repositories
 {

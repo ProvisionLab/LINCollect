@@ -1,0 +1,8 @@
+DROP DATABASE IF EXISTS DBSurveys;
+
+SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'DBSurveys';
+CREATE DATABASE IF NOT EXISTS DBSurveys;
+
+USE DBSurveys;
+
+source access/create_user_with_privileges.sql

@@ -5,6 +5,9 @@ select 'survey_template' as '';
 CREATE TABLE IF NOT EXISTS Survey_Template(
 	id 					SERIAL,
     template_name		varchar(100) UNIQUE,
+	introduction_text	TEXT,
+	thank_you_text		TEXT,
+	landing_page_text	TEXT,
     user_created_id		BIGINT UNSIGNED NULL,
 	user_modified_id 	BIGINT UNSIGNED NULL, 
     created				DATE NOT NULL,
