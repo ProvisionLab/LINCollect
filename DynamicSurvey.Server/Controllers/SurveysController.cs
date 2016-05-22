@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Core.Entities;
+using DynamicSurvey.Core.SessionStorage;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.Services;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
+using NHibernate.Linq;
+using Survey = DynamicSurvey.Server.DAL.Entities.Survey;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -79,27 +82,22 @@ namespace DynamicSurvey.Server.Controllers
         {
             var editSurveyViewModel = new EditSurveyViewModel();
 
-            editSurveyViewModel.Languages = new LanguageItemViewModel[]
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
             {
-                new LanguageItemViewModel()
-                {
-                    Id = 1,
-                    Name = "English"
-                }
-            };
+                var languages = session.Query<UserLanguage>()
+                    .OrderBy(ul => ul.Name)
+                    .Select(ul => new LanguageItemViewModel
+                    {
+                        Id = ul.Id,
+                        Name = ul.Name
+                    })
+                    .ToList();
 
-            //using (var dbContext = new DbSurveysContext())
-            //{
-            //	var languages = dbContext.language.OrderBy(l => l.name)
-            //		.Select(l => new LanguageItemViewModel
-            //		{
-            //			Id = l.id,
-            //			Name = l.name
-            //		})
-            //		.ToList();
+                editSurveyViewModel.Languages = languages;
 
-            //	editSurveyViewModel.Languages = languages;
-            //}
+                transaction.Commit();
+            }
 
             return View(editSurveyViewModel);
         }
