@@ -1,7 +1,11 @@
-﻿using System;
-using System.Data;
-using System.Text;
+﻿using DynamicSurvey.Server.DAL.Entities;
 using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DynamicSurvey.Server.DAL
 {

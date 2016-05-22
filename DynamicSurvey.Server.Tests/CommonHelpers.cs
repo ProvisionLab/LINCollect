@@ -1,6 +1,5 @@
 ﻿using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.Tests
 {
