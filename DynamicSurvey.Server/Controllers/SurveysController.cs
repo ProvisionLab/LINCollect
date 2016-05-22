@@ -1,13 +1,11 @@
-﻿using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Fakes;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
+using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
-using Moq;
-using System;
-using System.Linq;
-using System.Web.Mvc;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -23,7 +21,7 @@ namespace DynamicSurvey.Server.Controllers
         public ActionResult Index()
         {
 
-			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
+            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
             return View(new SurveysViewModel
             {
                 Surveys = res
