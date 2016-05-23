@@ -566,6 +566,7 @@
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\EditSurvey.js" />
+    <None Include="Scripts\_references.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
