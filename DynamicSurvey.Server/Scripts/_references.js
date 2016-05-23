@@ -223,3 +223,4 @@
 /// <reference path="../Content/theme/assets/layouts/layout/scripts/demo.js" />
 /// <reference path="../Content/theme/assets/layouts/layout/scripts/layout.js" />
 /// <reference path="EditSurvey.js" />
+/// <reference path="aboutrespondent.js" />

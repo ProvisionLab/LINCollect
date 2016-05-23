@@ -565,6 +565,7 @@
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.js" />
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.min.js" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\AboutRespondent.js" />
     <Content Include="Scripts\EditSurvey.js" />
     <None Include="Scripts\_references.js" />
     <Content Include="Web.config" />
@@ -648,6 +649,7 @@
     <Content Include="Views\Surveys\_EditSurveyMenu.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_EditQuestion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
