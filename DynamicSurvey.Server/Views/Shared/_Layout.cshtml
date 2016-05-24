@@ -2967,54 +2967,60 @@
     <script src="~/Content/theme/assets/layouts/layout/scripts/demo.min.js" type="text/javascript"></script>
     <script src="~/Content/theme/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
     <!-- END THEME LAYOUT SCRIPTS -->
+    <script src="~/Scripts/_Layout.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+            _Layout.init();
+        });
+    </script>
     @RenderSection("Scripts", false)
 </body>
 </html>
 
 @*
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-    <style>
-        footer {
-            height: 10em;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="content-wrapper">
-            <div class="float-left">
-                <p class="site-title">
-                    <a href="~/">LOGO HERE</a>
-                </p>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>@ViewBag.Title</title>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        <style>
+            footer {
+                height: 10em;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p class="site-title">
+                        <a href="~/">LOGO HERE</a>
+                    </p>
+                </div>
+                <div class="float-right">
+                    <nav>
+                        <ul id="menu">
+                            <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("Surveys", "Index", "Surveys", new { area = "" }, null)</li>
+                            <li><a href="api/fakes/FreeFakes" > Fake surveys! </a></li>
+                            <li><a href="api/fakes/FreeFakesFromDatabase"> DB - Fake surveys! </a></li>
+                            @*<li>@Html.ActionLink("Fake surveys!", "FreeFakes", "Fakes", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("DB - Fake surveys!", "", "Fakes", new { area = "" }, null)</li>
+                        </ul>
+                    </nav>
+                </div>
             </div>
-            <div class="float-right">
-                <nav>
-                    <ul id="menu">
-                        <li>@Html.ActionLink("Users", "Index", "Users", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("Surveys", "Index", "Surveys", new { area = "" }, null)</li>
-                        <li><a href="api/fakes/FreeFakes" > Fake surveys! </a></li>
-                        <li><a href="api/fakes/FreeFakesFromDatabase"> DB - Fake surveys! </a></li>
-                        @*<li>@Html.ActionLink("Fake surveys!", "FreeFakes", "Fakes", new { area = "" }, null)</li>
-                        <li>@Html.ActionLink("DB - Fake surveys!", "", "Fakes", new { area = "" }, null)</li>                    
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </header>
+        </header>
 
 
-    @RenderBody()
+        @RenderBody()
 
 
-    @Scripts.Render("~/bundles/jquery")
-    @RenderSection("scripts", required: false)
-</body>
-</html>
+        @Scripts.Render("~/bundles/jquery")
+        @RenderSection("scripts", required: false)
+    </body>
+    </html>
 *@

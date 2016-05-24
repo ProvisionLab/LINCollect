@@ -568,6 +568,7 @@
     <Content Include="Scripts\AboutRespondent.js" />
     <Content Include="Scripts\EditSurvey.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\_Layout.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -595,6 +596,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SurveyService.cs" />
     <Compile Include="ViewModels\EditSurveyMenu.cs" />
+    <Compile Include="ViewModels\QuestionFormat.cs" />
     <Compile Include="ViewModels\SurveysViewModel.cs" />
     <Compile Include="ViewModels\Surveys\EditSurveyViewModel.cs" />
     <Compile Include="ViewModels\Surveys\LanguageItemViewModel.cs" />
