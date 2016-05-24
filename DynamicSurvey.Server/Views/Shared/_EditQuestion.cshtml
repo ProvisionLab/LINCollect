@@ -1,4 +1,6 @@
-﻿<div class="modal fade" id="basic" tabindex="-1" role="basic" aria-hidden="true">
+﻿@using DynamicSurvey.Server.ViewModels
+
+<div class="modal fade" id="basic" tabindex="-1" role="basic" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,7 +8,7 @@
                 <h4 class="modal-title">Modal Title</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal form-row-seperated">
+                <form action="@Url.Action("EditQuestion", "Surveys")" method="POST" class="form-horizontal form-row-seperated">
                     <div class="form-body">
                         <div class="form-group">
                             <label class="control-label col-md-3">Question: <span class="required">*</span></label>
@@ -25,7 +27,8 @@
                             <div class="col-md-9">
                                 <div class="checkbox-list">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" />
+                                        <input name="Compulsory" type="checkbox" value="true" />
+                                        <input name="Compulsory" type="hidden" value="false" />
                                         Compulsory
                                     </label>
                                 </div>
@@ -36,27 +39,27 @@
                             <div class="col-md-9">
                                 <div class="radio-list">
                                     <label class="radio-inline">
-                                        <input name="Format" type="radio" />
+                                        <input name="Format" type="radio" value="@QuestionFormat.Text" />
                                         Text
                                     </label>
                                     <label class="radio-inline">
-                                        <input name="Format" type="radio" />
+                                        <input name="Format" type="radio" value="@QuestionFormat.ChoiceAccross" />
                                         Choice Across
                                     </label>
                                     <label class="radio-inline">
-                                        <input name="Format" type="radio" />
+                                        <input name="Format" type="radio" value="@QuestionFormat.ChoiceDown" />
                                         Choice Down
                                     </label>
                                     <label class="radio-inline">
-                                        <input name="Format" type="radio" />
+                                        <input name="Format" type="radio" value="@QuestionFormat.DropDown" />
                                         Drop Down
                                     </label>
                                     <label class="radio-inline">
-                                        <input name="Format" type="radio" />
+                                        <input name="Format" type="radio" value="@QuestionFormat.Matrix" />
                                         Matrix
                                     </label>
                                     <label class="radio-inline">
-                                        <input name="Format" type="radio" />
+                                        <input name="Format" type="radio" value="@QuestionFormat.Slider" />
                                         Slider
                                     </label>
                                 </div>

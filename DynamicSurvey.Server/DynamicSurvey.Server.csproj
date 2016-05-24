@@ -598,6 +598,7 @@
     <Compile Include="ViewModels\EditSurveyMenu.cs" />
     <Compile Include="ViewModels\QuestionFormat.cs" />
     <Compile Include="ViewModels\SurveysViewModel.cs" />
+    <Compile Include="ViewModels\Surveys\EditQuestionViewModel.cs" />
     <Compile Include="ViewModels\Surveys\EditSurveyViewModel.cs" />
     <Compile Include="ViewModels\Surveys\LanguageItemViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />

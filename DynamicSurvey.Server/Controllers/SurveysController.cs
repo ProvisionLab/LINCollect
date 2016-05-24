@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
@@ -97,6 +98,11 @@ namespace DynamicSurvey.Server.Controllers
             }
 
             return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
+        }
+
+        public ActionResult EditQuestion(EditQuestionViewModel editQuestionViewModel)
+        {
+            throw new NotImplementedException();
         }
 
         public ActionResult AboutRespondent()
