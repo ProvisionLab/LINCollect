@@ -97,10 +97,6 @@
       <Project>{db1cc1a2-130a-42a1-a44d-baef85348892}</Project>
       <Name>DynamicSurvey.Server.DAL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSurvey.Server\DynamicSurvey.Server.csproj">
-      <Project>{8E948EF3-E862-4909-8E64-3E3849F9E297}</Project>
-      <Name>DynamicSurvey.Server</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -151,5 +147,4 @@
     <!--Publish copies the untransformed App.config to deployment directory so overwrite it-->
     <Copy Condition="Exists('$(DeployedConfig)')" SourceFiles="$(IntermediateOutputPath)$(TargetFileName).config" DestinationFiles="$(DeployedConfig)" />
   </Target>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>

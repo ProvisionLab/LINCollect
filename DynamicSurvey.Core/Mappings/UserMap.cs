@@ -7,12 +7,13 @@ namespace DynamicSurvey.Core.Mappings
     {
         public UserMap()
         {
-            Id(it => it.Id);
-            Map(it => it.Login).Not.Nullable().Unique();
-            Map(it => it.Password).Not.Nullable();
-            Map(it => it.Salt).Not.Nullable();
-            Map(it => it.IsDeleted).Not.Nullable();
-            References(it => it.UserRight).Not.Nullable().Column("UserRight_Id");
+            Id(it => it.Id).Column("id");
+            Map(it => it.Login).Not.Nullable().Unique().Column("login");
+            Map(it => it.Password).Not.Nullable().Column("password");
+            Map(it => it.Salt).Not.Nullable().Column("salt");
+            Map(it => it.IsDeleted).Not.Nullable().Column("is_deleted");
+            References(it => it.UserRight).Not.Nullable().Column("user_right_id");
+            Table("user");
         }
     }
 }

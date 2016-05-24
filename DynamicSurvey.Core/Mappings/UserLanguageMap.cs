@@ -7,8 +7,9 @@ namespace DynamicSurvey.Core.Mappings
     {
         public UserLanguageMap()
         {
-            Id(it => it.Id);
-            Map(it => it.Name);
+            Id(it => it.Id).Column("id");
+            Map(it => it.Name).Column("name");
+            Table("user_language");
         }
     }
 }

@@ -1,29 +1,30 @@
-﻿using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Fakes;
+﻿using System.Linq;
+using System.Web.Mvc;
+using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
+using DynamicSurvey.Server.Services;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
-using Moq;
-using System;
-using System.Linq;
-using System.Web.Mvc;
+using Survey = DynamicSurvey.Server.DAL.Entities.Survey;
 
 namespace DynamicSurvey.Server.Controllers
 {
     public class SurveysController : Controller
     {
+        private readonly SurveyService _surveyService;
         private readonly ISurveysRepository _surveysRepository;
 
         public SurveysController(ISurveysRepository surveysRepository)
         {
+            _surveyService = new SurveyService();
             _surveysRepository = surveysRepository;
         }
 
         public ActionResult Index()
         {
 
-			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
+            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
             return View(new SurveysViewModel
             {
                 Surveys = res
@@ -74,31 +75,9 @@ namespace DynamicSurvey.Server.Controllers
             return View();
         }
 
-        public ActionResult EditSurvey()
+        public ActionResult EditSurvey(int? surveyTemplateId)
         {
-            var editSurveyViewModel = new EditSurveyViewModel();
-
-            editSurveyViewModel.Languages = new LanguageItemViewModel[]
-            {
-                new LanguageItemViewModel()
-                {
-                    Id = 1,
-                    Name = "English"
-                }
-            };
-
-            //using (var dbContext = new DbSurveysContext())
-            //{
-            //	var languages = dbContext.language.OrderBy(l => l.name)
-            //		.Select(l => new LanguageItemViewModel
-            //		{
-            //			Id = l.id,
-            //			Name = l.name
-            //		})
-            //		.ToList();
-
-            //	editSurveyViewModel.Languages = languages;
-            //}
+            var editSurveyViewModel = _surveyService.GetEditSurveyViewModel(surveyTemplateId);
 
             return View(editSurveyViewModel);
         }
@@ -106,20 +85,18 @@ namespace DynamicSurvey.Server.Controllers
         [HttpPost]
         public ActionResult EditSurvey(EditSurveyViewModel editSurveyViewModel)
         {
+            SurveyTemplate surveyTemplate;
+
             if (editSurveyViewModel.Id == null)
             {
-                var survey = new Survey
-                {
-                    Title = editSurveyViewModel.Name,
-                    IntroductionText = editSurveyViewModel.IntroductionText,
-                    ThankYouText = editSurveyViewModel.ThankYouText,
-                    LandingPageText = editSurveyViewModel.LandingPageText
-                };
-
-                _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
+                surveyTemplate = _surveyService.CreateSurveyTemplate(editSurveyViewModel);
+            }
+            else
+            {
+                surveyTemplate = _surveyService.EditSurveyTemplate(editSurveyViewModel);
             }
 
-            throw new NotImplementedException();
+            return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
         }
 
         public ActionResult AboutRespondent()

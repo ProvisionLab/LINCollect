@@ -67,6 +67,9 @@ namespace DynamicSurvey.Bootstrapper
                         }
                     }
                 }
+
+                // Bootstrap database
+                DbBootstrapper.BootstrapDatabase();
             }
             catch (Exception exception)
             {
