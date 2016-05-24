@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using DynamicSurvey.Server.DAL.Repositories;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DynamicSurvey.Server.DAL;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests.Fetch
 {

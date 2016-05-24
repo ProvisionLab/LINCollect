@@ -1,6 +1,5 @@
 ﻿using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.Tests
 {
@@ -14,11 +13,11 @@ namespace DynamicSurvey.Server.Tests
 			usersRepository.AddOrUpdate(null, user);
 		}
 
-		public static User CreateAdmin(string username = "Admin", bool encrypted = false)
+		public static User CreateAdmin(string username = "Admin", ulong id = 1, bool encrypted = false)
 		{
 			return new User()
 			{
-				Id = 0,
+				Id = id,
 				Username = username,
 				Password = encrypted ? "DFD14FF9FA9464A63ADAEF65271E8C32" : "Password",
 				AccessRight = new AccessRight()

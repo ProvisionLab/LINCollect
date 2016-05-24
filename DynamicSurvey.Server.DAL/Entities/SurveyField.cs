@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 namespace DynamicSurvey.Server.DAL.Entities
 {
 	public class SurveyField

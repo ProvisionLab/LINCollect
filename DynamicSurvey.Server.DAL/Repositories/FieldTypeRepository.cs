@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System;
 
-namespace DynamicSurvey.Server.DAL.Repositories
+namespace DynamicSurvey.Server.DAL.Entities
 {
 	public  interface IFieldTypeRepository
 	{

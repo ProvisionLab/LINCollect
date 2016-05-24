@@ -1,4 +1,10 @@
-﻿namespace DynamicSurvey.Server.DAL.Repositories
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DynamicSurvey.Server.DAL.Repositories
 {
 	 internal class VocabularyRepository
 	{

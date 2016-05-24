@@ -1,5 +1,5 @@
-﻿using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Repositories;
+﻿using DynamicSurvey.Server.DAL;
+using DynamicSurvey.Server.DAL.Entities;
 
 namespace DynamicSurvey.Server.Tests.Repositories.UsersRepositoryTests
 {

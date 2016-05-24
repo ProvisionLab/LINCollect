@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
+using System.Threading.Tasks;
 
 namespace DynamicSurvey.Server.DAL.Filters
 {

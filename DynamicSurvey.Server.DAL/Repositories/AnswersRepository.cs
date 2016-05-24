@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Filters;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Filters;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DynamicSurvey.Server.DAL.Repositories
 {
@@ -10,7 +13,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 	{
 		List<SurveyReport> GetReports(SurveyReportFilter filter);
 
-		void AddReport(User caller, ulong respondentId, ulong companyId, DateTime timestamp);
+		void AddReport(User caller, ulong respondentId, ulong companyId, DateTime timestamp, List<SurveyPage> pages);
 
 		void UpdateAnswer(User caller, ulong answerId, string newAnswer);
 		void RemoveAnswer(User caller, ulong answerId);
@@ -107,6 +110,20 @@ namespace DynamicSurvey.Server.DAL.Repositories
 						Id = viewFields.RespondentId ?? 0,
 						Username = viewFields.RespondentLogin
 					};
+
+					res.Company = new Company()
+					{
+						Id = viewFields.CompanyId ?? 0,
+						Address = viewFields.CompanyAddress,
+						City = viewFields.CityName,
+						CityId = viewFields.CityId ?? 0,
+						Country = viewFields.CountryName,
+						CountryId = viewFields.CountryId ?? 0,
+						Name = viewFields.CompanyName,
+						PhoneNumber = viewFields.CompanyPhoneNumber,
+						PostalCode = viewFields.CompanyPostalCode
+					};
+
 					res.Report = new Survey()
 					{
 						Id = viewFields.SurveyId ?? 0,
@@ -170,9 +187,31 @@ namespace DynamicSurvey.Server.DAL.Repositories
 
 		}
 
-		public void AddReport(User caller, ulong respondentId, ulong companyId, DateTime timestamp)
+		public void AddReport(User caller, ulong respondentId, ulong companyId, DateTime timestamp, List<SurveyPage> pages)
 		{
-			throw new NotImplementedException();
+			var reportId = DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_survey, cmd =>
+			{
+				cmd.Parameters.AddWithValue("creator_login", caller.Username);
+				cmd.Parameters.AddWithValue("creator_password", caller.Password);
+				cmd.Parameters.AddWithValue("respondent_id", caller.Id);
+				cmd.Parameters.AddWithValue("company_id", companyId);
+				cmd.Parameters.AddWithValue("timestamp", timestamp);
+			});
+
+			foreach (var page in pages)
+			{
+				foreach (var field in page.Fields.Where(u => u.UserAnswer!= null))
+				{
+					DataEngine.Engine.ExecuteStoredProcedure(DataEngine.sp_add_survey_detail, cmd =>
+					{
+						cmd.Parameters.AddWithValue("creator_login", caller.Username);
+						cmd.Parameters.AddWithValue("creator_password", caller.Password);
+						cmd.Parameters.AddWithValue("parent_survey_id", reportId);
+						cmd.Parameters.AddWithValue("field_id", field.Id);
+						cmd.Parameters.AddWithValue("answer", field.UserAnswer);
+					});
+				}
+			}
 		}
 
 		public void UpdateAnswer(User caller, ulong answerId, string newAnswer)

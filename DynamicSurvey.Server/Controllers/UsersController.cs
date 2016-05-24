@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.ViewModels;
 
 namespace DynamicSurvey.Server.Controllers
