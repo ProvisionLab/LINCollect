@@ -1,10 +1,22 @@
-PUT 
-http://localhost:32106/api/login
+﻿PUT 
+http://opros.gear.host/api/login
 { "Username":"Admin", "Password":"Password" }
 
+# после успешнго логина
+## NB: можно залогиниться через веб-форму. GET-запросы точно отработают
+
+GET
+http://opros.gear.host/api/lookup/city
+http://opros.gear.host/api/lookup/country
+http://opros.gear.host/api/lookup/company
+http://opros.gear.host/api/lookup/company/1
+http://opros.gear.host/api/survey
+http://opros.gear.host/api/survey/1
+
 # стараемся обходиться айдишками.
+# компанию заполняем либо автоматически с помощью лукапа либо через ввод пользователя. Тут без айди
 POST
-http://localhost:32106/api/report
+http://opros.gear.host/api/report
 [
     {
         "Company":
