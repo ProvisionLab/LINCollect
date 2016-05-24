@@ -12,52 +12,43 @@ using System.Web.Http;
 
 namespace DynamicSurvey.Server.ControllersApi
 {
-	public class SurveyController : ApiController
-	{
+    public class SurveyController : ApiController
+    {
 		private readonly ISurveysRepository surveysRepository;
 		public SurveyController()
 		{
 			surveysRepository = new SurveysRepository();
 		}
 		public OperationResultBase Get()
-		{
-			try
+        {
+			var user = HttpContext.Current.Session.GetCurrentUser();
+			if (user == null)
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
-				var user = HttpContext.Current.Session.GetCurrentUser();
-				return new DataOperationResult<Survey>()
-				{
-					Data = surveysRepository.GetSurveys(user, true)
-				};
-
+				return OperationResultBase.Unauthorized;
 			}
-			catch (Exception ex)
+
+			return new DataOperationResult<Survey>()
 			{
-				return new FailedOperationResult(ex);
-			}
-		}
+				Data = surveysRepository.GetSurveys(user, true)
+			};
+        }
 
-		// GET api/surveysapi/5
+        // GET api/surveysapi/5
 		public OperationResultBase Get(int id)
-		{
-			try
+        {
+			var user = HttpContext.Current.Session.GetCurrentUser();
+			if (user == null)
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
-				var user = HttpContext.Current.Session.GetCurrentUser();
-				
+				return OperationResultBase.Unauthorized;
+			}
 
-				return new DataOperationResult<Survey>()
-				{
-					Data = new Survey[] 
+			return new DataOperationResult<Survey>()
+			{
+				Data = new Survey[] 
 				{
 					surveysRepository.GetSurveyById(user, (ulong) id)
 				}
-				};
-			}
-			catch(Exception ex)
-			{
-				return new FailedOperationResult(ex);
-			}
-		}
-	}
+			};
+        }
+    }
 }

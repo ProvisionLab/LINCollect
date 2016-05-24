@@ -53,13 +53,5 @@ namespace DynamicSurvey.Server.Helpers
 			return session[userKey] != null;
 		}
 
-		public static void ThrowIfNotAuthorized(this HttpSessionState session)
-		{
-			if (!IsCurrentUserSet(session))
-			{
-				throw new System.Security.Authentication.AuthenticationException("Unauthorized api access");
-			}
-		}
-
 	}
 }

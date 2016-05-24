@@ -9,22 +9,9 @@ namespace DynamicSurvey.Server.ControllersApi.Result
 	{
 		public TData[] Data { get; set; }
 
-		public DataOperationResult()
-			: base(200)
+		public DataOperationResult() : base(200)
 		{
 
-		}
-
-		public DataOperationResult(TData singleEntity)
-			: base(200)
-		{
-			Data = new TData[] { singleEntity };
-		}
-
-		public DataOperationResult(TData[] values)
-			: base(200)
-		{
-			Data =  values;
 		}
 	}
 }

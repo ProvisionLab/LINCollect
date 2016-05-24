@@ -11,6 +11,8 @@
     <AssemblyName>DynamicSurvey.Server.DAL</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,19 +41,13 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="mysql.data.entity.EF6, Version=6.8.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MySql.Data.Entities.6.8.3.0\lib\net45\mysql.data.entity.EF6.dll</HintPath>
+    <Reference Include="MySql.Web, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\MySql.Web.6.9.8\lib\net45\MySql.Web.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -66,10 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataEngine.cs" />
-    <Compile Include="DataRowConverters\StringEntityConverter.cs" />
     <Compile Include="Entities\AccessLevel.cs" />
-    <Compile Include="Entities\Company.cs" />
-    <Compile Include="Entities\SimpleEntities\StringEntity.cs" />
     <Compile Include="Filters\SurveyReportFilter.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Repositories\AnswersRepository.cs" />
@@ -85,8 +78,9 @@
     <Compile Include="Fakes\FakeSurveysFactory.cs" />
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Helpers\Pager.cs" />
+    <Compile Include="OperationResults\OperationResult.cs" />
+    <Compile Include="OperationResults\ResultCode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\LookupRepository.cs" />
     <Compile Include="Repositories\VocabularyRepository.cs" />
     <Compile Include="Repositories\SurveysRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />

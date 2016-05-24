@@ -11,11 +11,10 @@ namespace DynamicSurvey.Server
                 routeTemplate: "api/{controller}");
 			config.Routes.MapHttpRoute(
 				name: "DefaultApiLookup",
-				routeTemplate: "api/Lookup/{action}/{id}",
+				routeTemplate: "api/Lookup/{action}",
 				defaults: new
 				{
-					controller = "Lookup",
-					id = RouteParameter.Optional
+					controller = "Lookup"
 
 				});
 
