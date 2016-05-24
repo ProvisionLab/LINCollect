@@ -4,7 +4,6 @@
 	{
 		public int HttpResponse {get; set;}
 
-		public bool IsSuccess { get { return HttpResponse <= 200 && HttpResponse < 300; } }
 
 		public OperationResultBase (int httpResponseCode)
 		{

@@ -9,14 +9,31 @@ namespace DynamicSurvey.Server
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}");
+			config.Routes.MapHttpRoute(
+				name: "DefaultApiLookup",
+				routeTemplate: "api/Lookup/{action}",
+				defaults: new
+				{
+					controller = "Lookup"
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApiFreeFakes",
-                routeTemplate: "api/Fakes/{action}",
-                defaults: new
-                {
-                    controller = "Fakes"
-                });
-        }
-    }
+				});
+
+			config.Routes.MapHttpRoute(
+				name: "DefaultApiFreeFakes",
+				routeTemplate: "api/Fakes/{action}",
+				defaults: new
+				{
+					controller = "Fakes"
+
+				});
+
+			config.Routes.MapHttpRoute(
+				name: "DefaultApi",
+				routeTemplate: "api/{controller}/{id}",
+				defaults: new 
+				{
+					id = RouteParameter.Optional
+				});
+		}
+	}
 }
