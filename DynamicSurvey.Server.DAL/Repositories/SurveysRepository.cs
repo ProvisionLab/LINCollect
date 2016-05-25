@@ -43,9 +43,6 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		private readonly UsersRepository usersRepository;
 		private readonly FieldTypeRepository fieldTypeRepository;
 
-		private readonly string connectionString = "server=localhost;user id=CodeClient;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
-
-
 		public SurveysRepository()
 		{
 			this.vocabularyRepository = new VocabularyRepository();

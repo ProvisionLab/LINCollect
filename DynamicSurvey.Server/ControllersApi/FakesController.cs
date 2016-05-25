@@ -51,7 +51,12 @@ namespace DynamicSurvey.Server.ControllersApi
 		[HttpGet]
 		public IHttpActionResult FreeFakesFromDatabase()
 		{
-			var res = surveysRepository.GetSurveys(HttpContext.Current.Session.GetCurrentUser(), true);
+			var user = new User()
+			{
+				Username = "Admin",
+				Password = "DFD14FF9FA9464A63ADAEF65271E8C32"
+			};
+			var res = surveysRepository.GetSurveys(user, true);
 			return Json(res);
 		}
 

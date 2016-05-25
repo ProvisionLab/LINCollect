@@ -1,20 +1,19 @@
-﻿using DynamicSurvey.Server.DAL.Entities.SimpleEntities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DynamicSurvey.Server.DAL.DataRowConverters;
+﻿using DynamicSurvey.Server.DAL.DataRowConverters;
 using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.DAL.Entities.SimpleEntities;
+using System.Collections.Generic;
 
 namespace DynamicSurvey.Server.DAL.Repositories
 {
 	public interface ILookupRepository
 	{
 		StringEntity[] GetCompanies();
+		Company[] GetCompaniesFullInfo();
 		Company GetCompanyById(ulong id);
 		StringEntity[] GetCities();
 		StringEntity[] GetCountries();
+
+		// todo: replace UserName by Id
 		ulong AddOrUpdateCompany(User caller, Company company);
 	}
 	public class LookupRepository : ILookupRepository
@@ -24,6 +23,13 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		{
 			var entities = new List<StringEntity>();
 			DataEngine.Engine.SelectFromView(DataEngine.vw_company_lookup, row => entities.Add(StringEntityConverter.ToEntity(row)));
+			return entities.ToArray();
+		}
+
+		public Company[] GetCompaniesFullInfo()
+		{
+			var entities = new List<Company>();
+			DataEngine.Engine.SelectFromView(DataEngine.vw_company, row => entities.Add(new Company(row)));
 			return entities.ToArray();
 		}
 
