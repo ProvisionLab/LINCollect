@@ -28,6 +28,16 @@
     var handleEditQuestionModal = function() {
         $("#question").ckeditor();
 
+        $(".is-default").click(function() {
+            var checked = $(this).is(":checked");
+
+            $(".is-default").prop("checked", false);
+            $.uniform.update(".is-default");
+
+            $(this).prop("checked", checked);
+            $.uniform.update($(this));
+        });
+
         $("#addRow").click(function() {
             addRow();
         });
