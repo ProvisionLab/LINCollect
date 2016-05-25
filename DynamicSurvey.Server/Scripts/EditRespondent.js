@@ -2,7 +2,18 @@
 
     var addRow = function() {
         var rowTemplate = $(".answer-choice-row:first").clone(true);
+
+        $(".text", rowTemplate).val("");
+        $(".coding", rowTemplate).val("");
+
+        var isDefaultNameAttribute = (".is-default", rowTemplate).attr("name");
+
+        $(".checkbox-inline", rowTemplate).empty();
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute + "].IsDefault\" type=\"checkbox\" value=\"true\" class=\"is-default\" />");
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute + "].IsDefault\" type=\"hidden\" value=\"false\" />");
         $(".answer-choice-row:last").after(rowTemplate);
+
+        $(".is-default", rowTemplate).uniform();
     };
 
     var handleEditQuestionModal = function() {
