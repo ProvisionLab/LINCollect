@@ -10,6 +10,8 @@ namespace DynamicSurvey.Server.Services
 {
     public class SurveyService
     {
+        public const int DefaultRows = 1;
+
         public EditSurveyViewModel GetEditSurveyViewModel(int? surveyTemplateId)
         {
             var editSurveyViewModel = new EditSurveyViewModel();
@@ -100,6 +102,28 @@ namespace DynamicSurvey.Server.Services
             {
                 QuestionAction = questionAction
             };
+
+            if (questionAction == QuestionAction.Add)
+            {
+                editRespondentViewModel.EditQuestionViewModel.Rows = DefaultRows;
+            }
+
+            /*
+            if (questionAction != null)
+            {
+                editRespondentViewModel.EditQuestionViewModel = new EditQuestionViewModel();
+                if (questionAction.Value == QuestionAction.Add)
+                {
+                    editRespondentViewModel.EditQuestionViewModel.Rows = DefaultRows;
+                }
+            }
+             */
+
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+
+            }
 
             return editRespondentViewModel;
         }

@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 
 namespace DynamicSurvey.Server.ViewModels.Surveys
 {
@@ -12,5 +13,7 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public string ShortName { get; set; }
         public bool Compulsory { get; set; }
         public QuestionFormat Format { get; set; }
+        public int Rows { get; set; }
+        public IEnumerable<AnswerChoiceItemViewModel> AnswerChoiceItemViewModels { get; set; }
     }
 }
