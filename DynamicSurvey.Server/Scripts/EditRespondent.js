@@ -25,8 +25,44 @@
         $(".is-default", rowTemplate).uniform();
     };
 
-    var handleEditQuestionModal = function() {
+    var handleEditQuestionModal = function(questionAction) {
         $("#question").ckeditor();
+
+        if (questionAction === "Add") {
+            $(".question-format-container").hide();
+        }
+
+        $(".format").change(function() {
+            var questionFormat = $(this).val();
+
+            $(".question-format-container").hide();
+
+            switch (questionFormat) {
+            case "Text":
+            {
+                $("#textQuestionFormatContainer").show();
+                break;
+            }
+            case "ChoiceAcross":
+            case "ChoiceDown":
+            case "DropDown":
+            {
+                $("#choiceQuestionFormatContainer").show();
+                break;
+            }
+            case "Matrix":
+            {
+                $("#matrixQuestionFormatContainer").show();
+                break;
+            }
+            case "Slider":
+            {
+                $("#sliderQuestionFormatContainer").show();
+                break;
+            }
+            default:
+            }
+        });
 
         $(".is-default").click(function() {
             var checked = $(this).is(":checked");
@@ -77,7 +113,7 @@
         var questionAction = $("#questionAction").val();
 
         if (questionAction) {
-            handleEditQuestionModal();
+            handleEditQuestionModal(questionAction);
         }
     };
 

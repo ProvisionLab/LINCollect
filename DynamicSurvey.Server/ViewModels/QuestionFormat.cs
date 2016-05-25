@@ -3,7 +3,7 @@
     public enum QuestionFormat
     {
         Text,
-        ChoiceAccross,
+        ChoiceAcross,
         ChoiceDown,
         DropDown,
         Matrix,
