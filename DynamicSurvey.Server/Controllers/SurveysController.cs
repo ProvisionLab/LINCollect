@@ -102,7 +102,9 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditRespondent(QuestionAction? questionAction)
         {
-            return View();
+            var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(questionAction);
+
+            return View(editRespondentViewModel);
         }
 
         public ActionResult EditQuestion(EditQuestionViewModel editQuestionViewModel)

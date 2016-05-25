@@ -2,6 +2,7 @@
 using System.Linq;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Core.SessionStorage;
+using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
 using NHibernate.Linq;
 
@@ -91,6 +92,13 @@ namespace DynamicSurvey.Server.Services
 
                 return surveyTemplate;
             }
+        }
+
+        public EditRespondentViewModel GetEditRespondentViewModel(QuestionAction? questionAction)
+        {
+            var editRespondentViewModel = new EditRespondentViewModel();
+
+            return editRespondentViewModel;
         }
     }
 }
