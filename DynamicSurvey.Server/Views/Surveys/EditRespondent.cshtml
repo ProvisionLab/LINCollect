@@ -6,9 +6,10 @@
 
 @{ Html.RenderPartial("_EditSurveyMenu", EditSurveyMenu.AboutRespondent); }
 
-<a class="btn red btn-outline sbold" data-toggle="modal" href="#basic"> View Demo </a>
+<a class="btn red btn-outline sbold" data-toggle="modal" href="@Url.Action("EditRespondent", "Surveys", new { questionAction = QuestionAction.Add })">insert question</a>
 
-@{ Html.RenderPartial("_EditQuestion", Model.EditQuestionViewModel);}
+<input type="hidden" id="questionAction" value="@Model.QuestionAction" />
+@{ Html.RenderPartial("_EditQuestion", Model.EditQuestionViewModel); }
 
 @section Scripts
 {
