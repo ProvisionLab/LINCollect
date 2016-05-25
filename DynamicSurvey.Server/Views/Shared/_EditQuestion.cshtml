@@ -20,7 +20,7 @@
             <div class="modal-body">
                 <div class="portlet light bordered form-fit">
                     <div class="portlet-body form">
-                        <form action="@Url.Action("EditQuestion", "Surveys")" method="POST" class="form-horizontal form-row-seperated">
+                        <form id="editQuestionForm" action="@Url.Action("EditQuestion", "Surveys")" method="POST" class="form-horizontal form-row-seperated">
                             <div class="form-body">
                                 <div class="form-group">
                                     <label class="control-label col-md-3">Question: <span class="required">*</span></label>
@@ -101,7 +101,7 @@
                                                         <div class="checkbox-list">
                                                             <label class="checkbox-inline">
                                                                 <input name="AnswerChoiceItemViewModels[@i].IsDefault" type="checkbox" value="true" class="is-default" />
-                                                                <input name="AnswerChoiceItemViewModels[@i].IsDefault" type="hidden" value="false" />
+                                                                <input name="AnswerChoiceItemViewModels[@i].IsDefault" type="hidden" value="false" class="is-default-hidden" />
                                                             </label>
                                                         </div>
                                                     </div>
