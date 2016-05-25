@@ -90,7 +90,7 @@
                                         <div class="col-md-offset-3 col-md-9">
                                             @for (var i = 0; i < Model.AnswerChoiceItemViewModels.Count; i++)
                                             {
-                                                <div class="row space-between-row">
+                                                <div class="answer-choice-row row space-between-row">
                                                     <div class="col-md-4">
                                                         <input name="AnswerChoiceItemViewModels[@i].Text" type="text" class="form-control" />
                                                     </div>
@@ -106,21 +106,28 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <a href="javascript:;" class="btn btn-icon-only green">
+                                                        <a href="javascript:;" class="move-row-up btn btn-icon-only green">
                                                             <i class="fa fa-arrow-up">
                                                             </i>
                                                         </a>
-                                                        <a href="javascript:;" class="btn btn-icon-only green">
+                                                        <a href="javascript:;" class="move-row-down btn btn-icon-only green">
                                                             <i class="fa fa-arrow-down">
                                                             </i>
                                                         </a>
-                                                        <a href="javascript:;" class="btn btn-icon-only red">
+                                                        <a href="javascript:;" class="delete-row btn btn-icon-only red">
                                                             <i class="fa fa-remove">
                                                             </i>
                                                         </a>
                                                     </div>
                                                 </div>
                                             }
+                                            <div class="row space-between-row">
+                                                <div class="col-md-9">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button id="addRow" type="button" class="btn green">Add Row</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

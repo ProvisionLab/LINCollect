@@ -11,7 +11,6 @@
         <div class="caption">
             <i class="icon-equalizer font-green-haze"></i>
             <span class="caption-subject font-green-haze bold uppercase">General Survey Information</span>
-            <span class="caption-helper">some info...</span>
         </div>
         <div class="actions">
             <a href="javascript:;" class="btn btn-circle btn-default btn-sm">
@@ -28,19 +27,19 @@
             <input name="Id" type="hidden" value="@Model.Id" />
             <div class="form-body">
                 <div class="form-group">
-                    <label class="control-label col-md-3">Survey Name *:</label>
+                    <label class="control-label col-md-3">Survey Name: <span class="required">*</span></label>
                     <div class="col-md-9">
-                        <input name="TemplateName" type="text" placeholder="small" class="form-control" value="@Model.TemplateName" />
+                        <input name="TemplateName" type="text" class="form-control" value="@Model.TemplateName" />
                         <span class="help-block"> This is inline help </span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-md-3">Language *:</label>
+                    <label class="control-label col-md-3">Language: <span class="required">*</span></label>
                     <div class="col-md-9">
                         <select name="LanguageId" class="form-control">
                             @foreach (var language in Model.Languages)
                             {
-                                <option value="@language.Id" @if (language.Id == Model.LanguageId) { <text> selected="selected" </text>  }>@language.Name</option>
+                                <option value="@language.Id" @if (language.Id == Model.LanguageId) { <text> selected="selected" </text>   }>@language.Name</option>
                             }
                         </select>
                         <span class="help-block"> Select your gender. </span>
@@ -69,7 +68,7 @@
                 <div class="row">
                     <div class="col-md-offset-3 col-md-9">
                         <button type="submit" class="btn green">
-                            <i class="fa fa-pencil"></i> 1Edit
+                            <i class="fa fa-pencil"></i>Edit
                         </button>
                         <button type="button" class="btn default">Cancel</button>
                     </div>
