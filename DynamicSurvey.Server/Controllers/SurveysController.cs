@@ -100,14 +100,14 @@ namespace DynamicSurvey.Server.Controllers
             return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
         }
 
+        public ActionResult EditRespondent(QuestionAction? questionAction)
+        {
+            return View();
+        }
+
         public ActionResult EditQuestion(EditQuestionViewModel editQuestionViewModel)
         {
             throw new NotImplementedException();
-        }
-
-        public ActionResult AboutRespondent()
-        {
-            return View();
         }
 
         public ActionResult Relationships()
