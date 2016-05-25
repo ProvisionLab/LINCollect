@@ -564,6 +564,7 @@
     <Content Include="Content\theme\assets\layouts\layout\scripts\demo.min.js" />
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.js" />
     <Content Include="Content\theme\assets\layouts\layout\scripts\layout.min.js" />
+    <Content Include="Content\styles\_Layout.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\EditRespondent.js" />
     <Content Include="Scripts\EditSurvey.js" />
