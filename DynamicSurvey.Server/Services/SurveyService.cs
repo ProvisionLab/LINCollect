@@ -96,7 +96,10 @@ namespace DynamicSurvey.Server.Services
 
         public EditRespondentViewModel GetEditRespondentViewModel(QuestionAction? questionAction)
         {
-            var editRespondentViewModel = new EditRespondentViewModel();
+            var editRespondentViewModel = new EditRespondentViewModel
+            {
+                QuestionAction = questionAction
+            };
 
             return editRespondentViewModel;
         }
