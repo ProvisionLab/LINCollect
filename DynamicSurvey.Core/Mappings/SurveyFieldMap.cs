@@ -7,12 +7,14 @@ namespace DynamicSurvey.Core.Mappings
     {
         public SurveyFieldMap()
         {
-            Id(it => it.Id);
-            Map(it => it.FieldIndex).Not.Nullable();
-            Map(it => it.Label).Not.Nullable();
-            References(it => it.SurveyFieldType).Column("SurveyFieldType_Id");
-            References(it => it.Group).Column("Group_Id");
-            References(it => it.ParentPage).Not.Nullable().Column("ParentPage_Id");
+            Id(it => it.Id).Column("id");
+            Map(it => it.FieldIndex).Not.Nullable().Column("field_index");
+            Map(it => it.Label).Not.Nullable().Column("label");
+            References(it => it.SurveyFieldType).Column("fk_survey_field_type_id");
+            References(it => it.Group).Column("fk_group_id");
+            References(it => it.ParentPage).Not.Nullable().Column("fk_parent_page_id");
+            HasMany(it => it.SurveyFieldVocabularyCrossList).Inverse().Cascade.All();
+            Table("survey_field");
         }
     }
 }

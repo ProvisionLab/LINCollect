@@ -7,9 +7,10 @@ namespace DynamicSurvey.Core.Mappings
     {
         public SurveyFieldVocabularyCrossMap()
         {
-            Id(it => it.Id);
-            References(it => it.SurveyField).Not.Nullable().Column("SurveyField_Id");
-            References(it => it.VocabularyWord).Not.Nullable().Column("VocabularyWord_Id");
+            Id(it => it.Id).Column("id");
+            References(it => it.SurveyField).Not.Nullable().Column("fk_survey_field_id");
+            References(it => it.VocabularyWord).Not.Nullable().Column("fk_vocabulary_word_id");
+            Table("survey_field_vocabulary_cross");
         }
     }
 }

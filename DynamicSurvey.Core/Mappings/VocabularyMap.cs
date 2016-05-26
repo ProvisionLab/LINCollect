@@ -7,9 +7,10 @@ namespace DynamicSurvey.Core.Mappings
     {
         public VocabularyMap()
         {
-            Id(it => it.Id);
-            Map(it => it.Word).Unique();
-            References(it => it.UserLanguage).Not.Nullable().Column("UserLanguage_Id");
+            Id(it => it.Id).Column("id");
+            Map(it => it.Word).Unique().Column("word");
+            References(it => it.UserLanguage).Not.Nullable().Column("language_id");
+            Table("user_language");
         }
     }
 }

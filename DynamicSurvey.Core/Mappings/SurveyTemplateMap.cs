@@ -17,6 +17,7 @@ namespace DynamicSurvey.Core.Mappings
             References(it => it.UserCreated).Column("user_created_id");
             References(it => it.UserModified).Column("user_modified_id");
             References(it => it.UserLanguage).Column("language_id");
+            HasMany(it => it.SurveyPages).Inverse().Cascade.All();
             Table("survey_template");
         }
     }

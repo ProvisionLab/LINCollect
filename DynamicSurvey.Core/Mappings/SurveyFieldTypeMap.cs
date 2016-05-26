@@ -7,8 +7,9 @@ namespace DynamicSurvey.Core.Mappings
     {
         public SurveyFieldTypeMap()
         {
-            Id(it => it.Id);
-            Map(it => it.FieldType).Unique();
+            Id(it => it.Id).Column("id");
+            Map(it => it.FieldType).Unique().Column("field_type");
+            Table("survey_field_type");
         }
     }
 }
