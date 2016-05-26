@@ -135,11 +135,14 @@
                                                 <div class="col-md-8">
                                                     <div class="radio-list">
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" value="false" />
+                                                            @{
+                                                                var allowMultipleValuesNegation = !Model.AllowMultipleValues;
+                                                            }
+                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text>   } value="@allowMultipleValuesNegation" />
                                                             No
                                                         </label>
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" value="true" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text>    } value="@Model.AllowMultipleValues" />
                                                             Yes
                                                         </label>
                                                     </div>
