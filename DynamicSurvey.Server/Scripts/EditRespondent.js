@@ -2,6 +2,7 @@
 
     var fixRowIndexing = function() {
         $(".answer-choice-row").each(function(rowIndex, rowElement) {
+            $(rowElement).find(".choice-id").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].Id");
             $(rowElement).find(".text").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].Text");
             $(rowElement).find(".coding").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].Coding");
             $(rowElement).find(".is-default").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].IsDefault");
@@ -13,6 +14,7 @@
     var addRow = function() {
         var rowTemplate = $(".answer-choice-row:first").clone(true);
 
+        $(".choice-id", rowTemplate).val("");
         $(".text", rowTemplate).val("");
         $(".coding", rowTemplate).val("");
 

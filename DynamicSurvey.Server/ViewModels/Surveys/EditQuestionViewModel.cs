@@ -13,6 +13,7 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public const decimal DefaultMaximumValue = 5;
         public const decimal DefaultResolution = 1;
 
+        public int SurveyTemplateId { get; set; }
         public int? Id { get; set; }
 
         [AllowHtml]
@@ -35,11 +36,6 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public EditQuestionViewModel()
         {
             AnswerChoiceItemViewModels = new List<AnswerChoiceItemViewModel>(DefaultAnswerChoiceNumber);
-            for (var i = 0; i < DefaultAnswerChoiceNumber; i++)
-            {
-                AnswerChoiceItemViewModels.Add(new AnswerChoiceItemViewModel());
-            }
-
             Rows = DefaultRows;
             ExtremePointLeft = DefaultExtremePointLeft;
             ExtremePointRight = DefaultExtremePointRight;

@@ -1,5 +1,5 @@
 ﻿@using DynamicSurvey.Server.ViewModels
-@model EditSurveyMenu
+@model EditSurveyMenuViewModel
 
 @functions
 {
@@ -13,25 +13,25 @@
 
 <div class="row">
     <div class="col-md-3">
-        <a href="@Url.Action("EditSurvey", "Surveys")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.SurveyOptions, Model)">
+        <a href="@Url.Action("EditSurvey", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId})" class="btn btn-block @SelectMenuItem(EditSurveyMenu.SurveyOptions, Model.EditSurveyMenu)">
             <i class="fa fa-user"></i>
             Survey Options
         </a>
     </div>
     <div class="col-md-3">
-        <a href="@Url.Action("EditRespondent", "Surveys")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.AboutRespondent, Model)">
+        <a href="@Url.Action("EditRespondent", "Surveys", new {surveyTemplateId=Model.SurveyTemplateId})" class="btn btn-block @SelectMenuItem(EditSurveyMenu.AboutRespondent, Model.EditSurveyMenu)">
             <i class="fa fa-user"></i>
             About Respondent
         </a>
     </div>
     <div class="col-md-3">
-        <a href="@Url.Action("Relationships", "Surveys")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.Relationships, Model)">
+        <a href="@Url.Action("Relationships", "Surveys")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.Relationships, Model.EditSurveyMenu)">
             <i class="fa fa-user"></i>
             Relationships
         </a>
     </div>
     <div class="col-md-3">
-        <a href="@Url.Action("PreviewSurvey", "Surveys")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.PreviewSurvey, Model)">
+        <a href="@Url.Action("PreviewSurvey", "Surveys")" class="btn btn-block @SelectMenuItem(EditSurveyMenu.PreviewSurvey, Model.EditSurveyMenu)">
             <i class="fa fa-user"></i>
             Preview Survey
         </a>

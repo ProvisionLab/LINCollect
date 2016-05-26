@@ -16,6 +16,7 @@ namespace DynamicSurvey.Core.Entities
         public SurveyField()
         {
             Choices = new List<SurveyField>();
+            SurveyFieldVocabularyCrossList = new List<SurveyFieldVocabularyCross>();
         }
     }
 }

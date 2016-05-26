@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
@@ -100,18 +99,28 @@ namespace DynamicSurvey.Server.Controllers
             return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
         }
 
-        public ActionResult EditRespondent(QuestionAction? questionAction)
+        public ActionResult EditRespondent(QuestionAction? questionAction, int? surveyTemplateId, int? questionId)
         {
-            var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(questionAction);
+            if (surveyTemplateId == null)
+            {
+                return RedirectToAction("EditSurvey");
+            }
+
+            var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(questionAction,
+                surveyTemplateId.Value, questionId);
 
             return View(editRespondentViewModel);
         }
 
+        [HttpPost]
         public ActionResult EditQuestion(EditQuestionViewModel editQuestionViewModel)
         {
-            _surveyService.CreateQuestion(editQuestionViewModel);
+            if (editQuestionViewModel.Id == null)
+            {
+                _surveyService.CreateQuestion(editQuestionViewModel);
+            }
 
-            throw new NotImplementedException();
+            return RedirectToAction("EditRespondent", new {surveyTemplateId = editQuestionViewModel.SurveyTemplateId});
         }
 
         public ActionResult Relationships()

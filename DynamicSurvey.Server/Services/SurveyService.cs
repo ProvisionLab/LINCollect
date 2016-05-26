@@ -95,15 +95,67 @@ namespace DynamicSurvey.Server.Services
             }
         }
 
-        public EditRespondentViewModel GetEditRespondentViewModel(QuestionAction? questionAction)
+        public EditRespondentViewModel GetEditRespondentViewModel(QuestionAction? questionAction, int surveyTemplateId,
+            int? questionId)
         {
             var editRespondentViewModel = new EditRespondentViewModel
             {
+                SurveyTemplateId = surveyTemplateId,
                 QuestionAction = questionAction
             };
 
-            var editQuestionViewModel = new EditQuestionViewModel();
+            var editQuestionViewModel = new EditQuestionViewModel
+            {
+                SurveyTemplateId = surveyTemplateId
+            };
+
             editRespondentViewModel.EditQuestionViewModel = editQuestionViewModel;
+
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+                if (questionAction == QuestionAction.Edit)
+                {
+                    var question = session.Get<SurveyField>(questionId);
+
+                    editQuestionViewModel.Id = question.Id;
+                    editQuestionViewModel.Question = question.Label;
+                    editQuestionViewModel.Format = GetQuestionFormatFromSurveyField(question);
+
+                    if (question.SurveyFieldType.FieldType == FieldType.GroupBox)
+                    {
+                        if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.Checkbox))
+                        {
+                            editQuestionViewModel.AllowMultipleValues = true;
+                        }
+                        else if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.RadioButton))
+                        {
+                            editQuestionViewModel.AllowMultipleValues = false;
+                        }
+
+                        foreach (var choice in question.Choices)
+                        {
+                            var answerChoiceItemViewModel = new AnswerChoiceItemViewModel
+                            {
+                                Id = choice.Id,
+                                Text = choice.Label
+                            };
+
+                            editQuestionViewModel.AnswerChoiceItemViewModels.Add(answerChoiceItemViewModel);
+                        }
+                    }
+                }
+
+                transaction.Commit();
+            }
+
+            var numberOfEmptyChoicesToAdd = EditQuestionViewModel.DefaultAnswerChoiceNumber -
+                                            editQuestionViewModel.AnswerChoiceItemViewModels.Count;
+
+            for (var i = 0; i < numberOfEmptyChoicesToAdd; i++)
+            {
+                editQuestionViewModel.AnswerChoiceItemViewModels.Add(new AnswerChoiceItemViewModel());
+            }
 
             return editRespondentViewModel;
         }
@@ -187,12 +239,65 @@ namespace DynamicSurvey.Server.Services
                         question.Choices.Add(choice);
                     }
                 }
+                else if (editQuestionViewModel.Format == QuestionFormat.DropDown)
+                {
+                    foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
+                    {
+                        if (!string.IsNullOrWhiteSpace(answerChoiceItemViewModel.Text))
+                        {
+
+                        }
+                    }
+                }
 
                 session.Save(question);
 
                 transaction.Commit();
 
                 return question;
+            }
+        }
+
+        private static QuestionFormat GetQuestionFormatFromSurveyField(SurveyField surveyField)
+        {
+            switch (surveyField.SurveyFieldType.FieldType)
+            {
+                case FieldType.TextBox:
+                {
+                    return QuestionFormat.Text;
+                }
+                case FieldType.Email:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                case FieldType.Checkbox:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                case FieldType.Button:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                case FieldType.RadioButton:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                case FieldType.GroupBox:
+                {
+                    return QuestionFormat.ChoiceDown;
+                }
+                case FieldType.DatePicker:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                case FieldType.DropdownList:
+                {
+                    return QuestionFormat.DropDown;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
             }
         }
     }
