@@ -109,6 +109,8 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditQuestion(EditQuestionViewModel editQuestionViewModel)
         {
+            _surveyService.CreateQuestion(editQuestionViewModel);
+
             throw new NotImplementedException();
         }
 

@@ -13,6 +13,7 @@ namespace DynamicSurvey.Core.Mappings
             References(it => it.SurveyFieldType).Column("fk_survey_field_type_id");
             References(it => it.Group).Column("fk_group_id");
             References(it => it.ParentPage).Not.Nullable().Column("fk_parent_page_id");
+            HasMany(it => it.Choices).Inverse().Cascade.All();
             HasMany(it => it.SurveyFieldVocabularyCrossList).Inverse().Cascade.All();
             Table("survey_field");
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DynamicSurvey.Core;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Core.SessionStorage;
 using DynamicSurvey.Server.ViewModels;
@@ -105,6 +106,94 @@ namespace DynamicSurvey.Server.Services
             editRespondentViewModel.EditQuestionViewModel = editQuestionViewModel;
 
             return editRespondentViewModel;
+        }
+
+        public SurveyField CreateQuestion(EditQuestionViewModel editQuestionViewModel)
+        {
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+                var firstPage = session.Get<SurveyPage>(1);
+
+                var question = new SurveyField
+                {
+                    Label = editQuestionViewModel.Question,
+                    FieldIndex = 1,
+                    ParentPage = firstPage
+                };
+
+                FieldType questionFieldType;
+                switch (editQuestionViewModel.Format)
+                {
+                    case QuestionFormat.Text:
+                    {
+                        questionFieldType = FieldType.TextBox;
+                        break;
+                    }
+                    case QuestionFormat.ChoiceAcross:
+                    {
+                        questionFieldType = FieldType.GroupBox;
+                        break;
+                    }
+                    case QuestionFormat.ChoiceDown:
+                    {
+                        questionFieldType = FieldType.GroupBox;
+                        break;
+                    }
+                    case QuestionFormat.DropDown:
+                    {
+                        questionFieldType = FieldType.DropdownList;
+                        break;
+                    }
+                    case QuestionFormat.Matrix:
+                    {
+                        throw new ArgumentOutOfRangeException();
+                    }
+                    case QuestionFormat.Slider:
+                    {
+                        throw new ArgumentOutOfRangeException();
+                    }
+                    default:
+                    {
+                        throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                var questionSurveyFieldType = session.Query<SurveyFieldType>()
+                    .First(sft => sft.FieldType == questionFieldType);
+                question.SurveyFieldType = questionSurveyFieldType;
+
+                if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
+                    editQuestionViewModel.Format == QuestionFormat.ChoiceDown)
+                {
+                    var choiceFieldType = editQuestionViewModel.AllowMultipleValues
+                        ? FieldType.Checkbox
+                        : FieldType.RadioButton;
+
+                    var choiceSurveyFieldType = session.Query<SurveyFieldType>()
+                        .First(sft => sft.FieldType == choiceFieldType);
+
+                    foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
+                    {
+                        var choice = new SurveyField
+                        {
+                            Label = answerChoiceItemViewModel.Text,
+                            FieldIndex = 1,
+                            ParentPage = firstPage,
+                            Group = question,
+                            SurveyFieldType = choiceSurveyFieldType
+                        };
+
+                        question.Choices.Add(choice);
+                    }
+                }
+
+                session.Save(question);
+
+                transaction.Commit();
+
+                return question;
+            }
         }
     }
 }
