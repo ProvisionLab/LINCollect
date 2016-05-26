@@ -36,6 +36,7 @@
             var questionFormat = $(this).val();
 
             $(".question-format-container").hide();
+            $(".allow-multiple-values-container").hide();
 
             switch (questionFormat) {
             case "Text":
@@ -44,7 +45,17 @@
                 break;
             }
             case "ChoiceAcross":
+            {
+                $("#choiceQuestionFormatContainer").show();
+                $(".allow-multiple-values-container").show();
+                break;
+            }
             case "ChoiceDown":
+            {
+                $("#choiceQuestionFormatContainer").show();
+                $(".allow-multiple-values-container").show();
+                break;
+            }
             case "DropDown":
             {
                 $("#choiceQuestionFormatContainer").show();
