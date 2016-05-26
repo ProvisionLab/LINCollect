@@ -39,7 +39,8 @@
             var questionFormat = $(this).val();
 
             $(".question-format-container").hide();
-            $(".allow-multiple-values-container").hide();
+            $("#includeAnnotationContainer").hide();
+            $("#allowMultipleValuesContainer").hide();
 
             switch (questionFormat) {
             case "Text":
@@ -50,13 +51,14 @@
             case "ChoiceAcross":
             {
                 $("#choiceQuestionFormatContainer").show();
-                $(".allow-multiple-values-container").show();
+                $("#includeAnnotationContainer").show();
+                $("#allowMultipleValuesContainer").show();
                 break;
             }
             case "ChoiceDown":
             {
                 $("#choiceQuestionFormatContainer").show();
-                $(".allow-multiple-values-container").show();
+                $("#allowMultipleValuesContainer").show();
                 break;
             }
             case "DropDown":

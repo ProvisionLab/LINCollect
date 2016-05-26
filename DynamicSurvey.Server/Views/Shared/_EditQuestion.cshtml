@@ -88,6 +88,19 @@
                                 <div class="question-format-container" id="choiceQuestionFormatContainer">
                                     <div class="form-group">
                                         <div class="col-md-offset-3 col-md-9">
+                                            <div id="includeAnnotationContainer" class="row">
+                                                <div class="col-md-3">
+                                                    <label class="control-label">Include annotation:</label>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <div class="checkbox-list">
+                                                        <label class="checkbox-inline">
+                                                            <input name="IncludeAnnotation" type="checkbox" @if (Model.IncludeAnnotation) { <text> checked="checked" </text>    } value="true" />
+                                                            <input name="IncludeAnnotation" type="hidden" value="false" />
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             @for (var i = 0; i < Model.AnswerChoiceItemViewModels.Count; i++)
                                             {
                                                 <div class="answer-choice-row row space-between-row">
@@ -128,18 +141,18 @@
                                                     <button id="addRow" type="button" class="btn green">Add Row</button>
                                                 </div>
                                             </div>
-                                            <div class="row space-between-row allow-multiple-values-container">
+                                            <div id="allowMultipleValuesContainer" class="row space-between-row">
                                                 <div class="col-md-4">
                                                     <label class="control-label">Allow multiple values:</label>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="radio-list">
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text> } value="false" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text>   } value="false" />
                                                             No
                                                         </label>
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text> } value="true" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text>   } value="true" />
                                                             Yes
                                                         </label>
                                                     </div>

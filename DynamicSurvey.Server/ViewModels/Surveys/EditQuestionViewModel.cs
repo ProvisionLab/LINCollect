@@ -14,6 +14,7 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public bool Compulsory { get; set; }
         public QuestionFormat Format { get; set; }
         public int Rows { get; set; }
+        public bool IncludeAnnotation { get; set; }
         public List<AnswerChoiceItemViewModel> AnswerChoiceItemViewModels { get; set; }
         public bool AllowMultipleValues { get; set; }
     }
