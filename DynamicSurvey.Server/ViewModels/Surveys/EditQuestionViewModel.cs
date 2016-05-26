@@ -5,6 +5,14 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
 {
     public class EditQuestionViewModel
     {
+        public const int DefaultRows = 1;
+        public const int DefaultAnswerChoiceNumber = 4;
+        public const string DefaultExtremePointLeft = "Strongly Agree";
+        public const string DefaultExtremePointRight = "Strongly Disagree";
+        public const decimal DefaultMinimumValue = 1;
+        public const decimal DefaultMaximumValue = 5;
+        public const decimal DefaultResolution = 1;
+
         public int? Id { get; set; }
 
         [AllowHtml]
@@ -17,5 +25,27 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public bool IncludeAnnotation { get; set; }
         public List<AnswerChoiceItemViewModel> AnswerChoiceItemViewModels { get; set; }
         public bool AllowMultipleValues { get; set; }
+        public string ExtremePointLeft { get; set; }
+        public string ExtremePointRight { get; set; }
+        public decimal MinimumValue { get; set; }
+        public decimal MaximumValue { get; set; }
+        public decimal Resolution { get; set; }
+        public bool ShowValue { get; set; }
+
+        public EditQuestionViewModel()
+        {
+            AnswerChoiceItemViewModels = new List<AnswerChoiceItemViewModel>(DefaultAnswerChoiceNumber);
+            for (var i = 0; i < DefaultAnswerChoiceNumber; i++)
+            {
+                AnswerChoiceItemViewModels.Add(new AnswerChoiceItemViewModel());
+            }
+
+            Rows = DefaultRows;
+            ExtremePointLeft = DefaultExtremePointLeft;
+            ExtremePointRight = DefaultExtremePointRight;
+            MinimumValue = DefaultMinimumValue;
+            MaximumValue = DefaultMaximumValue;
+            Resolution = DefaultResolution;
+        }
     }
 }

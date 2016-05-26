@@ -95,7 +95,7 @@
                                                 <div class="col-md-1">
                                                     <div class="checkbox-list">
                                                         <label class="checkbox-inline">
-                                                            <input name="IncludeAnnotation" type="checkbox" @if (Model.IncludeAnnotation) { <text> checked="checked" </text>    } value="true" />
+                                                            <input name="IncludeAnnotation" type="checkbox" @if (Model.IncludeAnnotation) { <text> checked="checked" </text>            } value="true" />
                                                             <input name="IncludeAnnotation" type="hidden" value="false" />
                                                         </label>
                                                     </div>
@@ -148,11 +148,11 @@
                                                 <div class="col-md-8">
                                                     <div class="radio-list">
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text>   } value="false" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text>           } value="false" />
                                                             No
                                                         </label>
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text>   } value="true" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text>           } value="true" />
                                                             Yes
                                                         </label>
                                                     </div>
@@ -164,6 +164,47 @@
                                 <div class="question-format-container" id="matrixQuestionFormatContainer">
                                 </div>
                                 <div class="question-format-container" id="sliderQuestionFormatContainer">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Extreme points: <span class="required">*</span></label>
+                                        <div class="col-md-4">
+                                            <input name="ExtremePointLeft" type="text" class="form-control" value="@Model.ExtremePointLeft" />
+                                            <span class="help-block">Appears to left of slider</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input name="ExtremePointRight" type="text" class="form-control" value="@Model.ExtremePointRight" />
+                                            <span class="help-block">Appears to right of slider</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Values: <span class="required">*</span></label>
+                                        <div class="col-md-3">
+                                            <input name="MinimumValue" type="text" class="form-control input-small" value="@Model.MinimumValue" />
+                                            <span class="help-block">Minimum value for slider</span>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input name="MaximumValue" type="text" class="form-control input-small" value="@Model.MaximumValue" />
+                                            <span class="help-block">Maximum value for slider</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Resolution: <span class="required">*</span></label>
+                                        <div class="col-md-9">
+                                            <input name="Resolution" type="text" class="form-control input-small" value="@Model.Resolution" />
+                                            <span class="help-block">The step value. e.g. 0.5 will allow 1, 1.5, 2, 2.5 etc</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Show Value:</label>
+                                        <div class="col-md-9">
+                                            <div class="checkbox-list">
+                                                <label class="checkbox-inline">
+                                                    <input name="ShowValue" type="checkbox" @if (Model.ShowValue) { <text> checked="checked" </text>     } value="true" />
+                                                    <input name="ShowValue" type="hidden" value="false" />
+                                                </label>
+                                            </div>
+                                            <span class="help-block">Show user the value of the slider</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-actions right">

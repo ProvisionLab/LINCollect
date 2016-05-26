@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Core.SessionStorage;
@@ -11,9 +10,6 @@ namespace DynamicSurvey.Server.Services
 {
     public class SurveyService
     {
-        public const int DefaultRows = 1;
-        public const int DefaultAnswerChoiceNumber = 4;
-
         public EditSurveyViewModel GetEditSurveyViewModel(int? surveyTemplateId)
         {
             var editSurveyViewModel = new EditSurveyViewModel();
@@ -105,41 +101,8 @@ namespace DynamicSurvey.Server.Services
                 QuestionAction = questionAction
             };
 
-            var editQuestionViewModel = new EditQuestionViewModel
-            {
-                AnswerChoiceItemViewModels = new List<AnswerChoiceItemViewModel>()
-            };
-
+            var editQuestionViewModel = new EditQuestionViewModel();
             editRespondentViewModel.EditQuestionViewModel = editQuestionViewModel;
-
-            if (questionAction == QuestionAction.Add)
-            {
-                editQuestionViewModel.Rows = DefaultRows;
-            }
-
-            /*
-            if (questionAction != null)
-            {
-                editRespondentViewModel.EditQuestionViewModel = new EditQuestionViewModel();
-                if (questionAction.Value == QuestionAction.Add)
-                {
-                    editRespondentViewModel.EditQuestionViewModel.Rows = DefaultRows;
-                }
-            }
-             */
-
-            var session = PersistenceContext.GetCurrentSession();
-            using (var transaction = session.BeginTransaction())
-            {
-
-            }
-
-            var numberOfEmptyAnswerChoices = DefaultAnswerChoiceNumber -
-                                             editQuestionViewModel.AnswerChoiceItemViewModels.Count;
-            for (var i = 0; i < numberOfEmptyAnswerChoices; i++)
-            {
-                editQuestionViewModel.AnswerChoiceItemViewModels.Add(new AnswerChoiceItemViewModel());
-            }
 
             return editRespondentViewModel;
         }
