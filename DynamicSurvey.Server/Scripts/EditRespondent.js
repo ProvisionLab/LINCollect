@@ -5,7 +5,8 @@
             $(rowElement).find(".text").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].Text");
             $(rowElement).find(".coding").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].Coding");
             $(rowElement).find(".is-default").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].IsDefault");
-            $(rowElement).find(".is-default-hidden").attr("name", "AnswerChoiceItemViewModels[" + rowIndex + "].IsDefault");
+            $(rowElement).find(".is-default-hidden").attr("name", "AnswerChoiceItemViewModels[" + rowIndex +
+                "].IsDefault");
         });
     };
 
@@ -18,8 +19,10 @@
         var isDefaultNameAttribute = (".is-default", rowTemplate).attr("name");
 
         $(".checkbox-inline", rowTemplate).empty();
-        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute + "].IsDefault\" type=\"checkbox\" value=\"true\" class=\"is-default\" />");
-        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute + "].IsDefault\" type=\"hidden\" value=\"false\" class=\"is-default-hidden\" />");
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
+            "].IsDefault\" type=\"checkbox\" value=\"true\" class=\"is-default\" />");
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
+            "].IsDefault\" type=\"hidden\" value=\"false\" class=\"is-default-hidden\" />");
         $(".answer-choice-row:last").after(rowTemplate);
 
         $(".is-default", rowTemplate).uniform();
@@ -75,7 +78,7 @@
             }
         });
 
-        $(".is-default").click(function() {
+        $(document).on("click", ".is-default", function() {
             var checked = $(this).is(":checked");
 
             $(".is-default").prop("checked", false);

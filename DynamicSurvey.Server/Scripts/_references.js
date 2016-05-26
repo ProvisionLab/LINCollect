@@ -1,4 +1,4 @@
-﻿/// <autosync enabled="true"/>
+﻿/// <autosync enabled="true" />
 /// <reference path="../Content/theme/assets/global/plugins/excanvas.min.js" />
 /// <reference path="../Content/theme/assets/global/plugins/jquery.blockui.min.js" />
 /// <reference path="../Content/theme/assets/global/plugins/jquery.min.js" />
