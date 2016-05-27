@@ -120,7 +120,7 @@ namespace DynamicSurvey.Server.Services
 
                     editQuestionViewModel.QuestionId = question.Id;
                     editQuestionViewModel.Question = question.Label;
-                    editQuestionViewModel.Format = GetQuestionFormatFromSurveyField(question);
+                    editQuestionViewModel.Format = GetQuestionFormatFromFieldType(question.SurveyFieldType.FieldType);
 
                     if (question.SurveyFieldType.FieldType == FieldType.GroupBox)
                     {
@@ -140,6 +140,11 @@ namespace DynamicSurvey.Server.Services
                                 Id = choice.Id,
                                 Text = choice.Label
                             };
+
+                            if (choice.SurveyFieldVocabularyCrossList.Any(sfvcl => sfvcl.SurveyField == choice))
+                            {
+                                answerChoiceItemViewModel.IsDefault = true;
+                            }
 
                             editQuestionViewModel.AnswerChoiceItemViewModels.Add(answerChoiceItemViewModel);
                         }
@@ -165,6 +170,7 @@ namespace DynamicSurvey.Server.Services
             var session = PersistenceContext.GetCurrentSession();
             using (var transaction = session.BeginTransaction())
             {
+                var surveyTemplate = session.Get<SurveyTemplate>(editQuestionViewModel.SurveyTemplateId);
                 var firstPage = session.Get<SurveyPage>(1);
 
                 var question = new SurveyField
@@ -174,42 +180,7 @@ namespace DynamicSurvey.Server.Services
                     ParentPage = firstPage
                 };
 
-                FieldType questionFieldType;
-                switch (editQuestionViewModel.Format)
-                {
-                    case QuestionFormat.Text:
-                    {
-                        questionFieldType = FieldType.TextBox;
-                        break;
-                    }
-                    case QuestionFormat.ChoiceAcross:
-                    {
-                        questionFieldType = FieldType.GroupBox;
-                        break;
-                    }
-                    case QuestionFormat.ChoiceDown:
-                    {
-                        questionFieldType = FieldType.GroupBox;
-                        break;
-                    }
-                    case QuestionFormat.DropDown:
-                    {
-                        questionFieldType = FieldType.DropdownList;
-                        break;
-                    }
-                    case QuestionFormat.Matrix:
-                    {
-                        throw new ArgumentOutOfRangeException();
-                    }
-                    case QuestionFormat.Slider:
-                    {
-                        throw new ArgumentOutOfRangeException();
-                    }
-                    default:
-                    {
-                        throw new ArgumentOutOfRangeException();
-                    }
-                }
+                var questionFieldType = GetFieldTypeFromQuestionFormat(editQuestionViewModel.Format);
 
                 var questionSurveyFieldType = session.Query<SurveyFieldType>()
                     .First(sft => sft.FieldType == questionFieldType);
@@ -237,6 +208,31 @@ namespace DynamicSurvey.Server.Services
                         };
 
                         question.Choices.Add(choice);
+
+                        if (answerChoiceItemViewModel.IsDefault)
+                        {
+                            var vocabularyWord = session.Query<Vocabulary>()
+                                .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
+
+                            if (vocabularyWord == null)
+                            {
+                                vocabularyWord = new Vocabulary
+                                {
+                                    Word = answerChoiceItemViewModel.Text,
+                                    UserLanguage = surveyTemplate.UserLanguage
+                                };
+
+                                session.Save(vocabularyWord);
+                            }
+
+                            var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
+                            {
+                                SurveyField = choice,
+                                VocabularyWord = vocabularyWord
+                            };
+
+                            choice.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
+                        }
                     }
                 }
                 else if (editQuestionViewModel.Format == QuestionFormat.DropDown)
@@ -245,7 +241,27 @@ namespace DynamicSurvey.Server.Services
                     {
                         if (!string.IsNullOrWhiteSpace(answerChoiceItemViewModel.Text))
                         {
+                            var vocabularyWord = session.Query<Vocabulary>()
+                                .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
 
+                            if (vocabularyWord == null)
+                            {
+                                vocabularyWord = new Vocabulary
+                                {
+                                    Word = answerChoiceItemViewModel.Text,
+                                    UserLanguage = surveyTemplate.UserLanguage
+                                };
+
+                                session.Save(vocabularyWord);
+                            }
+
+                            var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
+                            {
+                                SurveyField = question,
+                                VocabularyWord = vocabularyWord
+                            };
+
+                            question.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
                         }
                     }
                 }
@@ -258,9 +274,44 @@ namespace DynamicSurvey.Server.Services
             }
         }
 
-        private static QuestionFormat GetQuestionFormatFromSurveyField(SurveyField surveyField)
+        private static FieldType GetFieldTypeFromQuestionFormat(QuestionFormat questionFormat)
         {
-            switch (surveyField.SurveyFieldType.FieldType)
+            switch (questionFormat)
+            {
+                case QuestionFormat.Text:
+                {
+                    return FieldType.TextBox;
+                }
+                case QuestionFormat.ChoiceAcross:
+                {
+                    return FieldType.GroupBox;
+                }
+                case QuestionFormat.ChoiceDown:
+                {
+                    return FieldType.GroupBox;
+                }
+                case QuestionFormat.DropDown:
+                {
+                    return FieldType.DropdownList;
+                }
+                case QuestionFormat.Matrix:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                case QuestionFormat.Slider:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+
+        private static QuestionFormat GetQuestionFormatFromFieldType(FieldType fieldType)
+        {
+            switch (fieldType)
             {
                 case FieldType.TextBox:
                 {
