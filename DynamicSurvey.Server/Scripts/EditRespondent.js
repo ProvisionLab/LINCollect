@@ -30,6 +30,49 @@
         $(".is-default", rowTemplate).uniform();
     };
 
+    var showControlsForQuestionFormat = function(questionFormat) {
+        $(".question-format-container").hide();
+        $("#includeAnnotationContainer").hide();
+        $("#allowMultipleValuesContainer").hide();
+
+        switch (questionFormat) {
+        case "Text":
+        {
+            $("#textQuestionFormatContainer").show();
+            break;
+        }
+        case "ChoiceAcross":
+        {
+            $("#choiceQuestionFormatContainer").show();
+            $("#includeAnnotationContainer").show();
+            $("#allowMultipleValuesContainer").show();
+            break;
+        }
+        case "ChoiceDown":
+        {
+            $("#choiceQuestionFormatContainer").show();
+            $("#allowMultipleValuesContainer").show();
+            break;
+        }
+        case "DropDown":
+        {
+            $("#choiceQuestionFormatContainer").show();
+            break;
+        }
+        case "Matrix":
+        {
+            $("#matrixQuestionFormatContainer").show();
+            break;
+        }
+        case "Slider":
+        {
+            $("#sliderQuestionFormatContainer").show();
+            break;
+        }
+        default:
+        }
+    };
+
     var handleEditQuestionModal = function(questionAction) {
         $("#question").ckeditor();
 
@@ -37,95 +80,15 @@
         $(".question-format-container").hide();
 
         if (questionAction === "Edit") {
-            switch (hiddenQuestionFormat) {
-            case "Text":
-            {
-                $("#questionFormatText").prop("checked", true);
-                $("#textQuestionFormatContainer").show();
-                break;
-            }
-            case "ChoiceAcross":
-            {
-                $("#questionFormatChoiceAcross").prop("checked", true);
-                $("#choiceQuestionFormatContainer").show();
-                $("#includeAnnotationContainer").show();
-                $("#allowMultipleValuesContainer").show();
-                break;
-            }
-            case "ChoiceDown":
-            {
-                $("#questionFormatChoiceDown").prop("checked", true);
-                $("#choiceQuestionFormatContainer").show();
-                break;
-            }
-            case "DropDown":
-            {
-                $("#questionFormatDropDown").prop("checked", true);
-                $("#choiceQuestionFormatContainer").show();
-                $("#allowMultipleValuesContainer").show();
-                break;
-            }
-            case "Matrix":
-            {
-                $("#questionFormatMatrix").prop("checked", true);
-                $("#matrixQuestionFormatContainer").show();
-                break;
-            }
-            case "Slider":
-            {
-                $("#questionFormatSlider").prop("checked", true);
-                $("#sliderQuestionFormatContainer").show();
-                break;
-            }
-            default:
-            }
-
+            $(".format[value=" + hiddenQuestionFormat + "]").prop("checked", true);
             $.uniform.update(".format");
+
+            showControlsForQuestionFormat(hiddenQuestionFormat);
         }
 
         $(".format").change(function() {
             var questionFormat = $(this).val();
-
-            $(".question-format-container").hide();
-            $("#includeAnnotationContainer").hide();
-            $("#allowMultipleValuesContainer").hide();
-
-            switch (questionFormat) {
-            case "Text":
-            {
-                $("#textQuestionFormatContainer").show();
-                break;
-            }
-            case "ChoiceAcross":
-            {
-                $("#choiceQuestionFormatContainer").show();
-                $("#includeAnnotationContainer").show();
-                $("#allowMultipleValuesContainer").show();
-                break;
-            }
-            case "ChoiceDown":
-            {
-                $("#choiceQuestionFormatContainer").show();
-                $("#allowMultipleValuesContainer").show();
-                break;
-            }
-            case "DropDown":
-            {
-                $("#choiceQuestionFormatContainer").show();
-                break;
-            }
-            case "Matrix":
-            {
-                $("#matrixQuestionFormatContainer").show();
-                break;
-            }
-            case "Slider":
-            {
-                $("#sliderQuestionFormatContainer").show();
-                break;
-            }
-            default:
-            }
+            showControlsForQuestionFormat(questionFormat);
         });
 
         $(document).on("click", ".is-default", function() {

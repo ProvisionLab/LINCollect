@@ -42,7 +42,7 @@
                                     <div class="col-md-9">
                                         <div class="checkbox-list">
                                             <label class="checkbox-inline">
-                                                <input name="Compulsory" @if (Model.Compulsory) { <text> checked="checked" </text>  } type="checkbox" value="true" />
+                                                <input name="Compulsory" @if (Model.Compulsory) { <text> checked="checked" </text>   } type="checkbox" value="true" />
                                                 <input name="Compulsory" type="hidden" value="false" />
                                                 Compulsory
                                             </label>
@@ -54,27 +54,27 @@
                                     <div class="col-md-9">
                                         <div class="radio-list">
                                             <label class="radio-inline">
-                                                <input name="Format" id="questionFormatText" type="radio" value="@QuestionFormat.Text" class="format" />
+                                                <input name="Format" type="radio" value="@QuestionFormat.Text" class="format" />
                                                 Text
                                             </label>
                                             <label class="radio-inline">
-                                                <input name="Format" id="questionFormatChoiceAcross" type="radio" value="@QuestionFormat.ChoiceAcross" class="format" />
+                                                <input name="Format" type="radio" value="@QuestionFormat.ChoiceAcross" class="format" />
                                                 Choice Across
                                             </label>
                                             <label class="radio-inline">
-                                                <input name="Format" id="questionFormatChoiceDown" type="radio" value="@QuestionFormat.ChoiceDown" class="format" />
+                                                <input name="Format" type="radio" value="@QuestionFormat.ChoiceDown" class="format" />
                                                 Choice Down
                                             </label>
                                             <label class="radio-inline">
-                                                <input name="Format" id="questionFormatDropDown" type="radio" value="@QuestionFormat.DropDown" class="format" />
+                                                <input name="Format" type="radio" value="@QuestionFormat.DropDown" class="format" />
                                                 Drop Down
                                             </label>
                                             <label class="radio-inline">
-                                                <input name="Format" id="questionFormatMatrix" type="radio" value="@QuestionFormat.Matrix" class="format" />
+                                                <input name="Format" type="radio" value="@QuestionFormat.Matrix" class="format" />
                                                 Matrix
                                             </label>
                                             <label class="radio-inline">
-                                                <input name="Format" id="questionFormatSlider" type="radio" value="@QuestionFormat.Slider" class="format" />
+                                                <input name="Format" type="radio" value="@QuestionFormat.Slider" class="format" />
                                                 Slider
                                             </label>
                                         </div>
@@ -98,7 +98,7 @@
                                                 <div class="col-md-1">
                                                     <div class="checkbox-list">
                                                         <label class="checkbox-inline">
-                                                            <input name="IncludeAnnotation" type="checkbox" @if (Model.IncludeAnnotation) { <text> checked="checked" </text>       } value="true" />
+                                                            <input name="IncludeAnnotation" type="checkbox" @if (Model.IncludeAnnotation) { <text> checked="checked" </text>        } value="true" />
                                                             <input name="IncludeAnnotation" type="hidden" value="false" />
                                                         </label>
                                                     </div>
@@ -117,7 +117,7 @@
                                                     <div class="col-md-1">
                                                         <div class="checkbox-list">
                                                             <label class="checkbox-inline">
-                                                                <input name="AnswerChoiceItemViewModels[@i].IsDefault" @if (Model.AnswerChoiceItemViewModels[i].IsDefault) { <text> checked="checked" </text>       } type="checkbox" value="true" class="is-default" />
+                                                                <input name="AnswerChoiceItemViewModels[@i].IsDefault" @if (Model.AnswerChoiceItemViewModels[i].IsDefault) { <text> checked="checked" </text>        } type="checkbox" value="true" class="is-default" />
                                                                 <input name="AnswerChoiceItemViewModels[@i].IsDefault" type="hidden" value="false" class="is-default-hidden" />
                                                             </label>
                                                         </div>
@@ -152,11 +152,11 @@
                                                 <div class="col-md-8">
                                                     <div class="radio-list">
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text>       } value="false" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (!Model.AllowMultipleValues) { <text> checked="checked" </text>        } value="false" />
                                                             No
                                                         </label>
                                                         <label class="radio-inline">
-                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text>       } value="true" />
+                                                            <input name="AllowMultipleValues" type="radio" @if (Model.AllowMultipleValues) { <text> checked="checked" </text>        } value="true" />
                                                             Yes
                                                         </label>
                                                     </div>
@@ -202,7 +202,7 @@
                                         <div class="col-md-9">
                                             <div class="checkbox-list">
                                                 <label class="checkbox-inline">
-                                                    <input name="ShowValue" type="checkbox" @if (Model.ShowValue) { <text> checked="checked" </text>       } value="true" />
+                                                    <input name="ShowValue" type="checkbox" @if (Model.ShowValue) { <text> checked="checked" </text>        } value="true" />
                                                     <input name="ShowValue" type="hidden" value="false" />
                                                 </label>
                                             </div>
