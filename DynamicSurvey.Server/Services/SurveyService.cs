@@ -118,7 +118,7 @@ namespace DynamicSurvey.Server.Services
                 {
                     var question = session.Get<SurveyField>(questionId);
 
-                    editQuestionViewModel.Id = question.Id;
+                    editQuestionViewModel.QuestionId = question.Id;
                     editQuestionViewModel.Question = question.Label;
                     editQuestionViewModel.Format = GetQuestionFormatFromSurveyField(question);
 

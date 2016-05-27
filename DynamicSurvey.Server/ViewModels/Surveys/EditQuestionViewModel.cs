@@ -14,7 +14,7 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public const decimal DefaultResolution = 1;
 
         public int SurveyTemplateId { get; set; }
-        public int? Id { get; set; }
+        public int? QuestionId { get; set; }
 
         [AllowHtml]
         public string Question { get; set; }

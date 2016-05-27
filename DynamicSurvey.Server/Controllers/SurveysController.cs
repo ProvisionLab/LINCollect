@@ -115,7 +115,7 @@ namespace DynamicSurvey.Server.Controllers
         [HttpPost]
         public ActionResult EditQuestion(EditQuestionViewModel editQuestionViewModel)
         {
-            if (editQuestionViewModel.Id == null)
+            if (editQuestionViewModel.QuestionId == null)
             {
                 _surveyService.CreateQuestion(editQuestionViewModel);
             }
