@@ -149,14 +149,29 @@ namespace DynamicSurvey.Server.Services
                             editQuestionViewModel.AnswerChoiceItemViewModels.Add(answerChoiceItemViewModel);
                         }
                     }
+                    else if (question.SurveyFieldType.FieldType == FieldType.DropdownList)
+                    {
+                        foreach (var dropDownListItem in question.SurveyFieldVocabularyCrossList)
+                        {
+                            var answerChoiceItemViewModel = new AnswerChoiceItemViewModel
+                            {
+                                Id = dropDownListItem.Id,
+                                Text = dropDownListItem.VocabularyWord.Word
+                            };
+
+                            // todo: Come up with how to store default value for dropdown
+
+                            editQuestionViewModel.AnswerChoiceItemViewModels.Add(answerChoiceItemViewModel);
+                        }
+                    }
                 }
 
                 transaction.Commit();
             }
 
+            // Add empty rows to viewmodel if needed
             var numberOfEmptyChoicesToAdd = EditQuestionViewModel.DefaultAnswerChoiceNumber -
                                             editQuestionViewModel.AnswerChoiceItemViewModels.Count;
-
             for (var i = 0; i < numberOfEmptyChoicesToAdd; i++)
             {
                 editQuestionViewModel.AnswerChoiceItemViewModels.Add(new AnswerChoiceItemViewModel());
