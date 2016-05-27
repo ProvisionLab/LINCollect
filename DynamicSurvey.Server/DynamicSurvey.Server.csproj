@@ -569,6 +569,7 @@
     <Content Include="Scripts\EditRespondent.js" />
     <Content Include="Scripts\EditSurvey.js" />
     <None Include="Scripts\_references.js" />
+    <None Include="Scripts\vsdoc\jquery-2.1.0-vsdoc.js" />
     <Content Include="Scripts\_Layout.js" />
     <Content Include="Web.config" />
   </ItemGroup>

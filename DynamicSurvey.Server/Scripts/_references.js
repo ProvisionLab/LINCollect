@@ -225,3 +225,4 @@
 /// <reference path="EditSurvey.js" />
 /// <reference path="_layout.js" />
 /// <reference path="editrespondent.js" />
+/// <reference path="vsdoc/jquery-2.1.0.js" />
