@@ -119,6 +119,10 @@ namespace DynamicSurvey.Server.Controllers
             {
                 _surveyService.CreateQuestion(editQuestionViewModel);
             }
+            else
+            {
+                _surveyService.EditQuestion(editQuestionViewModel);
+            }
 
             return RedirectToAction("EditRespondent", new {surveyTemplateId = editQuestionViewModel.SurveyTemplateId});
         }
