@@ -139,7 +139,7 @@ namespace DynamicSurvey.Server.Services
                             editQuestionViewModel.AllowMultipleValues = false;
                         }
 
-                        foreach (var choice in question.Choices)
+                        foreach (var choice in question.Choices.OrderBy(c => c.DisplayOrder))
                         {
                             var answerChoiceItemViewModel = new AnswerChoiceItemViewModel
                             {
@@ -201,7 +201,7 @@ namespace DynamicSurvey.Server.Services
                             questionItemViewModel.AllowMultipleValues = false;
                         }
 
-                        foreach (var choice in question.Choices)
+                        foreach (var choice in question.Choices.OrderBy(c => c.DisplayOrder))
                         {
                             var questionChoiceItemViewModel = new QuestionChoiceItemViewModel
                             {
@@ -276,7 +276,19 @@ namespace DynamicSurvey.Server.Services
 
                 if (editQuestionViewModel.InsertPosition == null)
                 {
-                    questionDisplayOrder = 1;
+                    var maxQuestionDisplayOrder = session.Query<SurveyField>()
+                        .Where(q => q.ParentPage.SurveyTemplate == surveyTemplate)
+                        .Where(q => q.Group == null)
+                        .Max(q => (int?) q.DisplayOrder);
+
+                    if (maxQuestionDisplayOrder != null)
+                    {
+                        questionDisplayOrder = maxQuestionDisplayOrder.Value + 1;
+                    }
+                    else
+                    {
+                        questionDisplayOrder = 1;
+                    }
                 }
                 else
                 {
@@ -319,11 +331,16 @@ namespace DynamicSurvey.Server.Services
                     var choiceSurveyFieldType = session.Query<SurveyFieldType>()
                         .First(sft => sft.FieldType == choiceFieldType);
 
+                    var choiceDisplayOrderCounter = 0;
+
                     foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
                     {
+                        choiceDisplayOrderCounter++;
+
                         var choice = new SurveyField
                         {
                             Label = answerChoiceItemViewModel.Text,
+                            DisplayOrder = choiceDisplayOrderCounter,
                             FieldIndex = 1,
                             ParentPage = surveyPage,
                             Group = question,

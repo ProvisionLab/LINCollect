@@ -59,7 +59,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>  } />
+                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>      } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -71,7 +71,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label class="radio-inline">
-                                                <input name="answer-choice" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>  } />
+                                                <input name="answer-choice-@question.QuestionId" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>       } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -86,7 +86,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label>
-                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>  } />
+                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>      } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -98,7 +98,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label>
-                                                <input name="answer-choice" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>  } />
+                                                <input name="answer-choice-@question.QuestionId" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>      } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -118,6 +118,14 @@
                         </div>
                     </div>
                 }
+                <div class="row">
+                    <div class="col-md-offset-10 col-md-2">
+                        <a href="@Url.Action("EditRespondent", "Surveys", new {questionAction = QuestionAction.Add, surveyTemplateId = Model.SurveyTemplateId})" class="btn btn-sm green">
+                            Insert Question
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
