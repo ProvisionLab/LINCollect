@@ -3,6 +3,7 @@ using System.Linq;
 using DynamicSurvey.Core;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Core.SessionStorage;
+using DynamicSurvey.Server.Models.Surveys;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
 using NHibernate.Linq;
@@ -95,18 +96,23 @@ namespace DynamicSurvey.Server.Services
             }
         }
 
-        public EditRespondentViewModel GetEditRespondentViewModel(QuestionAction? questionAction, int surveyTemplateId,
-            int? questionId)
+        public EditRespondentViewModel GetEditRespondentViewModel(EditRespondentRequestModel request)
         {
+            if (request.SurveyTemplateId == null)
+            {
+                throw new NullReferenceException("SurveyTemplateId can not be null.");
+            }
+
             var editRespondentViewModel = new EditRespondentViewModel
             {
-                SurveyTemplateId = surveyTemplateId,
-                QuestionAction = questionAction
+                SurveyTemplateId = request.SurveyTemplateId.Value,
+                QuestionAction = request.QuestionAction
             };
 
             var editQuestionViewModel = new EditQuestionViewModel
             {
-                SurveyTemplateId = surveyTemplateId
+                SurveyTemplateId = request.SurveyTemplateId.Value,
+                InsertPosition = request.InsertPosition
             };
 
             editRespondentViewModel.EditQuestionViewModel = editQuestionViewModel;
@@ -114,9 +120,9 @@ namespace DynamicSurvey.Server.Services
             var session = PersistenceContext.GetCurrentSession();
             using (var transaction = session.BeginTransaction())
             {
-                if (questionAction == QuestionAction.Edit)
+                if (request.QuestionAction == QuestionAction.Edit)
                 {
-                    var question = session.Get<SurveyField>(questionId);
+                    var question = session.Get<SurveyField>(request.QuestionId);
 
                     editQuestionViewModel.QuestionId = question.Id;
                     editQuestionViewModel.Question = question.Label;
@@ -167,14 +173,11 @@ namespace DynamicSurvey.Server.Services
                 }
 
                 var questions = session.Query<SurveyField>()
-                    .Where(q => q.ParentPage.SurveyTemplate.Id == surveyTemplateId)
-                    // Enumerate here all types of questions you want to see in list
-                    .Where(q => q.SurveyFieldType.FieldType == FieldType.GroupBox ||
-                                q.SurveyFieldType.FieldType == FieldType.TextBox ||
-                                q.SurveyFieldType.FieldType == FieldType.DropdownList)
+                    .Where(q => q.ParentPage.SurveyTemplate.Id == request.SurveyTemplateId.Value)
+                    .Where(q => q.Group == null)
                     .Fetch(q => q.Choices)
                     .Fetch(q => q.SurveyFieldVocabularyCrossList)
-                    .OrderBy(q => q.FieldIndex)
+                    .OrderBy(q => q.DisplayOrder)
                     .ToList();
 
                 foreach (var question in questions)
@@ -183,7 +186,7 @@ namespace DynamicSurvey.Server.Services
                     {
                         QuestionId = question.Id,
                         Question = question.Label,
-                        FieldIndex = question.FieldIndex,
+                        DisplayOrder = question.DisplayOrder,
                         Format = GetQuestionFormatFromFieldType(question.SurveyFieldType.FieldType)
                     };
 
@@ -269,9 +272,33 @@ namespace DynamicSurvey.Server.Services
                     session.Save(surveyPage);
                 }
 
+                int questionDisplayOrder;
+
+                if (editQuestionViewModel.InsertPosition == null)
+                {
+                    questionDisplayOrder = 1;
+                }
+                else
+                {
+                    questionDisplayOrder = editQuestionViewModel.InsertPosition.Value;
+
+                    var questionsWithHigherOrEqualDisplayOrder = session.Query<SurveyField>()
+                        .Where(q => q.ParentPage.SurveyTemplate == surveyTemplate)
+                        .Where(q => q.Group == null)
+                        .Where(q => q.DisplayOrder >= questionDisplayOrder)
+                        .ToList();
+
+                    foreach (var quest in questionsWithHigherOrEqualDisplayOrder)
+                    {
+                        quest.DisplayOrder++;
+                        session.Save(quest);
+                    }
+                }
+
                 var question = new SurveyField
                 {
                     Label = editQuestionViewModel.Question,
+                    DisplayOrder = questionDisplayOrder,
                     FieldIndex = 1,
                     ParentPage = surveyPage
                 };

@@ -595,6 +595,7 @@
     <Compile Include="Infrastructure\ApiSession\SessionStateRouteHandler.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Models\SurveysSelector.cs" />
+    <Compile Include="Models\Surveys\EditRespondentRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SurveyService.cs" />
     <Compile Include="ViewModels\EditSurveyMenu.cs" />

@@ -32,6 +32,7 @@ namespace DynamicSurvey.Server.ViewModels.Surveys
         public decimal MaximumValue { get; set; }
         public decimal Resolution { get; set; }
         public bool ShowValue { get; set; }
+        public int? InsertPosition { get; set; }
 
         public EditQuestionViewModel()
         {

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using DynamicSurvey.Core.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
+using DynamicSurvey.Server.Models.Surveys;
 using DynamicSurvey.Server.Services;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
@@ -99,15 +100,14 @@ namespace DynamicSurvey.Server.Controllers
             return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
         }
 
-        public ActionResult EditRespondent(QuestionAction? questionAction, int? surveyTemplateId, int? questionId)
+        public ActionResult EditRespondent(EditRespondentRequestModel request)
         {
-            if (surveyTemplateId == null)
+            if (request.SurveyTemplateId == null)
             {
                 return RedirectToAction("EditSurvey");
             }
 
-            var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(questionAction,
-                surveyTemplateId.Value, questionId);
+            var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(request);
 
             return View(editRespondentViewModel);
         }

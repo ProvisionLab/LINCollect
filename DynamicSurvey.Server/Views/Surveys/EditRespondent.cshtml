@@ -14,8 +14,6 @@
 
 @{ Html.RenderPartial("_EditSurveyMenu", editSurveyMenuViewModel); }
 
-<a class="btn red btn-outline sbold" data-toggle="modal" href="@Url.Action("EditRespondent", "Surveys", new { questionAction = QuestionAction.Add, surveyTemplateId = Model.SurveyTemplateId })">insert question</a>
-
 <input type="hidden" id="questionAction" value="@Model.QuestionAction" />
 @if (Model.QuestionAction != null)
 {
@@ -28,9 +26,17 @@
             <div class="form-body">
                 @foreach (var question in Model.Questions)
                 {
+                    <div class="row">
+                        <div class="col-md-offset-10 col-md-2">
+                            <a href="@Url.Action("EditRespondent", "Surveys", new {questionAction = QuestionAction.Add, surveyTemplateId = Model.SurveyTemplateId, insertPosition = question.DisplayOrder})" class="btn btn-sm green">
+                                Insert Question
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-md-1">
-                            <span class="label label-primary">@question.FieldIndex</span>
+                            <span class="label label-primary">@question.DisplayOrder</span>
                         </div>
                         <div class="col-md-8">
                             @Html.Raw(question.Question)
@@ -53,7 +59,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text> } />
+                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>  } />
                                                 @answerChoice.Text
                                             </label>
                                         }
