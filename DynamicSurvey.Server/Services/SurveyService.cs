@@ -166,6 +166,71 @@ namespace DynamicSurvey.Server.Services
                     }
                 }
 
+                var questions = session.Query<SurveyField>()
+                    .Where(q => q.ParentPage.SurveyTemplate.Id == surveyTemplateId)
+                    // Enumerate here all types of questions you want to see in list
+                    .Where(q => q.SurveyFieldType.FieldType == FieldType.GroupBox ||
+                                q.SurveyFieldType.FieldType == FieldType.TextBox ||
+                                q.SurveyFieldType.FieldType == FieldType.DropdownList)
+                    .Fetch(q => q.Choices)
+                    .Fetch(q => q.SurveyFieldVocabularyCrossList)
+                    .OrderBy(q => q.FieldIndex)
+                    .ToList();
+
+                foreach (var question in questions)
+                {
+                    var questionItemViewModel = new QuestionItemViewModel
+                    {
+                        QuestionId = question.Id,
+                        Question = question.Label,
+                        FieldIndex = question.FieldIndex,
+                        Format = GetQuestionFormatFromFieldType(question.SurveyFieldType.FieldType)
+                    };
+
+                    if (question.SurveyFieldType.FieldType == FieldType.GroupBox)
+                    {
+                        if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.Checkbox))
+                        {
+                            questionItemViewModel.AllowMultipleValues = true;
+                        }
+                        else if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.RadioButton))
+                        {
+                            questionItemViewModel.AllowMultipleValues = false;
+                        }
+
+                        foreach (var choice in question.Choices)
+                        {
+                            var questionChoiceItemViewModel = new QuestionChoiceItemViewModel
+                            {
+                                Text = choice.Label
+                            };
+
+                            if (choice.SurveyFieldVocabularyCrossList.Any(sfvcl => sfvcl.SurveyField == choice))
+                            {
+                                questionChoiceItemViewModel.IsDefault = true;
+                            }
+
+                            questionItemViewModel.AnswerChoices.Add(questionChoiceItemViewModel);
+                        }
+                    }
+                    else if (question.SurveyFieldType.FieldType == FieldType.DropdownList)
+                    {
+                        foreach (var dropDownListItem in question.SurveyFieldVocabularyCrossList)
+                        {
+                            var questionChoiceItemViewModel = new QuestionChoiceItemViewModel
+                            {
+                                Text = dropDownListItem.VocabularyWord.Word
+                            };
+
+                            // todo: Come up with how to store default value for dropdown
+
+                            questionItemViewModel.AnswerChoices.Add(questionChoiceItemViewModel);
+                        }
+                    }
+
+                    editRespondentViewModel.Questions.Add(questionItemViewModel);
+                }
+
                 transaction.Commit();
             }
 
@@ -186,13 +251,29 @@ namespace DynamicSurvey.Server.Services
             using (var transaction = session.BeginTransaction())
             {
                 var surveyTemplate = session.Get<SurveyTemplate>(editQuestionViewModel.SurveyTemplateId);
-                var firstPage = session.Get<SurveyPage>(1);
+
+                // Create survey page if not exist
+                SurveyPage surveyPage;
+                if (surveyTemplate.SurveyPages.Any())
+                {
+                    surveyPage = surveyTemplate.SurveyPages.First();
+                }
+                else
+                {
+                    surveyPage = new SurveyPage
+                    {
+                        PageIndex = 1,
+                        PageTitle = "First Page",
+                        SurveyTemplate = surveyTemplate
+                    };
+                    session.Save(surveyPage);
+                }
 
                 var question = new SurveyField
                 {
                     Label = editQuestionViewModel.Question,
                     FieldIndex = 1,
-                    ParentPage = firstPage
+                    ParentPage = surveyPage
                 };
 
                 var questionFieldType = GetFieldTypeFromQuestionFormat(editQuestionViewModel.Format);
@@ -217,7 +298,7 @@ namespace DynamicSurvey.Server.Services
                         {
                             Label = answerChoiceItemViewModel.Text,
                             FieldIndex = 1,
-                            ParentPage = firstPage,
+                            ParentPage = surveyPage,
                             Group = question,
                             SurveyFieldType = choiceSurveyFieldType
                         };

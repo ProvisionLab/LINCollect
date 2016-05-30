@@ -607,6 +607,8 @@
     <Compile Include="ViewModels\Surveys\EditRespondentViewModel.cs" />
     <Compile Include="ViewModels\Surveys\EditSurveyViewModel.cs" />
     <Compile Include="ViewModels\Surveys\LanguageItemViewModel.cs" />
+    <Compile Include="ViewModels\Surveys\QuestionChoiceItemViewModel.cs" />
+    <Compile Include="ViewModels\Surveys\QuestionItemViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

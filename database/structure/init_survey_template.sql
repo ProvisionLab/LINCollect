@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS Survey_Field(
     fk_survey_field_type_id		BIGINT UNSIGNED NULL,
 	fk_group_id					BIGINT UNSIGNED NULL,  
 	field_index					BIGINT UNSIGNED NOT NULL,
-    label						varchar(50) NOT NULL,
+    label						varchar(5000) 	NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (fk_survey_field_type_id) REFERENCES Survey_Field_Type (id)
 	ON DELETE SET NULL,

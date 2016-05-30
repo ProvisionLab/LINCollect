@@ -15,6 +15,11 @@ namespace DynamicSurvey.Core.Entities
         public virtual User UserCreated { get; set; }
         public virtual User UserModified { get; set; }
         public virtual UserLanguage UserLanguage { get; set; }
-        public virtual IList<SurveyPage> SurveyPages { get; set; }
+        public virtual ISet<SurveyPage> SurveyPages { get; set; }
+
+        public SurveyTemplate()
+        {
+            SurveyPages = new HashSet<SurveyPage>();
+        }
     }
 }
