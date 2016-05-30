@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS Survey_Field(
 	fk_parent_page_id			BIGINT UNSIGNED NOT NULL,
     fk_survey_field_type_id		BIGINT UNSIGNED NULL,
 	fk_group_id					BIGINT UNSIGNED NULL,  
+	display_order				INT	   UNSIGNED NOT NULL,
 	field_index					BIGINT UNSIGNED NOT NULL,
     label						varchar(5000) 	NOT NULL,
 	PRIMARY KEY (id),

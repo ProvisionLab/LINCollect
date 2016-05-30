@@ -8,6 +8,7 @@ namespace DynamicSurvey.Core.Mappings
         public SurveyFieldMap()
         {
             Id(it => it.Id).Column("id");
+            Map(it => it.DisplayOrder).Not.Nullable().Column("display_order");
             Map(it => it.FieldIndex).Not.Nullable().Column("field_index");
             Map(it => it.Label).Not.Nullable().Column("label");
             References(it => it.SurveyFieldType).Column("fk_survey_field_type_id");
