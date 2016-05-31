@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS Survey_Field(
 	fk_parent_page_id			BIGINT UNSIGNED NOT NULL,
     fk_survey_field_type_id		BIGINT UNSIGNED NULL,
 	fk_group_id					BIGINT UNSIGNED NULL,  
-	display_order				INT	   UNSIGNED NOT NULL DEFAULT 0,
+	display_order				INT	   UNSIGNED NULL,
 	field_index					BIGINT UNSIGNED NOT NULL,
     label						varchar(5000) 	NOT NULL,
 	PRIMARY KEY (id),
@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS Survey_Field(
 select 'survey_field_vocabulary_cross - for default values in survey_field' as '';
 CREATE TABLE IF NOT EXISTS Survey_Field_Vocabulary_Cross(
 	id							SERIAL,
+	display_order				INT	   UNSIGNED NULL,
     fk_survey_field_id			BIGINT UNSIGNED NOT NULL,
     fk_vocabulary_word_id		BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (id),

@@ -3,6 +3,7 @@
     public class SurveyFieldVocabularyCross
     {
         public virtual int Id { get; protected set; }
+        public virtual int DisplayOrder { get; set; }
         public virtual SurveyField SurveyField { get; set; }
         public virtual Vocabulary VocabularyWord { get; set; }
     }
