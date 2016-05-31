@@ -157,7 +157,8 @@ namespace DynamicSurvey.Server.Services
                     }
                     else if (question.SurveyFieldType.FieldType == FieldType.DropdownList)
                     {
-                        foreach (var dropDownListItem in question.SurveyFieldVocabularyCrossList)
+                        foreach (var dropDownListItem in
+                            question.SurveyFieldVocabularyCrossList.OrderBy(sfvcl => sfvcl.DisplayOrder))
                         {
                             var answerChoiceItemViewModel = new AnswerChoiceItemViewModel
                             {
@@ -218,7 +219,8 @@ namespace DynamicSurvey.Server.Services
                     }
                     else if (question.SurveyFieldType.FieldType == FieldType.DropdownList)
                     {
-                        foreach (var dropDownListItem in question.SurveyFieldVocabularyCrossList)
+                        foreach (var dropDownListItem in 
+                            question.SurveyFieldVocabularyCrossList.OrderBy(sfvcl => sfvcl.DisplayOrder))
                         {
                             var questionChoiceItemViewModel = new QuestionChoiceItemViewModel
                             {
@@ -377,10 +379,14 @@ namespace DynamicSurvey.Server.Services
                 }
                 else if (editQuestionViewModel.Format == QuestionFormat.DropDown)
                 {
+                    var dropDownListItemDisplayOrderCounter = 0;
+
                     foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
                     {
                         if (!string.IsNullOrWhiteSpace(answerChoiceItemViewModel.Text))
                         {
+                            dropDownListItemDisplayOrderCounter++;
+
                             var vocabularyWord = session.Query<Vocabulary>()
                                 .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
 
@@ -397,6 +403,7 @@ namespace DynamicSurvey.Server.Services
 
                             var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
                             {
+                                DisplayOrder = dropDownListItemDisplayOrderCounter,
                                 SurveyField = question,
                                 VocabularyWord = vocabularyWord
                             };
