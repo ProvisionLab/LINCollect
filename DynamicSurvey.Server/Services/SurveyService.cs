@@ -489,6 +489,78 @@ namespace DynamicSurvey.Server.Services
             }
         }
 
+        public void DuplicateQuestion(int questionId)
+        {
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+                var question = session.Get<SurveyField>(questionId);
+
+                var questionsWithHigherDisplayOrder = session.Query<SurveyField>()
+                    .Where(q => q.ParentPage.SurveyTemplate == question.ParentPage.SurveyTemplate)
+                    .Where(q => q.Group == null)
+                    .Where(q => q.DisplayOrder > question.DisplayOrder)
+                    .ToList();
+
+                foreach (var quest in questionsWithHigherDisplayOrder)
+                {
+                    quest.DisplayOrder++;
+                    session.Save(quest);
+                }
+
+                var duplicateQuestion = new SurveyField
+                {
+                    Label = question.Label,
+                    DisplayOrder = question.DisplayOrder + 1,
+                    FieldIndex = 1,
+                    ParentPage = question.ParentPage,
+                    SurveyFieldType = question.SurveyFieldType
+                };
+
+                foreach (var choice in question.Choices)
+                {
+                    var duplicateChoice = new SurveyField
+                    {
+                        Label = choice.Label,
+                        DisplayOrder = choice.DisplayOrder,
+                        FieldIndex = 1,
+                        ParentPage = choice.ParentPage,
+                        Group = duplicateQuestion,
+                        SurveyFieldType = choice.SurveyFieldType
+                    };
+
+                    foreach (var defaultChoice in choice.SurveyFieldVocabularyCrossList)
+                    {
+                        var duplicateDefaultChoice = new SurveyFieldVocabularyCross
+                        {
+                            SurveyField = duplicateChoice,
+                            VocabularyWord = defaultChoice.VocabularyWord
+                        };
+
+                        duplicateChoice.SurveyFieldVocabularyCrossList.Add(duplicateDefaultChoice);
+                    }
+
+                    duplicateQuestion.Choices.Add(duplicateChoice);
+                }
+
+                foreach (var dropDownListItem in question.SurveyFieldVocabularyCrossList)
+                {
+                    var duplicateDropDownListItem = new SurveyFieldVocabularyCross
+                    {
+                        DisplayOrder = dropDownListItem.DisplayOrder,
+                        SurveyField = duplicateQuestion,
+                        VocabularyWord = dropDownListItem.VocabularyWord
+                    };
+
+                    duplicateQuestion.SurveyFieldVocabularyCrossList.Add(duplicateDropDownListItem);
+                }
+
+                session.Save(duplicateQuestion);
+
+                transaction.Commit();
+            }
+        }
+
         private static FieldType GetFieldTypeFromQuestionFormat(QuestionFormat questionFormat)
         {
             switch (questionFormat)

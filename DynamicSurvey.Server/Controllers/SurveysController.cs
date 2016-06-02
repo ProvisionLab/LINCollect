@@ -143,6 +143,14 @@ namespace DynamicSurvey.Server.Controllers
             return RedirectToAction("EditRespondent", new {surveyTemplateId});
         }
 
+        [HttpPost]
+        public ActionResult DuplicateQuestion(int surveyTemplateId, int questionId)
+        {
+            _surveyService.DuplicateQuestion(questionId);
+
+            return RedirectToAction("EditRespondent", new {surveyTemplateId});
+        }
+
         public ActionResult Relationships()
         {
             return View();
