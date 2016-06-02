@@ -135,6 +135,14 @@ namespace DynamicSurvey.Server.Controllers
             return RedirectToAction("EditRespondent", new {surveyTemplateId});
         }
 
+        [HttpPost]
+        public ActionResult DeleteQuestion(int surveyTemplateId, int questionId)
+        {
+            _surveyService.DeleteQuestion(questionId);
+
+            return RedirectToAction("EditRespondent", new {surveyTemplateId});
+        }
+
         public ActionResult Relationships()
         {
             return View();

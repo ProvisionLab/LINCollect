@@ -464,6 +464,31 @@ namespace DynamicSurvey.Server.Services
             throw new NotImplementedException();
         }
 
+        public void DeleteQuestion(int questionId)
+        {
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+                var question = session.Get<SurveyField>(questionId);
+
+                var upperQuestions = session.Query<SurveyField>()
+                    .Where(q => q.ParentPage.SurveyTemplate == question.ParentPage.SurveyTemplate)
+                    .Where(q => q.Group == null)
+                    .Where(q => q.DisplayOrder > question.DisplayOrder)
+                    .ToList();
+
+                foreach (var upperQuestion in upperQuestions)
+                {
+                    upperQuestion.DisplayOrder--;
+                    session.Save(upperQuestion);
+                }
+
+                session.Delete(question);
+
+                transaction.Commit();
+            }
+        }
+
         private static FieldType GetFieldTypeFromQuestionFormat(QuestionFormat questionFormat)
         {
             switch (questionFormat)
