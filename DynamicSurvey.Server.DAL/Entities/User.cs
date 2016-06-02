@@ -1,4 +1,5 @@
-﻿namespace DynamicSurvey.Server.DAL.Entities
+﻿using System;
+namespace DynamicSurvey.Server.DAL.Entities
 {
 	public class User
 	{
@@ -9,9 +10,12 @@
 		public Language[] SupportedLanguages { get; set; }
 		public AccessRight AccessRight { get; set; }
 
-		public User()
+		public void Trim()
 		{
+			Func<string, string> trimmer = s => s.Trim('\"');
 
+			Username = trimmer(Username);
+			Password = trimmer(Username);
 		}
 	}
 

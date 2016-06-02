@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.DAL.Entities;
+using DynamicSurvey.Server.ControllersApi.Result;
 
 namespace DynamicSurvey.Server.ControllersApi
 {
@@ -27,24 +28,31 @@ namespace DynamicSurvey.Server.ControllersApi
 		//}
 
 		// PUT api/login
-		public OperationResultBase Put([FromBody] User user)
+		[HttpPut]
+		public OperationResultBase Put([FromUri] AuthorizedRequest user)
 		{
 			try
 			{
 				if (!usersRepository.Authorize(user.Username, user.Password))
 				{
-					ResponseMessage(new HttpResponseMessage(HttpStatusCode.Unauthorized));
 					return FailedOperationResult.Unauthorized;
 				}
 
 				var currentUser = usersRepository.GetUserByName(user.Username);
 
-				HttpContext.Current.Session.SetCurrentUser(currentUser);
-				return OperationResultBase.Success;
+				return new OperationResultDynamic()
+				{
+					Result = new
+					{
+						Username = currentUser.Username,
+						Password = currentUser.Password,
+						AccessLevel = currentUser.AccessRight.Name
+					}
+				};
 			}
 			catch (Exception ex)
 			{
-				return new FailedOperationResult(500, ex);
+				return new FailedOperationResult(ex);
 			}
 		}
 

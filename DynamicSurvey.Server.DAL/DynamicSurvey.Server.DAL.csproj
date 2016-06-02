@@ -70,6 +70,8 @@
     <Compile Include="Entities\AccessLevel.cs" />
     <Compile Include="Entities\Company.cs" />
     <Compile Include="Entities\SimpleEntities\StringEntity.cs" />
+    <Compile Include="Entities\SurveyPageTransition.cs" />
+    <Compile Include="Entities\TransitionCondition.cs" />
     <Compile Include="Filters\SurveyReportFilter.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Repositories\AnswersRepository.cs" />

@@ -43,9 +43,6 @@ namespace DynamicSurvey.Server.DAL.Repositories
 		private readonly UsersRepository usersRepository;
 		private readonly FieldTypeRepository fieldTypeRepository;
 
-		private readonly string connectionString = "server=localhost;user id=CodeClient;password=In0Dd~uc!A55;persistsecurityinfo=True;database=dbsurveys;";
-
-
 		public SurveysRepository()
 		{
 			this.vocabularyRepository = new VocabularyRepository();
@@ -80,7 +77,6 @@ namespace DynamicSurvey.Server.DAL.Repositories
 					// SELECT `TemplateId`, `PageId`, `PageIndex`, `PageLabel` FROM `dbsurveys`.`vw_survey_template_pages`;
 					survey.Pages.Add(new SurveyPage()
 					{
-						PageIndex = (ulong)(r["PageIndex"]),
 						Title = Convert.ToString(r["PageLabel"]),
 						Id = (ulong)(r["PageId"])
 					});
@@ -253,7 +249,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
 				cmd.Parameters.Add(new MySqlParameter("updator_password", admin.Password));
 				cmd.Parameters.Add(new MySqlParameter("page_id", page.Id));
 				cmd.Parameters.Add(new MySqlParameter("page_title", page.Title));
-				cmd.Parameters.Add(new MySqlParameter("page_index", page.PageIndex));
+				cmd.Parameters.Add(new MySqlParameter("page_index", 1));
 			});
 		}
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DynamicSurvey.Server.ControllersApi
+namespace DynamicSurvey.Server.ControllersApi.Result
 {
 	public class OperationResultBase
 	{
@@ -16,29 +16,14 @@ namespace DynamicSurvey.Server.ControllersApi
 		// TODO: use enum
 	}
 
-	public class FailedOperationResult : OperationResultBase
+	public class OperationResultDynamic : OperationResultBase
 	{
-		public string ErrorMessage { get; private set; }
+		public dynamic Result { get; set; }
 
-		public FailedOperationResult(int errorCode, string errorMessage)
-			: base(errorCode)
+		public OperationResultDynamic() : base(200)
 		{
-			ErrorMessage = errorMessage;
 		}
-
-		public FailedOperationResult(int errorCode, Exception ex)
-			: base(errorCode)
-		{
-			ErrorMessage = ex.Message;
-		}
-
-		public FailedOperationResult(Exception ex)
-			: base(500)
-		{
-			ErrorMessage = ex.Message;
-		}
-
-		public static FailedOperationResult Unauthorized = new FailedOperationResult(401, "Unautorized");
-
 	}
+
+	
 }

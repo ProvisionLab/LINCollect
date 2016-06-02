@@ -1,4 +1,5 @@
 ﻿using DynamicSurvey.Server.ControllersApi.Result;
+using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Entities.SimpleEntities;
 using DynamicSurvey.Server.DAL.Repositories;
@@ -12,19 +13,21 @@ namespace DynamicSurvey.Server.ControllersApi
 	public class LookupController : ApiController
 	{
 		private readonly ILookupRepository lookupRepository;
+		private readonly IUsersRepository usersRepository;
 
 		public LookupController()
 		{
 			lookupRepository = new LookupRepository();
+			usersRepository = new UsersRepository();
 		}
 
 		[HttpGet]
 
-		public OperationResultBase Country()
+		public OperationResultBase Country([FromUri] AuthorizedRequest authorizationInfo)
 		{
 			try
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
+				authorizationInfo.ThrowIfInvalid(usersRepository);
 				return new DataOperationResult<StringEntity>()
 				{
 					Data = lookupRepository.GetCountries(),
@@ -38,11 +41,11 @@ namespace DynamicSurvey.Server.ControllersApi
 		}
 
 		[HttpGet]
-		public OperationResultBase City()
+		public OperationResultBase City([FromUri] AuthorizedRequest authorizationInfo)
 		{
 			try
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
+				authorizationInfo.ThrowIfInvalid(usersRepository);
 				return new DataOperationResult<StringEntity>()
 				{
 					Data = lookupRepository.GetCities(),
@@ -56,15 +59,26 @@ namespace DynamicSurvey.Server.ControllersApi
 		}
 
 		[HttpGet]
-		public OperationResultBase Company()
+		public OperationResultBase Company([FromUri] AuthorizedRequest authorizationInfo, bool fullInfo = false)
 		{
 			try
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
-				return new DataOperationResult<StringEntity>()
+				authorizationInfo.ThrowIfInvalid(usersRepository);
+
+				if (fullInfo)
 				{
-					Data = lookupRepository.GetCompanies(),
-				};
+					return new DataOperationResult<Company>()
+					{
+						Data = lookupRepository.GetCompaniesFullInfo()
+					};
+				}
+				else
+				{
+					return new DataOperationResult<StringEntity>()
+					{
+						Data = lookupRepository.GetCompanies()
+					};
+				}
 			}
 			catch (Exception ex)
 			{
@@ -74,11 +88,11 @@ namespace DynamicSurvey.Server.ControllersApi
 		}
 
 		[HttpGet]
-		public OperationResultBase Company(ulong id)
+		public OperationResultBase Company(ulong id, [FromUri] AuthorizedRequest authorizationInfo)
 		{
 			try
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
+				authorizationInfo.ThrowIfInvalid(usersRepository);
 				return new DataOperationResult<Company>(lookupRepository.GetCompanyById(id));
 			}
 			catch (Exception ex)
@@ -88,14 +102,15 @@ namespace DynamicSurvey.Server.ControllersApi
 
 		}
 
-		[HttpGet]
-		public OperationResultBase CompanyPost([FromBody]Company[] values)
+		[HttpPost]
+		public OperationResultBase CompanyPost([FromUri]AuthorizedRequest request, [FromBody]Company[] companies)
 		{
 			try
 			{
-				HttpContext.Current.Session.ThrowIfNotAuthorized();
-				var user = HttpContext.Current.Session.GetCurrentUser();
-				foreach (var value in values)
+				request.ThrowIfInvalid(usersRepository);
+				var user = request.ToUserEntity();
+
+				foreach (var value in companies)
 				{
 					lookupRepository.AddOrUpdateCompany(user, value);
 				}
