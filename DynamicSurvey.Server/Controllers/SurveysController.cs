@@ -127,6 +127,14 @@ namespace DynamicSurvey.Server.Controllers
             return RedirectToAction("EditRespondent", new {surveyTemplateId = editQuestionViewModel.SurveyTemplateId});
         }
 
+        [HttpPost]
+        public ActionResult MoveQuestion(int surveyTemplateId, int questionId, bool moveUp)
+        {
+            _surveyService.MoveQuestion(questionId, moveUp);
+
+            return RedirectToAction("EditRespondent", new {surveyTemplateId});
+        }
+
         public ActionResult Relationships()
         {
             return View();

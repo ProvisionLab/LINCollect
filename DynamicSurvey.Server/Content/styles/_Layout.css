@@ -2,6 +2,18 @@
     margin-top: 10px;
 }
 
+.row-margin-bottom-5 {
+    margin-bottom: 5px;
+}
+
+.btn-align-text-left {
+    text-align: left;
+}
+
+.btn-width-80 {
+    width: 80%;
+}
+
 .cke {
     z-index: 1000000 !important;
 }

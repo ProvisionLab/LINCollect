@@ -42,7 +42,7 @@
                             @Html.Raw(question.Question)
                             @if (question.Format == QuestionFormat.Text)
                             {
-                                if (question.Rows == 1)
+                                if (question.Rows <= 1)
                                 {
                                     <input type="text" class="form-control" />
                                 }
@@ -59,7 +59,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label class="checkbox-inline">
-                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>      } />
+                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>    } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -71,7 +71,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label class="radio-inline">
-                                                <input name="answer-choice-@question.QuestionId" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>       } />
+                                                <input name="answer-choice-@question.QuestionId" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>    } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -86,7 +86,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label>
-                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>      } />
+                                                <input type="checkbox" @if (answerChoice.IsDefault) { <text> checked="checked" </text>    } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -98,7 +98,7 @@
                                         @foreach (var answerChoice in question.AnswerChoices)
                                         {
                                             <label>
-                                                <input name="answer-choice-@question.QuestionId" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>      } />
+                                                <input name="answer-choice-@question.QuestionId" type="radio" @if (answerChoice.IsDefault) { <text> checked="checked" </text>    } />
                                                 @answerChoice.Text
                                             </label>
                                         }
@@ -114,6 +114,34 @@
                                         <option>@answerChoice.Text</option>
                                     }
                                 </select>
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            @if (question != Model.Questions.First())
+                            {
+                                <div class="row row-margin-bottom-5">
+                                    <div class="form-group">
+                                        <form method="post" action="@Url.Action("MoveQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId, moveUp = true})">
+                                            <button type="submit" class="btn btn-sm blue btn-align-text-left btn-width-80">
+                                                <i class="fa fa-arrow-up"></i>
+                                                Move up
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            }
+                            @if (question != Model.Questions.Last())
+                            {
+                                <div class="row row-margin-bottom-5">
+                                    <div class="form-group">
+                                        <form method="post" action="@Url.Action("MoveQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId, moveUp = false})">
+                                            <button type="submit" class="btn btn-sm blue btn-align-text-left btn-width-80">
+                                                <i class="fa fa-arrow-down"></i>
+                                                Move down
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             }
                         </div>
                     </div>

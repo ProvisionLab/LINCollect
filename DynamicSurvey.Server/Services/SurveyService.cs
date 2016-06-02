@@ -421,84 +421,47 @@ namespace DynamicSurvey.Server.Services
             }
         }
 
-        public SurveyField EditQuestion(EditQuestionViewModel editQuestionViewModel)
+        public void MoveQuestion(int questionId, bool moveUp)
         {
-            throw new NotImplementedException();
-
-            /*
             var session = PersistenceContext.GetCurrentSession();
             using (var transaction = session.BeginTransaction())
             {
-                var firstPage = session.Get<SurveyPage>(1);
-                var question = session.Get<SurveyField>(editQuestionViewModel.QuestionId);
-                question.Label = editQuestionViewModel.Question;
+                var question = session.Get<SurveyField>(questionId);
 
-                var questionFieldType = GetFieldTypeFromQuestionFormat(editQuestionViewModel.Format);
-
-                var questionSurveyFieldType = session.Query<SurveyFieldType>()
-                    .First(sft => sft.FieldType == questionFieldType);
-                //question.SurveyFieldType = questionSurveyFieldType;
-
-                if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
-                    editQuestionViewModel.Format == QuestionFormat.ChoiceDown)
+                if (moveUp)
                 {
-                    // Delete old question choices
-                    question.Choices.Clear();
+                    var upperQuestion = session.Query<SurveyField>()
+                        .Where(q => q.ParentPage.SurveyTemplate == question.ParentPage.SurveyTemplate)
+                        .Where(q => q.Group == null)
+                        .First(q => q.DisplayOrder == question.DisplayOrder - 1);
 
-                    var choiceFieldType = editQuestionViewModel.AllowMultipleValues
-                        ? FieldType.Checkbox
-                        : FieldType.RadioButton;
+                    question.DisplayOrder--;
+                    upperQuestion.DisplayOrder++;
 
-                    var choiceSurveyFieldType = session.Query<SurveyFieldType>()
-                        .First(sft => sft.FieldType == choiceFieldType);
+                    session.Save(question);
+                    session.Save(upperQuestion);
+                }
+                else
+                {
+                    var lowerQuestion = session.Query<SurveyField>()
+                        .Where(q => q.ParentPage.SurveyTemplate == question.ParentPage.SurveyTemplate)
+                        .Where(q => q.Group == null)
+                        .First(q => q.DisplayOrder == question.DisplayOrder + 1);
 
-                    foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
-                    {
-                        var choice = new SurveyField
-                        {
-                            Label = answerChoiceItemViewModel.Text,
-                            FieldIndex = 1,
-                            ParentPage = firstPage,
-                            Group = question,
-                            SurveyFieldType = choiceSurveyFieldType
-                        };
+                    question.DisplayOrder++;
+                    lowerQuestion.DisplayOrder--;
 
-                        question.Choices.Add(choice);
-
-                        if (answerChoiceItemViewModel.IsDefault)
-                        {
-                            var vocabularyWord = session.Query<Vocabulary>()
-                                .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
-
-                            if (vocabularyWord == null)
-                            {
-                                vocabularyWord = new Vocabulary
-                                {
-                                    Word = answerChoiceItemViewModel.Text,
-                                    UserLanguage = question.ParentPage.SurveyTemplate.UserLanguage
-                                };
-
-                                session.Save(vocabularyWord);
-                            }
-
-                            var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
-                            {
-                                SurveyField = choice,
-                                VocabularyWord = vocabularyWord
-                            };
-
-                            choice.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
-                        }
-                    }
+                    session.Save(question);
+                    session.Save(lowerQuestion);
                 }
 
-                session.Save(question);
-
                 transaction.Commit();
-
-                return question;
             }
-             */
+        }
+
+        public SurveyField EditQuestion(EditQuestionViewModel editQuestionViewModel)
+        {
+            throw new NotImplementedException();
         }
 
         private static FieldType GetFieldTypeFromQuestionFormat(QuestionFormat questionFormat)
