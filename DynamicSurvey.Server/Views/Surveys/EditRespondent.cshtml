@@ -38,7 +38,7 @@
                         <div class="col-md-1">
                             <span class="label label-primary">@question.DisplayOrder</span>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                             @Html.Raw(question.Question)
                             @if (question.Format == QuestionFormat.Text)
                             {
@@ -116,51 +116,49 @@
                                 </select>
                             }
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             @if (question != Model.Questions.First())
                             {
                                 <div class="row row-margin-bottom-5">
-                                    <div class="form-group">
-                                        <form method="post" action="@Url.Action("MoveQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId, moveUp = true})">
-                                            <button type="submit" class="btn btn-xs blue btn-align-text-left btn-width-80">
-                                                <i class="fa fa-arrow-up"></i>
-                                                Move up
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <form method="post" action="@Url.Action("MoveQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId, moveUp = true})">
+                                        <button type="submit" class="btn btn-xs blue btn-align-text-left btn-width-80">
+                                            <i class="fa fa-arrow-up"></i>
+                                            Move up
+                                        </button>
+                                    </form>
                                 </div>
                             }
                             <div class="row row-margin-bottom-5">
-                                <div class="form-group">
-                                    <form method="post" action="@Url.Action("DuplicateQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId})">
-                                        <button type="submit" class="btn btn-xs blue btn-align-text-left btn-width-80">
-                                            <i class="fa fa-plus"></i>
-                                            Duplicate
-                                        </button>
-                                    </form>
-                                </div>
+                                <form method="post" action="@Url.Action("DuplicateQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId})">
+                                    <button type="submit" class="btn btn-xs blue btn-align-text-left btn-width-80">
+                                        <i class="fa fa-plus"></i>
+                                        Duplicate
+                                    </button>
+                                </form>
                             </div>
                             <div class="row row-margin-bottom-5">
-                                <div class="form-group">
-                                    <form method="post" action="@Url.Action("DeleteQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId})">
-                                        <button type="submit" class="btn btn-xs red btn-align-text-left btn-width-80">
-                                            <i class="fa fa-trash"></i>
-                                            Delete
-                                        </button>
-                                    </form>
-                                </div>
+                                <a class="btn btn-xs green btn-align-text-left btn-width-80" href="@Url.Action("EditRespondent", "Surveys", new {questionAction = QuestionAction.Edit, surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId})">
+                                    <i class="fa fa-edit"></i>
+                                    Edit
+                                </a>
+                            </div>
+                            <div class="row row-margin-bottom-5">
+                                <form method="post" action="@Url.Action("DeleteQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId})">
+                                    <button type="submit" class="btn btn-xs red btn-align-text-left btn-width-80">
+                                        <i class="fa fa-trash"></i>
+                                        Delete
+                                    </button>
+                                </form>
                             </div>
                             @if (question != Model.Questions.Last())
                             {
                                 <div class="row row-margin-bottom-5">
-                                    <div class="form-group">
-                                        <form method="post" action="@Url.Action("MoveQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId, moveUp = false})">
-                                            <button type="submit" class="btn btn-xs blue btn-align-text-left btn-width-80">
-                                                <i class="fa fa-arrow-down"></i>
-                                                Move down
-                                            </button>
-                                        </form>
-                                    </div>
+                                    <form method="post" action="@Url.Action("MoveQuestion", "Surveys", new {surveyTemplateId = Model.SurveyTemplateId, questionId = question.QuestionId, moveUp = false})">
+                                        <button type="submit" class="btn btn-xs blue btn-align-text-left btn-width-80">
+                                            <i class="fa fa-arrow-down"></i>
+                                            Move down
+                                        </button>
+                                    </form>
                                 </div>
                             }
                         </div>
