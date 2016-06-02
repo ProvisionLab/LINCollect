@@ -337,43 +337,46 @@ namespace DynamicSurvey.Server.Services
 
                     foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
                     {
-                        choiceDisplayOrderCounter++;
-
-                        var choice = new SurveyField
+                        if (!string.IsNullOrWhiteSpace(answerChoiceItemViewModel.Text))
                         {
-                            Label = answerChoiceItemViewModel.Text,
-                            DisplayOrder = choiceDisplayOrderCounter,
-                            FieldIndex = 1,
-                            ParentPage = surveyPage,
-                            Group = question,
-                            SurveyFieldType = choiceSurveyFieldType
-                        };
+                            choiceDisplayOrderCounter++;
 
-                        question.Choices.Add(choice);
-
-                        if (answerChoiceItemViewModel.IsDefault)
-                        {
-                            var vocabularyWord = session.Query<Vocabulary>()
-                                .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
-
-                            if (vocabularyWord == null)
+                            var choice = new SurveyField
                             {
-                                vocabularyWord = new Vocabulary
-                                {
-                                    Word = answerChoiceItemViewModel.Text,
-                                    UserLanguage = surveyTemplate.UserLanguage
-                                };
-
-                                session.Save(vocabularyWord);
-                            }
-
-                            var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
-                            {
-                                SurveyField = choice,
-                                VocabularyWord = vocabularyWord
+                                Label = answerChoiceItemViewModel.Text,
+                                DisplayOrder = choiceDisplayOrderCounter,
+                                FieldIndex = 1,
+                                ParentPage = surveyPage,
+                                Group = question,
+                                SurveyFieldType = choiceSurveyFieldType
                             };
 
-                            choice.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
+                            if (answerChoiceItemViewModel.IsDefault)
+                            {
+                                var vocabularyWord = session.Query<Vocabulary>()
+                                    .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
+
+                                if (vocabularyWord == null)
+                                {
+                                    vocabularyWord = new Vocabulary
+                                    {
+                                        Word = answerChoiceItemViewModel.Text,
+                                        UserLanguage = surveyTemplate.UserLanguage
+                                    };
+
+                                    session.Save(vocabularyWord);
+                                }
+
+                                var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
+                                {
+                                    SurveyField = choice,
+                                    VocabularyWord = vocabularyWord
+                                };
+
+                                choice.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
+                            }
+
+                            question.Choices.Add(choice);
                         }
                     }
                 }
@@ -461,7 +464,124 @@ namespace DynamicSurvey.Server.Services
 
         public SurveyField EditQuestion(EditQuestionViewModel editQuestionViewModel)
         {
-            throw new NotImplementedException();
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+                var question = session.Get<SurveyField>(editQuestionViewModel.QuestionId);
+
+                question.Label = editQuestionViewModel.Question;
+
+                var questionFieldType = GetFieldTypeFromQuestionFormat(editQuestionViewModel.Format);
+
+                var questionSurveyFieldType = session.Query<SurveyFieldType>()
+                    .First(sft => sft.FieldType == questionFieldType);
+                question.SurveyFieldType = questionSurveyFieldType;
+
+                if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
+                    editQuestionViewModel.Format == QuestionFormat.ChoiceDown)
+                {
+                    // Remove old choices
+                    question.Choices.Clear();
+
+                    var choiceFieldType = editQuestionViewModel.AllowMultipleValues
+                        ? FieldType.Checkbox
+                        : FieldType.RadioButton;
+
+                    var choiceSurveyFieldType = session.Query<SurveyFieldType>()
+                        .First(sft => sft.FieldType == choiceFieldType);
+
+                    var choiceDisplayOrderCounter = 0;
+
+                    foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
+                    {
+                        if (!string.IsNullOrWhiteSpace(answerChoiceItemViewModel.Text))
+                        {
+                            choiceDisplayOrderCounter++;
+
+                            var choice = new SurveyField
+                            {
+                                Label = answerChoiceItemViewModel.Text,
+                                DisplayOrder = choiceDisplayOrderCounter,
+                                FieldIndex = 1,
+                                ParentPage = question.ParentPage,
+                                Group = question,
+                                SurveyFieldType = choiceSurveyFieldType
+                            };
+
+                            if (answerChoiceItemViewModel.IsDefault)
+                            {
+                                var vocabularyWord = session.Query<Vocabulary>()
+                                    .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
+
+                                if (vocabularyWord == null)
+                                {
+                                    vocabularyWord = new Vocabulary
+                                    {
+                                        Word = answerChoiceItemViewModel.Text,
+                                        UserLanguage = question.ParentPage.SurveyTemplate.UserLanguage
+                                    };
+
+                                    session.Save(vocabularyWord);
+                                }
+
+                                var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
+                                {
+                                    SurveyField = choice,
+                                    VocabularyWord = vocabularyWord
+                                };
+
+                                choice.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
+                            }
+
+                            question.Choices.Add(choice);
+                        }
+                    }
+                }
+                else if (editQuestionViewModel.Format == QuestionFormat.DropDown)
+                {
+                    // Remove old dropdown list items
+                    question.SurveyFieldVocabularyCrossList.Clear();
+
+                    var dropDownListItemDisplayOrderCounter = 0;
+
+                    foreach (var answerChoiceItemViewModel in editQuestionViewModel.AnswerChoiceItemViewModels)
+                    {
+                        if (!string.IsNullOrWhiteSpace(answerChoiceItemViewModel.Text))
+                        {
+                            dropDownListItemDisplayOrderCounter++;
+
+                            var vocabularyWord = session.Query<Vocabulary>()
+                                .FirstOrDefault(vw => vw.Word == answerChoiceItemViewModel.Text);
+
+                            if (vocabularyWord == null)
+                            {
+                                vocabularyWord = new Vocabulary
+                                {
+                                    Word = answerChoiceItemViewModel.Text,
+                                    UserLanguage = question.ParentPage.SurveyTemplate.UserLanguage
+                                };
+
+                                session.Save(vocabularyWord);
+                            }
+
+                            var surveyFieldVocabularyCross = new SurveyFieldVocabularyCross
+                            {
+                                DisplayOrder = dropDownListItemDisplayOrderCounter,
+                                SurveyField = question,
+                                VocabularyWord = vocabularyWord
+                            };
+
+                            question.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
+                        }
+                    }
+                }
+
+                session.Save(question);
+
+                transaction.Commit();
+
+                return question;
+            }
         }
 
         public void DeleteQuestion(int questionId)
