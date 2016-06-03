@@ -598,6 +598,7 @@
     <Compile Include="Models\Surveys\EditRespondentRequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\SurveyService.cs" />
+    <Compile Include="Services\SurveyValidationService.cs" />
     <Compile Include="ViewModels\EditSurveyMenu.cs" />
     <Compile Include="ViewModels\EditSurveyMenuViewModel.cs" />
     <Compile Include="ViewModels\QuestionAction.cs" />

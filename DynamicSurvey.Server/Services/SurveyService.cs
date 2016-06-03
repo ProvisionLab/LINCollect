@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DynamicSurvey.Core;
 using DynamicSurvey.Core.Entities;
@@ -45,6 +46,26 @@ namespace DynamicSurvey.Server.Services
             }
 
             return editSurveyViewModel;
+        }
+
+        public IEnumerable<LanguageItemViewModel> GetLanguages()
+        {
+            var session = PersistenceContext.GetCurrentSession();
+            using (var transaction = session.BeginTransaction())
+            {
+                var languages = session.Query<UserLanguage>()
+                    .OrderBy(ul => ul.Name)
+                    .Select(ul => new LanguageItemViewModel
+                    {
+                        Id = ul.Id,
+                        Name = ul.Name
+                    })
+                    .ToList();
+
+                transaction.Commit();
+
+                return languages;
+            }
         }
 
         public SurveyTemplate CreateSurveyTemplate(EditSurveyViewModel editSurveyViewModel)

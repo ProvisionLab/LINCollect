@@ -20,24 +20,30 @@
             <i class="icon-equalizer font-green-haze"></i>
             <span class="caption-subject font-green-haze bold uppercase">General Survey Information</span>
         </div>
-        <div class="actions">
-            <a href="javascript:;" class="btn btn-circle btn-default btn-sm">
-                <i class="fa fa-pencil"></i> Edit
-            </a>
-            <a href="javascript:;" class="btn btn-circle btn-default btn-sm">
-                <i class="fa fa-plus"></i> Add
-            </a>
-        </div>
     </div>
     <div class="portlet-body form">
         <form action="@Url.Action("EditSurvey")" method="POST" enctype="multipart/form-data" class="form-horizontal form-row-seperated">
             <input name="Id" type="hidden" value="@Model.Id" />
             <div class="form-body">
-                <div class="form-group">
+                @{
+                    var isTemplateNameValid = ViewData.ModelState.IsValidField("TemplateName");
+                    string templateNameErrorMessage = null;
+                    if (!isTemplateNameValid)
+                    {
+                        templateNameErrorMessage = ViewData.ModelState["TemplateName"].Errors.First().ErrorMessage;
+                    }
+                }
+                <div class="form-group @if (!isTemplateNameValid)
+                                       {<text>has-error</text>}">
                     <label class="control-label col-md-3">Survey Name: <span class="required">*</span></label>
                     <div class="col-md-9">
                         <input name="TemplateName" type="text" class="form-control" value="@Model.TemplateName" />
-                        <span class="help-block"> This is inline help </span>
+                        @if (!isTemplateNameValid)
+                        {
+                            <span class="help-block">
+                                @templateNameErrorMessage
+                            </span>
+                        }
                     </div>
                 </div>
                 <div class="form-group">
@@ -46,10 +52,11 @@
                         <select name="LanguageId" class="form-control">
                             @foreach (var language in Model.Languages)
                             {
-                                <option value="@language.Id" @if (language.Id == Model.LanguageId) { <text> selected="selected" </text>      }>@language.Name</option>
+                                <option value="@language.Id" @if (language.Id == Model.LanguageId) { <text> selected="selected" </text>  }>
+                                    @language.Name
+                                </option>
                             }
                         </select>
-                        <span class="help-block"> Select your gender. </span>
                     </div>
                 </div>
                 <div class="form-group">

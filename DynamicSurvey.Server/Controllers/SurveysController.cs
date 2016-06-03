@@ -13,11 +13,16 @@ namespace DynamicSurvey.Server.Controllers
 {
     public class SurveysController : Controller
     {
+        private readonly SurveyValidationService _surveyValidationService;
         private readonly SurveyService _surveyService;
         private readonly ISurveysRepository _surveysRepository;
 
+        private const string ViewModelTempDataKey = "ViewModel";
+        private const string ModelStateTempDateKey = "ModelState";
+
         public SurveysController(ISurveysRepository surveysRepository)
         {
+            _surveyValidationService = new SurveyValidationService();
             _surveyService = new SurveyService();
             _surveysRepository = surveysRepository;
         }
@@ -78,7 +83,26 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditSurvey(int? surveyTemplateId)
         {
-            var editSurveyViewModel = _surveyService.GetEditSurveyViewModel(surveyTemplateId);
+            EditSurveyViewModel editSurveyViewModel;
+
+            if (TempData[ViewModelTempDataKey] != null)
+            {
+                editSurveyViewModel = (EditSurveyViewModel) TempData[ViewModelTempDataKey];
+
+                // Populate ViewModel with languages again
+                editSurveyViewModel.Languages = _surveyService.GetLanguages();
+
+                var modelState = (ModelStateDictionary) TempData[ModelStateTempDateKey];
+                ModelState.Merge(modelState);
+
+                // Fill TempData with ViewModel and ModelState in case the page will be refreshed
+                TempData[ViewModelTempDataKey] = editSurveyViewModel;
+                TempData[ModelStateTempDateKey] = ModelState;
+            }
+            else
+            {
+                editSurveyViewModel = _surveyService.GetEditSurveyViewModel(surveyTemplateId);
+            }
 
             return View(editSurveyViewModel);
         }
@@ -86,6 +110,14 @@ namespace DynamicSurvey.Server.Controllers
         [HttpPost]
         public ActionResult EditSurvey(EditSurveyViewModel editSurveyViewModel)
         {
+            if (!_surveyValidationService.ValidateEditSurveyViewModel(editSurveyViewModel, ModelState))
+            {
+                TempData[ViewModelTempDataKey] = editSurveyViewModel;
+                TempData[ModelStateTempDateKey] = ModelState;
+
+                return RedirectToAction("EditSurvey");
+            }
+
             SurveyTemplate surveyTemplate;
 
             if (editSurveyViewModel.Id == null)
@@ -96,6 +128,10 @@ namespace DynamicSurvey.Server.Controllers
             {
                 surveyTemplate = _surveyService.EditSurveyTemplate(editSurveyViewModel);
             }
+
+            // Remove ViewModel and ModelState from TempData
+            TempData[ViewModelTempDataKey] = null;
+            TempData[ModelStateTempDateKey] = null;
 
             return RedirectToAction("EditSurvey", new {surveyTemplateId = surveyTemplate.Id});
         }
