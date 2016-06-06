@@ -72,6 +72,8 @@
     <Compile Include="Entities\SimpleEntities\StringEntity.cs" />
     <Compile Include="Entities\SurveyPageTransition.cs" />
     <Compile Include="Entities\TransitionCondition.cs" />
+    <Compile Include="Fakes\EnglishSurvey.cs" />
+    <Compile Include="Fakes\MatrixSurvey.cs" />
     <Compile Include="Filters\SurveyReportFilter.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Repositories\AnswersRepository.cs" />

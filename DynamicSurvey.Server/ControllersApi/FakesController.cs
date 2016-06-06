@@ -26,9 +26,6 @@ namespace DynamicSurvey.Server.ControllersApi
 			mock.Setup(m => m.GetSurveys(It.IsAny<User>(), It.IsAny<bool>()))
 				.Returns(FakeSurveysFactory.CreateSurveyList());
 
-			mock.Setup(m => m.GetSurveyById(null, It.Is<ulong>(i => i == 2)))
-				.Returns(FakeSurveysFactory.CreateEnglishSurvey());
-
 			Func<ulong, bool> anyOther = i =>
 			{
 				var usedIndexes = new ulong[] { 1, 2, 3 };

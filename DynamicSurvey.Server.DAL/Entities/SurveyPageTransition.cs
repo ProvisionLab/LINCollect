@@ -9,7 +9,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 	public class SurveyPageTransition
 	{
         public int Id { get; set; }
-		public int? NextPageId { get; set; }
+		public ulong? NextPageId { get; set; }
 
 		public List<ConditionBase> Conditions { get; set; }
 
@@ -25,7 +25,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 				new SurveyPageTransition()
 				{
                     Id = id,
-					NextPageId = nextDefaultPageId
+					NextPageId = (ulong)nextDefaultPageId
 				}
 			};
 		}

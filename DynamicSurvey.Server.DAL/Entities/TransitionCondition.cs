@@ -12,18 +12,20 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 	public enum UnaryConditionEnum
 	{
-		MoreThan,
-		LessThan,
-		Equals,
-		NonEquals
-	}
+        Equals,
+        NotEquals,
+        More,
+        Less,
+        MoreEquals,
+        LessEquals
+    }
 
 	public abstract class ConditionBase
 	{
-        public int Id { get; set; }
+        public ulong Id { get; set; }
 		public string Operation { get; private set; }
 
-		protected ConditionBase(int id, string operation)
+		protected ConditionBase(ulong id, string operation)
 		{
 		    this.Id = id;
 			this.Operation = operation;
@@ -37,7 +39,7 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 		public ConditionBase RightOperand { get; private set; }
 
-		public BinaryCondition(int id, BinaryConditionEnum operation, ConditionBase leftOperand, ConditionBase rightOperand)
+		public BinaryCondition(ulong id, BinaryConditionEnum operation, ConditionBase leftOperand, ConditionBase rightOperand)
 			: base(id, operation.ToString())
 		{
 			LeftOperand = leftOperand;
@@ -47,14 +49,14 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 	public class UnaryCondition : ConditionBase
 	{
-		public int TargetId { get; private set; }
+		public ulong TargetFieldId { get; private set; }
 
 		public string TargetValue { get; private set; }
 
-		public UnaryCondition(int id, UnaryConditionEnum operation, int targetId, string targetValue)
+		public UnaryCondition(ulong id, UnaryConditionEnum operation, ulong targetFieldId, string targetValue)
 			: base(id, operation.ToString())
 		{
-			this.TargetId = targetId;
+			this.TargetFieldId = targetFieldId;
 			this.TargetValue = targetValue;
 		}
 	}

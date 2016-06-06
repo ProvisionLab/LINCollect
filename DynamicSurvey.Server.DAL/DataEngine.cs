@@ -40,8 +40,9 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string sp_add_field_default_value = "sp_add_field_default_value";
 		public static readonly string sp_add_survey = "sp_add_survey";
 		public static readonly string sp_add_survey_detail = "sp_add_survey_detail";
+	    public static readonly string sp_add_survey_transition = "sp_add_survey_transition";
 
-		public static readonly string sp_update_field_default_value = "sp_update_field_default_value";
+        public static readonly string sp_update_field_default_value = "sp_update_field_default_value";
 		public static readonly string sp_update_survey_template = "sp_update_survey_template";
 		public static readonly string sp_update_survey_template_field = "sp_update_survey_template_field";
 		public static readonly string sp_update_survey_template_page = "sp_update_survey_template_page";
@@ -52,8 +53,9 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string sp_remove_survey_template_field = "sp_remove_survey_template_field";
 		public static readonly string sp_remove_survey_template = "sp_remove_survey_template";
 		public static readonly string sp_remove_user = "sp_remove_user";
+        public static readonly string sp_remove_survey_transition = "sp_remove_survey_transition";
 
-		public static readonly string vw_field_type_view = "vw_field_type_view";
+        public static readonly string vw_field_type_view = "vw_field_type_view";
 		public static readonly string vw_survey_template = "vw_survey_template";
 		public static readonly string vw_survey_template_field_default_values = "vw_survey_template_field_default_values";
 		public static readonly string vw_survey_template_fields = "vw_survey_template_fields";
@@ -65,8 +67,10 @@ namespace DynamicSurvey.Server.DAL
 		public static readonly string vw_country_lookup = "vw_country_lookup";
 		public static readonly string vw_city_lookup = "vw_city_lookup";
 		public static readonly string vw_company = "vw_company";
+	    public static readonly string vw_survey_transition_view = "survey_transition_view";
 
-		public static readonly string sp_is_user_exists = "sp_is_user_exists";
+
+        public static readonly string sp_is_user_exists = "sp_is_user_exists";
 		public static readonly string sp_is_user_admin = "sp_is_user_admin";
 
 
