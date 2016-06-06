@@ -1,4 +1,5 @@
 ﻿using DynamicSurvey.Server.ControllersApi.Result;
+using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Repositories;
 using DynamicSurvey.Server.Helpers;
@@ -12,43 +13,53 @@ using System.Web.Http;
 
 namespace DynamicSurvey.Server.ControllersApi
 {
-    public class SurveyController : ApiController
-    {
+	public class SurveyController : ApiController
+	{
 		private readonly ISurveysRepository surveysRepository;
+		private readonly IUsersRepository usersRepository;
+
 		public SurveyController()
 		{
 			surveysRepository = new SurveysRepository();
+			usersRepository = new UsersRepository();
 		}
-		public OperationResultBase Get()
-        {
-			var user = HttpContext.Current.Session.GetCurrentUser();
-			if (user == null)
+		public OperationResultBase Get([FromUri] AuthorizedRequest request)
+		{
+			try
 			{
-				return OperationResultBase.Unauthorized;
-			}
-
-			return new DataOperationResult<Survey>()
-			{
-				Data = surveysRepository.GetSurveys(user, true)
-			};
-        }
-
-        // GET api/surveysapi/5
-		public OperationResultBase Get(int id)
-        {
-			var user = HttpContext.Current.Session.GetCurrentUser();
-			if (user == null)
-			{
-				return OperationResultBase.Unauthorized;
-			}
-
-			return new DataOperationResult<Survey>()
-			{
-				Data = new Survey[] 
+				request.ThrowIfInvalid(usersRepository);
+				var user = request.ToUserEntity();
+				return new DataOperationResult<Survey>()
 				{
-					surveysRepository.GetSurveyById(user, (ulong) id)
-				}
-			};
-        }
-    }
+					Data = surveysRepository.GetSurveys(user, true)
+				};
+
+			}
+			catch (Exception ex)
+			{
+				return new FailedOperationResult(ex);
+			}
+		}
+
+		// GET api/surveysapi/5
+		public OperationResultBase Get(int id, [FromUri] AuthorizedRequest request)
+		{
+			try
+			{
+				request.ThrowIfInvalid(usersRepository);
+				var user = request.ToUserEntity();
+				return new DataOperationResult<Survey>()
+				{
+					Data = new Survey[] 
+					{
+						surveysRepository.GetSurveyById(user, (ulong) id)
+					}
+				};
+			}
+			catch(Exception ex)
+			{
+				return new FailedOperationResult(ex);
+			}
+		}
+	}
 }

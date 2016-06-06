@@ -10,13 +10,23 @@ namespace DynamicSurvey.Server
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}");
 			config.Routes.MapHttpRoute(
-				name: "DefaultApiLookup",
-				routeTemplate: "api/Lookup/{action}",
+				name: "DefaultApiLookupFull",
+				routeTemplate: "api/Lookup/{action}/{Username}/{Password}/full",
 				defaults: new
 				{
-					controller = "Lookup"
-
+					controller = "Lookup",
+					fullInfo = true
 				});
+
+			config.Routes.MapHttpRoute(
+				name: "DefaultApiLookup",
+				routeTemplate: "api/Lookup/{action}/{Username}/{Password}/{id}",
+				defaults: new
+				{
+					controller = "Lookup",
+					id = RouteParameter.Optional
+				});
+			
 
 			config.Routes.MapHttpRoute(
 				name: "DefaultApiFreeFakes",
@@ -29,7 +39,7 @@ namespace DynamicSurvey.Server
 
 			config.Routes.MapHttpRoute(
 				name: "DefaultApi",
-				routeTemplate: "api/{controller}/{id}",
+				routeTemplate: "api/{controller}/{Username}/{Password}/{id}",
 				defaults: new 
 				{
 					id = RouteParameter.Optional
