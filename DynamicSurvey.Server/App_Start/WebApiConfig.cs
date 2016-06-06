@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿
+using System.Web.Http;
 
 namespace DynamicSurvey.Server
 {
@@ -6,9 +7,6 @@ namespace DynamicSurvey.Server
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}");
 			config.Routes.MapHttpRoute(
 				name: "DefaultApiLookupFull",
 				routeTemplate: "api/Lookup/{action}/{Username}/{Password}/full",
