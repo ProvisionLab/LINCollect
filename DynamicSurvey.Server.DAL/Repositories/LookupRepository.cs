@@ -1,7 +1,7 @@
-﻿using DynamicSurvey.Server.DAL.DataRowConverters;
-using DynamicSurvey.Server.DAL.Entities;
+﻿using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.DAL.Entities.SimpleEntities;
 using System.Collections.Generic;
+using DynamicSurvey.Server.DAL.DataRowConverters;
 
 namespace DynamicSurvey.Server.DAL.Repositories
 {

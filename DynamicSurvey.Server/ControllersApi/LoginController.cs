@@ -9,6 +9,7 @@ using System.Web.Http;
 using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.DAL.Entities;
 using DynamicSurvey.Server.ControllersApi.Result;
+using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.ControllersApi
 {
