@@ -123,7 +123,8 @@ namespace DynamicSurvey.Server.DAL.Repositories
                             fieldType = r["FieldType"],
                             fieldTypeId = r["FieldTypeId"],
                             groupId = r["ParentGroupBoxIndex"] as ulong?,
-                            id = r["FieldId"]
+                            id = r["FieldId"],
+                            is_mandatory = ((ulong)r["IsMandatoryField"] )== 1
                         };
 
                         page.Fields.Add(new SurveyField()
@@ -133,7 +134,8 @@ namespace DynamicSurvey.Server.DAL.Repositories
                             Label = Convert.ToString(f.label),
                             FieldType = Convert.ToString(f.fieldType),
                             FieldTypeId = (ulong)(f.fieldTypeId),
-                            GroupId = f.groupId
+                            GroupId = f.groupId,
+                            IsMandatory = f.is_mandatory
 
                         });
                     },
@@ -359,6 +361,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
                 cmd.Parameters.Add(new MySqlParameter("survey_field_type_id", field.FieldTypeId));
                 cmd.Parameters.Add(new MySqlParameter("group_id", field.GroupId));
                 cmd.Parameters.Add(new MySqlParameter("label", field.Label));
+                cmd.Parameters.Add(new MySqlParameter("is_mandatory", field.IsMandatory));
             });
         }
 
@@ -370,6 +373,7 @@ namespace DynamicSurvey.Server.DAL.Repositories
                 cmd.Parameters.Add(new MySqlParameter("creator_password", admin.Password));
                 cmd.Parameters.Add(new MySqlParameter("field_id", field.Id));
                 cmd.Parameters.Add(new MySqlParameter("new_label", field.Label));
+                cmd.Parameters.Add(new MySqlParameter("new_is_mandatory", field.IsMandatory));
             });
         }
 

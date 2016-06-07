@@ -10,6 +10,8 @@ namespace DynamicSurvey.Server.DAL.Entities
 
 		public ulong FieldTypeId { get; set; }
 
+	    public bool IsMandatory { get; set; }
+
 		public IEnumerable<string> DefaultValues { get; set; }
 
 		public ulong? GroupId { get; set; }
