@@ -4,6 +4,7 @@ using DynamicSurvey.Server.Helpers;
 using DynamicSurvey.Server.ViewModels;
 using System.Linq;
 using System.Web.Mvc;
+using DynamicSurvey.Server.Infrastructure.Authentication;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -16,45 +17,51 @@ namespace DynamicSurvey.Server.Controllers
             _surveysRepository = surveysRepository;
         }
 
+        [CustomAuthentication]
         public ActionResult Index()
         {
 
-			var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
+			var res = _surveysRepository.GetSurveys(SessionHelper.User);
             return View(new SurveysViewModel
             {
                 Surveys = res
             });
         }
 
+        [CustomAuthentication]
         public ActionResult CopySurvey(ulong sourceId)
         {
-			var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
+			var survey = _surveysRepository.GetSurveys(SessionHelper.User)
+                .Single(s => s.Id == sourceId);
             survey.Id = 0;
             survey.Title = survey.Title + "_Copy";
-            var id = _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
-            return View("AddSurvey", id);
+            _surveysRepository.AddSurvey(SessionHelper.User, survey);
+            return View("AddSurvey");
         }
 
-		public ActionResult AddSurvey(ulong sourceId)
+        [CustomAuthentication]
+        public ActionResult AddSurvey(ulong sourceId)
         {
-            var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(),sourceId);
+            var res = _surveysRepository.GetSurveyById(SessionHelper.User,sourceId);
 
             if (res == null)
             {
                 return RedirectToAction("Index");
             }
-            return View(res);
+            return View();
         }
 
         [HttpPost]
+        [CustomAuthentication]
         public ActionResult AddSurvey(Survey survey)
         {
             return View();
         }
 
-		public ActionResult Details(ulong sourceId)
+        [CustomAuthentication]
+        public ActionResult Details(ulong sourceId)
         {
-            var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
+            var res = _surveysRepository.GetSurveyById(SessionHelper.User, sourceId);
 
             if (res == null)
             {
@@ -64,9 +71,10 @@ namespace DynamicSurvey.Server.Controllers
         }
 
         [HttpPost]
+        [CustomAuthentication]
         public ActionResult Details(Survey editedSurvey)
         {
-            _surveysRepository.AddSurvey(Session.GetCurrentUser(), editedSurvey);
+            _surveysRepository.AddSurvey(SessionHelper.User, editedSurvey);
             return View();
         }
     }

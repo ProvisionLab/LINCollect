@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DynamicSurvey.Server.Infrastructure.Authentication;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -15,7 +16,8 @@ namespace DynamicSurvey.Server.Controllers
 			this.answersRepository = answersRepository;
 		}
 
-		public ActionResult Index(ulong surveyId)
+        [CustomAuthentication]
+        public ActionResult Index(ulong surveyId)
         {
 			var reports = answersRepository.GetReports(new DAL.Filters.SurveyReportFilter() 
 			{

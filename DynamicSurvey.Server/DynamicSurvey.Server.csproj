@@ -233,6 +233,8 @@
     <Compile Include="Helpers\HtmlPagingHelper.cs" />
     <Compile Include="Helpers\SessionHelper.cs" />
     <Compile Include="Infrastructure\ApiSession\SessionStateRouteHandler.cs" />
+    <Compile Include="Infrastructure\Authentication\CustomAuthenticationAttribute.cs" />
+    <Compile Include="Infrastructure\Authentication\CustomPrincipal.cs" />
     <Compile Include="Infrastructure\NinjectDependencyResolver.cs" />
     <Compile Include="Infrastructure\ApiSession\SessionableControllerHandler.cs" />
     <Compile Include="Models\SurveysSelector.cs" />
