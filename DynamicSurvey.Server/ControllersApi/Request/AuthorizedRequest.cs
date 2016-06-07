@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using DynamicSurvey.Server.DAL.Repositories;
 
 namespace DynamicSurvey.Server.ControllersApi.Result
 {
