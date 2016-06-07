@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
+using DynamicSurvey.Server.DAL;
 using DynamicSurvey.Server.DAL.Entities;
-using DynamicSurvey.Server.DAL.Repositories;
+using DynamicSurvey.Server.Infrastructure.Authentication;
 using DynamicSurvey.Server.ViewModels;
 
 namespace DynamicSurvey.Server.Controllers
@@ -19,6 +20,7 @@ namespace DynamicSurvey.Server.Controllers
         // TODO: map
         // /users?search=loginpart
         [HttpGet]
+        [CustomAuthentication]
         public ActionResult Search(string search = "")
         {
             throw new NotImplementedException();
@@ -26,6 +28,7 @@ namespace DynamicSurvey.Server.Controllers
 
         // /users/username
         [HttpGet]
+        [CustomAuthentication]
         public ActionResult Index(int page = 1)
         {
             var filter = new UsersFilter(pageIndex: page, pageSize: 3);
@@ -39,12 +42,14 @@ namespace DynamicSurvey.Server.Controllers
         }
 
         [HttpGet]
+        [CustomAuthentication]
         public ActionResult Create()
         {
             throw new NotImplementedException();
         }
 
         [HttpPost]
+        [CustomAuthentication]
         public ActionResult Create(object user)
         {
             throw new NotImplementedException();

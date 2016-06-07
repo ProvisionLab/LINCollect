@@ -1,57 +1,42 @@
 ﻿using System.Web;
-using System.Web.SessionState;
 using DynamicSurvey.Server.DAL.Entities;
+using System.Web.SessionState;
 
 namespace DynamicSurvey.Server.Helpers
 {
 	public static class SessionHelper
 	{
 		private static readonly string userKey = "User";
-		public static User GetCurrentUser(this HttpSessionStateBase session)
-		{
-			var res = session[userKey];
-			if (res == null)
-			{
-				return null;
-			}
-			else
-			{
-				return (User)session[userKey];
-			}
-		}
 
-		public static void SetCurrentUser(this HttpSessionStateBase session, User user)
+	    public static User User
+	    {
+	        get
+	        {
+                var session = HttpContext.Current.Session;
+                var res = session[userKey];
+                if (res == null)
+                {
+                    return new User();
+                }
+                else
+                {
+                    return (User)session[userKey];
+                }
+            }
+	        set
+	        {
+                var session = HttpContext.Current.Session;
+                session[userKey] = value;
+            }
+	    }
+        
+		public static bool IsCurrentUserSet()
 		{
-			session[userKey] = user;
+            var session = HttpContext.Current.Session;
+		    var user = session[userKey];
+            return user != null 
+                && user is User
+                && !string.IsNullOrEmpty(((User)user).Username) ;
 		}
-
-		public static bool IsCurrentUserSet(this HttpSessionStateBase session)
-		{
-			return session[userKey] != null;
-		}
-
-		public static User GetCurrentUser(this HttpSessionState session)
-		{
-			var res = session[userKey];
-			if (res == null)
-			{
-				return null;
-			}
-			else
-			{
-				return (User)session[userKey];
-			}
-		}
-
-		public static void SetCurrentUser(this HttpSessionState session, User user)
-		{
-			session[userKey] = user;
-		}
-
-		public static bool IsCurrentUserSet(this HttpSessionState session)
-		{
-			return session[userKey] != null;
-		}
-
 	}
 }

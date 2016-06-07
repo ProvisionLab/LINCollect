@@ -6,12 +6,13 @@ namespace DynamicSurvey.Server.DAL.Entities
 	{
 		public ulong Id { get; set; }
 		public string Title { get; set; }
-		public ulong PageIndex { get; set; }
 		public List<SurveyField> Fields { get; set; }
+	    public List<SurveyPageTransition> Transitions { get; set; }
 
 		public SurveyPage()
 		{
 			Fields = new List<SurveyField>();
+			Transitions = new List<SurveyPageTransition>();
 		}
 	}
 }

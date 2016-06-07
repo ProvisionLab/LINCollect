@@ -39,7 +39,7 @@ namespace DynamicSurvey.Server.Controllers
 
             user = _usersRepository.GetUserByName(user.Username);
 
-            Session.SetCurrentUser(user);
+            SessionHelper.User = user;
 
             // fetch all user fields via database
             // if not valid - return view;
