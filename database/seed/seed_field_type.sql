@@ -8,3 +8,5 @@ INSERT INTO Survey_Field_Type (field_type) VALUES ('DatePicker');
 INSERT INTO Survey_Field_Type (field_type) VALUES ('DropdownList');
 INSERT INTO Survey_Field_Type (field_type) VALUES ('RadioButton');
 INSERT INTO Survey_Field_Type (field_type) VALUES ('GroupBox');
+INSERT INTO Survey_Field_Type (field_type) VALUES ('Slider');
+INSERT INTO Survey_Field_Type (field_type) VALUES ('Matrix');

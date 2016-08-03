@@ -192,6 +192,37 @@ namespace DynamicSurvey.Server.Services
                             editQuestionViewModel.AnswerChoiceItemViewModels.Add(answerChoiceItemViewModel);
                         }
                     }
+                    else if (question.SurveyFieldType.FieldType == FieldType.Matrix)
+                    {
+                        if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.Matrix_Ch))
+                        {
+                            editQuestionViewModel.MatrixMultiple = true;
+                        }
+                        else if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.Matrix_Hor))
+                        {
+                            editQuestionViewModel.MatrixMultiple = false;
+                        }
+
+                        foreach (var choice in question.Choices.OrderBy(c => c.DisplayOrder).Where(q => q.FieldIndex == 1))
+                        {
+                            var matrixRow = new MatrixRow
+                            {
+                                Id = choice.Id,
+                                Text = choice.Label
+                            };
+                            editQuestionViewModel.MatrixRows.Add(matrixRow);
+                        }
+
+                        foreach (var choice in question.Choices.OrderBy(c => c.DisplayOrder).Where(q => q.FieldIndex == 2))
+                        {
+                            var matrixCol = new MatrixCol
+                            {
+                                Id = choice.Id,
+                                Text = choice.Label
+                            };
+                            editQuestionViewModel.MatrixColumns.Add(matrixCol);
+                        }
+                    }
                 }
 
                 var questions = session.Query<SurveyField>()
@@ -253,7 +284,48 @@ namespace DynamicSurvey.Server.Services
                             questionItemViewModel.AnswerChoices.Add(questionChoiceItemViewModel);
                         }
                     }
+                    else if (question.SurveyFieldType.FieldType == FieldType.Slider)
+                    {
+                        editRespondentViewModel.EditQuestionViewModel.ExtremePointLeft = question.ExtremePointLeft;
+                        editRespondentViewModel.EditQuestionViewModel.ExtremePointRight = question.ExtremePointRight;
+                        editRespondentViewModel.EditQuestionViewModel.MaximumValue = question.MaximumValue;
+                        editRespondentViewModel.EditQuestionViewModel.MinimumValue = question.MinimumValue;
+                        editRespondentViewModel.EditQuestionViewModel.ShowValue = question.ShowValue;
+                        editRespondentViewModel.EditQuestionViewModel.Resolution = question.Resolution;
+                    }
+                    else if (question.SurveyFieldType.FieldType == FieldType.Matrix)
+                    {
+                        if (question.Choices.Any(c => c.SurveyFieldType.FieldType == FieldType.Matrix_Ch))
+                        {
+                            questionItemViewModel.MatrixMiltiple = true;
+                            //questionItemViewModel.MatrixSingleRow = false;
+                            //questionItemViewModel.MatrixSingleColumn = false;
+                        }
+                        else if (question.MatrixRows.Any(c => c.SurveyFieldType.FieldType == FieldType.Matrix_Hor))
+                        {
+                            questionItemViewModel.MatrixMiltiple = false;
+                            //questionItemViewModel.MatrixSingleRow = true;
+                            //questionItemViewModel.MatrixSingleColumn = false;
+                        }
+                        //else if (question.MatrixRows.Any(c => c.SurveyFieldType.FieldType == FieldType.Matrix_Ver))
+                        //{
+                        //    questionItemViewModel.MatrixMiltiple = false;
+                        //    questionItemViewModel.MatrixSingleRow = false;
+                        //    questionItemViewModel.MatrixSingleColumn = true;
+                        //}
 
+                        foreach (var row in question.Choices.OrderBy(c => c.DisplayOrder).Where(q => q.FieldIndex == 1))
+                        {                            
+                            //questionItemViewModel.MatrixRowList.Add(new MatrixRowViewModel { Text = row.Label });
+                            editRespondentViewModel.EditQuestionViewModel.MatrixRows.Add(new MatrixRow {Id = 0, Text = row.Label });
+                        }
+
+                        foreach (var col in question.Choices.OrderBy(c => c.DisplayOrder).Where(q => q.FieldIndex == 2))
+                        {
+                            //questionItemViewModel.MatrixColumnList.Add(new MatrixColumnViewModel { Text = col.Label });
+                            editRespondentViewModel.EditQuestionViewModel.MatrixColumns.Add(new MatrixCol { Id = 0, Text = col.Label });
+                        }
+                    }
                     editRespondentViewModel.Questions.Add(questionItemViewModel);
                 }
 
@@ -263,9 +335,21 @@ namespace DynamicSurvey.Server.Services
             // Add empty rows to viewmodel if needed
             var numberOfEmptyChoicesToAdd = EditQuestionViewModel.DefaultAnswerChoiceNumber -
                                             editQuestionViewModel.AnswerChoiceItemViewModels.Count;
+            var numberOfEmptyRowsToAdd = EditQuestionViewModel.DefaultRowNumber -
+                                            editQuestionViewModel.MatrixRows.Count;
+            var numberOfEmptyColumnsToAdd = EditQuestionViewModel.DefaultColNumber -
+                                            editQuestionViewModel.MatrixColumns.Count;
             for (var i = 0; i < numberOfEmptyChoicesToAdd; i++)
             {
                 editQuestionViewModel.AnswerChoiceItemViewModels.Add(new AnswerChoiceItemViewModel());
+            }
+            for (var i = 0; i < numberOfEmptyRowsToAdd; i++)
+            {
+                editQuestionViewModel.MatrixRows.Add(new MatrixRow());
+            }
+            for (var i = 0; i < numberOfEmptyColumnsToAdd; i++)
+            {
+                editQuestionViewModel.MatrixColumns.Add(new MatrixCol());
             }
 
             return editRespondentViewModel;
@@ -334,7 +418,7 @@ namespace DynamicSurvey.Server.Services
                 {
                     Label = editQuestionViewModel.Question,
                     DisplayOrder = questionDisplayOrder,
-                    FieldIndex = 1,
+                    //FieldIndex = 1,
                     ParentPage = surveyPage
                 };
 
@@ -344,7 +428,69 @@ namespace DynamicSurvey.Server.Services
                     .First(sft => sft.FieldType == questionFieldType);
                 question.SurveyFieldType = questionSurveyFieldType;
 
-                if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
+                if (editQuestionViewModel.Format == QuestionFormat.Matrix)
+                {
+                    //var choiceFieldType = new SurveyFieldType();
+                    //if (editQuestionViewModel.MatrixMiltiple)
+                    //{
+                    //    choiceFieldType = session.Query<SurveyFieldType>().First(sft => sft.FieldType == FieldType.Matrix_Ch);
+                    //}
+                    //else if (editQuestionViewModel.MatrixSingleRow)
+                    //{
+                    //    choiceFieldType = session.Query<SurveyFieldType>().First(sft => sft.FieldType == FieldType.Matrix_Hor);
+                    //}
+                    //else if (editQuestionViewModel.MatrixSingleColumn)
+                    //{
+                    //    choiceFieldType = session.Query<SurveyFieldType>().First(sft => sft.FieldType == FieldType.Matrix_Ver);
+                    //}
+                    var choiceFieldType = editQuestionViewModel.MatrixMultiple
+                        ? FieldType.Matrix_Ch
+                        : FieldType.Matrix_Hor;
+                    var choiceSurveyFieldType = session.Query<SurveyFieldType>()
+                        .First(sft => sft.FieldType == choiceFieldType);
+                    //var choiceSurveyFieldType = choiceFieldType;
+                    var rowDisplayOrderCounter = 0;
+                    //var listR = new List<MatrixRow>();
+                    foreach (var matrixRow in editQuestionViewModel.MatrixRows)
+                    {
+                        if (!string.IsNullOrWhiteSpace(matrixRow.Text))
+                        {
+                            rowDisplayOrderCounter++;
+                            var rowChoice = new SurveyField
+                            {
+                                Label = matrixRow.Text,
+                                DisplayOrder = rowDisplayOrderCounter,
+                                FieldIndex = 1,
+                                ParentPage = surveyPage,
+                                Group = question,
+                                SurveyFieldType = choiceSurveyFieldType
+                            };
+                            //listR.Add(matrixRow);
+                            question.Choices.Add(rowChoice);
+                        }
+                    }
+                    //editQuestionViewModel.MatrixRows = listR;
+
+                    var colDisplayOrderCounter = 0;
+                    foreach (var matrixCol in editQuestionViewModel.MatrixColumns)
+                    {
+                        if (!string.IsNullOrWhiteSpace(matrixCol.Text))
+                        {
+                            colDisplayOrderCounter++;
+                            var colChoice = new SurveyField
+                            {
+                                Label = matrixCol.Text,
+                                DisplayOrder = rowDisplayOrderCounter,
+                                FieldIndex = 2,
+                                ParentPage = surveyPage,
+                                Group = question,
+                                SurveyFieldType = choiceSurveyFieldType
+                            };
+                            question.Choices.Add(colChoice);
+                        }
+                    }
+                }
+                else if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
                     editQuestionViewModel.Format == QuestionFormat.ChoiceDown)
                 {
                     var choiceFieldType = editQuestionViewModel.AllowMultipleValues
@@ -436,6 +582,15 @@ namespace DynamicSurvey.Server.Services
                         }
                     }
                 }
+                else if (editQuestionViewModel.Format == QuestionFormat.Slider)
+                {
+                    question.ShowValue = editQuestionViewModel.ShowValue;
+                    question.Resolution = editQuestionViewModel.Resolution;
+                    question.MinimumValue = editQuestionViewModel.MinimumValue;
+                    question.MaximumValue = editQuestionViewModel.MaximumValue;
+                    question.ExtremePointLeft = editQuestionViewModel.ExtremePointLeft;
+                    question.ExtremePointRight = editQuestionViewModel.ExtremePointRight;
+                }
 
                 session.Save(question);
 
@@ -498,7 +653,67 @@ namespace DynamicSurvey.Server.Services
                     .First(sft => sft.FieldType == questionFieldType);
                 question.SurveyFieldType = questionSurveyFieldType;
 
-                if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
+                if (editQuestionViewModel.Format == QuestionFormat.Matrix)
+                {
+                    question.Choices.Clear();
+                    //var choiceFieldType = new SurveyFieldType();
+                    //if (editQuestionViewModel.MatrixMiltiple)
+                    //{
+                    //    choiceFieldType = session.Query<SurveyFieldType>().First(sft => sft.FieldType == FieldType.Matrix_Ch);
+                    //}
+                    //else if (editQuestionViewModel.MatrixSingleRow)
+                    //{
+                    //    choiceFieldType = session.Query<SurveyFieldType>().First(sft => sft.FieldType == FieldType.Matrix_Hor);
+                    //}
+                    //else if (editQuestionViewModel.MatrixSingleColumn)
+                    //{
+                    //    choiceFieldType = session.Query<SurveyFieldType>().First(sft => sft.FieldType == FieldType.Matrix_Ver);
+                    //}
+                    var choiceFieldType = editQuestionViewModel.MatrixMultiple
+                        ? FieldType.Matrix_Ch
+                        : FieldType.Matrix_Hor;
+                    var choiceSurveyFieldType = session.Query<SurveyFieldType>()
+                        .First(sft => sft.FieldType == choiceFieldType);
+                    //var choiceSurveyFieldType = choiceFieldType;
+                    var rowDisplayOrderCounter = 0;
+                    
+                    foreach (var matrixRow in editQuestionViewModel.MatrixRows)
+                    {
+                        if (!string.IsNullOrWhiteSpace(matrixRow.Text))
+                        {
+                            rowDisplayOrderCounter++;
+                            var rowChoice = new SurveyField
+                            {
+                                Label = matrixRow.Text,
+                                DisplayOrder = rowDisplayOrderCounter,
+                                FieldIndex = 1,
+                                ParentPage = question.ParentPage,
+                                Group = question,
+                                SurveyFieldType = choiceSurveyFieldType
+                            };
+                            question.Choices.Add(rowChoice);
+                        }
+                    }
+                    var colDisplayOrderCounter = 0;
+                    foreach (var matrixCol in editQuestionViewModel.MatrixColumns)
+                    {
+                        if (!string.IsNullOrWhiteSpace(matrixCol.Text))
+                        {
+                            colDisplayOrderCounter++;
+                            var colChoice = new SurveyField
+                            {
+                                Label = matrixCol.Text,
+                                DisplayOrder = rowDisplayOrderCounter,
+                                FieldIndex = 2,
+                                ParentPage = question.ParentPage,
+                                Group = question,
+                                SurveyFieldType = choiceSurveyFieldType
+                            };
+                            question.Choices.Add(colChoice);
+                        }
+                    }
+                }
+                else  if (editQuestionViewModel.Format == QuestionFormat.ChoiceAcross ||
                     editQuestionViewModel.Format == QuestionFormat.ChoiceDown)
                 {
                     // Remove old choices
@@ -595,6 +810,15 @@ namespace DynamicSurvey.Server.Services
                             question.SurveyFieldVocabularyCrossList.Add(surveyFieldVocabularyCross);
                         }
                     }
+                }
+                else if (editQuestionViewModel.Format == QuestionFormat.Slider)
+                {
+                    question.ShowValue = editQuestionViewModel.ShowValue;
+                    question.Resolution = editQuestionViewModel.Resolution;
+                    question.MinimumValue = editQuestionViewModel.MinimumValue;
+                    question.MaximumValue = editQuestionViewModel.MaximumValue;
+                    question.ExtremePointLeft = editQuestionViewModel.ExtremePointLeft;
+                    question.ExtremePointRight = editQuestionViewModel.ExtremePointRight;
                 }
 
                 session.Save(question);
@@ -724,11 +948,11 @@ namespace DynamicSurvey.Server.Services
                 }
                 case QuestionFormat.Matrix:
                 {
-                    throw new NotImplementedException();
+                    return FieldType.Matrix;
                 }
                 case QuestionFormat.Slider:
                 {
-                    throw new NotImplementedException();
+                    return FieldType.Slider;
                 }
                 default:
                 {
@@ -772,6 +996,14 @@ namespace DynamicSurvey.Server.Services
                 case FieldType.DropdownList:
                 {
                     return QuestionFormat.DropDown;
+                }
+                case FieldType.Slider:
+                {
+                    return QuestionFormat.Slider;
+                }
+                case FieldType.Matrix:
+                {
+                    return QuestionFormat.Matrix;
                 }
                 default:
                 {

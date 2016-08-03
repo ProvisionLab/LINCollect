@@ -1,6 +1,257 @@
 ﻿@using DynamicSurvey.Server.ViewModels
+@model DynamicSurvey.Server.ViewModels.Surveys.EditRespondentViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@{ Html.RenderPartial("_EditSurveyMenu", EditSurveyMenu.Relationships); }
+@{
+    var editSurveyMenuViewModel = new EditSurveyMenuViewModel
+    {
+        EditSurveyMenu = EditSurveyMenu.Relationships,
+        SurveyTemplateId = null//Model.SurveyTemplateId
+    };
+}
+
+@{ Html.RenderPartial("_EditSurveyMenu", editSurveyMenuViewModel); }
+
+<div class="portlet light bordered form-fit">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-users font-green-haze"></i>
+            <span class="caption-subject font-green-haze bold uppercase">Relationships</span>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <form action="@Url.Action("EditSurvey")" method="POST" enctype="multipart/form-data" class="form-horizontal form-row-seperated">
+            <input name="Id" type="hidden" @*value="@Model.Id"*@ />
+            <div class="form-body">
+
+                <div class="form-group">
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-hover relations-table">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-small yellow btn-selected">options</a>
+                                            <a href="#" class="btn btn-sm btn-small yellow hide">+ nodes?</a>
+                                            <a href="#" class="btn btn-sm btn-small yellow">questions</a>
+                                        </td>
+                                        <td> Relationship1 </td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                            <a href="#" class="btn btn-sm btn-small yellow disabled"><i class="fa fa-sort-up"></i>up</a>
+                                            <a href="#" class="btn btn-sm btn-small yellow disabled"><i class="fa fa-sort-desc"></i>down</a>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <a style="float: right; margin-right: 20px;" href="#" class="btn btn-sm green">
+                        add relationship set
+                        <i class="fa fa-plus"></i>
+                    </a>
+
+                </div>
+
+                <div class="form-group" >
+                    @*@if (!isRelationshipNameValid)
+                    {<text>has-error</text>}"*@
+                    <label class="control-label col-md-3">Relationship Set Name: <span class="required">*</span></label>
+                    <div class="col-md-9">
+                        <input name="RelationshipName" type="text" class="form-control" @*value="@Model.RelationshipName"*@ />
+
+                        <span class="help-block">
+
+                        </span>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Select a node list: </label>
+                    <div class="col-md-9">
+                        <select name="QuestionLayout" class="form-control node-list hide">
+
+                            @*<option value="@layout.Id" 
+                                    @if (layout.Id == Model.QuestionLayout) { <text> selected="selected" </text>  }>
+
+                                        </option>*@
+
+                        </select>
+                        <button type="button" class="btn default" id="editQuestionButton" data-toggle="modal" data-target="#editQuestionModal">Create a list</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Question Layout: </label>
+                    <div class="col-md-9">
+                        <select name="QuestionLayout" class="form-control">
+                            @*@foreach (var layout in Model.Layouts)
+                                        {
+                                <option value="@layout.Id" 
+                                        @if (layout.Id == Model.QuestionLayout) { <text> selected="selected" </text>  }>
+
+                                        </option>
+                                }*@
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                                <label class="control-label col-md-3">Maximum Nodes: </label>
+                                <div class="col-md-9 maximum-nodes">
+                                    <input name="MaximumNodes" type="text" class="form-control" @*value="@Model.MaximumNodes"*@ />
+                                        <p>Enter '0' for unlimited nodes</p>
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="padding-top: 0;">Add nodes: </label>
+                                    <div class="col-md-9 add-nodes">
+                                        <input name="AddNodes" type="checkbox" class="form-control" @*value="@Model.AddNodes"*@ />
+                                        <p><span>Note:</span> Click on '+ node ?' to add questions about added nodes.</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="padding-top: 0;">Hide added nodes: </label>
+                                    <div class="col-md-9">
+                                        <input name="HideAddedNodes" type="checkbox" class="form-control" @*value="@Model.HideAddedNodes"*@ />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="padding-top: 0;">Allow select all nodes: </label>
+                                    <div class="col-md-9">
+                                        <input name="AllowSelectAllNodes" type="checkbox" class="form-control" @*value="@Model.AllowSelectAllNodes"*@ />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="padding-top: 0;">Can skip: </label>
+                                    <div class="col-md-9">
+                                        <input name="CanSkip" type="checkbox" class="form-control" @*value="@Model.CanSkip"*@ />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="padding-top: 0;">Use drop down search: </label>
+                                    <div class="col-md-9">
+                                        <input name="UseDropDownSearch" type="checkbox" class="form-control" @*value="@Model.UseDropDownSearch"*@ />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="padding-top: 0;">Super user view added nodes: </label>
+                                    <div class="col-md-9">
+                                        <input name="SuperUserViewAddedNodes" type="checkbox" class="form-control" @*value="@Model.SuperUserViewAddedNodes"*@ />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Node Selection: <span class="required">*</span></label>
+                                    <div class="col-md-9">
+                                        <select name="SelectionId" class="form-control">
+                                            @*@foreach (var selection in Model.Selections)
+                                        {
+                                                <option value="@selection.Id" @if (selection.Id == Model.SelectionId) { <text> selected="selected" </text>   }></option>
+                                        }*@
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Name Generator Question:</label>
+                                    <div class="col-md-9">
+                                        <textarea name="NameGeneralQuestion" id="nameGeneralQuestion" class="form-control" rows="5">@*@Model.*@NameGeneralQuestion</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <button type="submit" class="btn green">
+                                                <i class="fa fa-database"></i>Save
+                                            </button>
+                                            <button type="button" class="btn default">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+<div id="editQuestionModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">
+                    Create Relations
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="portlet light bordered form-fit">
+                    <div class="portlet-body form">
+                        <form id="editQuestionForm" action="" method="POST" class="form-horizontal form-row-separated">
+
+
+
+                            <div class="all-shits">
+                                <div class="row sheet-row">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 sheet-name">
+                                        <span>Sheet 1</span>
+                                        <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 relation">
+
+                                        <div class="relations-row">
+                                            <div class="relation-name">
+                                                <span>Relation 1</span>
+                                                <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                            </div>
+                                        </div>
+                                        <div class="relations-row">
+                                            <div class="relation-name">
+                                                <span>Relation 2</span>
+                                                <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-plus-circle"></i>
+                                        <input class="newRelation" type="text">
+
+                                    </div>
+                                </div>
+
+                                <div class="row sheet-row">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 sheet-name">
+                                        <span>Sheet 2</span>
+                                        <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 relation">
+
+                                        <div class="relations-row">
+                                            <div class="relation-name">
+                                                <span>Relation 1</span>
+                                                <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                            </div>
+                                        </div>
+                                        <div class="relations-row">
+                                            <div class="relation-name">
+                                                <span>Relation 2</span>
+                                                <a href="#" class="btn btn-sm btn-small yellow">delete</a>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-plus-circle"></i>
+                                        <input class="newRelation" type="text">
+
+                                    </div>
+                                </div>
+
+
+                                <i class="fa fa-plus-circle"></i>
+                                <input id="newList" type="text">
+                            </div>
+
+
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

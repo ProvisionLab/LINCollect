@@ -11,7 +11,7 @@
         });
     };
 
-    var addRow = function() {
+    var addRow = function () {
         var rowTemplate = $(".answer-choice-row:first").clone(true);
 
         $(".choice-id", rowTemplate).val("");
@@ -26,6 +26,45 @@
         $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
             "].IsDefault\" type=\"hidden\" value=\"false\" class=\"is-default-hidden\" />");
         $(".answer-choice-row:last").after(rowTemplate);
+
+        $(".is-default", rowTemplate).uniform();
+    };
+
+
+    var addRow1 = function () {
+        var rowTemplate = $(".answer-choice-row-1:first").clone(true);
+
+        $(".choice-id", rowTemplate).val("");
+        $(".text", rowTemplate).val("");
+        $(".coding", rowTemplate).val("");
+
+        var isDefaultNameAttribute = (".is-default", rowTemplate).attr("name");
+
+        $(".checkbox-inline", rowTemplate).empty();
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
+            "].IsDefault\" type=\"hidden\" value=\"true\" class=\"is-default-hidden\" />");
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
+            "].IsDefault\" type=\"hidden\" value=\"false\" class=\"is-default-hidden\" />");
+        $(".answer-choice-row-1:last").after(rowTemplate);
+
+        $(".is-default", rowTemplate).uniform();
+    };
+
+    var addRow2 = function () {
+        var rowTemplate = $(".answer-choice-row-2:first").clone(true);
+
+        $(".choice-id", rowTemplate).val("");
+        $(".text", rowTemplate).val("");
+        $(".coding", rowTemplate).val("");
+
+        var isDefaultNameAttribute = (".is-default", rowTemplate).attr("name");
+
+        $(".checkbox-inline", rowTemplate).empty();
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
+            "].IsDefault\" type=\"hidden\" value=\"true\" class=\"is-default-hidden\" />");
+        $(".checkbox-inline", rowTemplate).append("<input name=\"AnswerChoiceItemViewModels[" + isDefaultNameAttribute +
+            "].IsDefault\" type=\"hidden\" value=\"false\" class=\"is-default-hidden\" />");
+        $(".answer-choice-row-2:last").after(rowTemplate);
 
         $(".is-default", rowTemplate).uniform();
     };
@@ -101,8 +140,16 @@
             $.uniform.update($(this));
         });
 
-        $("#addRow").click(function() {
+        $("#addRow").click(function () {
             addRow();
+        });
+
+        $("#addRow1").click(function () {
+            addRow1();
+        });
+
+        $("#addRow2").click(function () {
+            addRow2();
         });
 
         $(".move-row-up").click(function() {
@@ -112,6 +159,26 @@
             }
 
             var beforeRow = row.prev(".answer-choice-row");
+            beforeRow.before(row);
+        });
+
+        $(".move-row-up-1").click(function () {
+            var row = $(this).closest(".answer-choice-row-1");
+            if (row.is(".answer-choice-row-1:first")) {
+                return;
+            }
+
+            var beforeRow = row.prev(".answer-choice-row-1");
+            beforeRow.before(row);
+        });
+
+        $(".move-row-up-2").click(function () {
+            var row = $(this).closest(".answer-choice-row-2");
+            if (row.is(".answer-choice-row-2:first")) {
+                return;
+            }
+
+            var beforeRow = row.prev(".answer-choice-row-2");
             beforeRow.before(row);
         });
 
@@ -125,8 +192,36 @@
             nextRow.after(row);
         });
 
+        $(".move-row-down-1").click(function () {
+            var row = $(this).closest(".answer-choice-row-1");
+            if (row.is(".answer-choice-row-1:last")) {
+                return;
+            }
+
+            var nextRow = row.next(".answer-choice-row-1");
+            nextRow.after(row);
+        });
+
+        $(".move-row-down-2").click(function () {
+            var row = $(this).closest(".answer-choice-row-2");
+            if (row.is(".answer-choice-row-2:last")) {
+                return;
+            }
+
+            var nextRow = row.next(".answer-choice-row-2");
+            nextRow.after(row);
+        });
+
         $(".delete-row").click(function() {
             $(this).closest(".answer-choice-row").remove();
+        });
+
+        $(".delete-row-1").click(function () {
+            $(this).closest(".answer-choice-row-1").remove();
+        });
+
+        $(".delete-row-2").click(function () {
+            $(this).closest(".answer-choice-row-2").remove();
         });
 
         $("#editQuestionForm").submit(function() {

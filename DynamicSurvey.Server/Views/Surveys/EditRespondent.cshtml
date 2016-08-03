@@ -38,7 +38,7 @@
                         <div class="col-md-1">
                             <span class="label label-primary">@question.DisplayOrder</span>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-9 question-block">
                             @Html.Raw(question.Question)
                             @if (question.Format == QuestionFormat.Text)
                             {
@@ -115,6 +115,96 @@
                                     }
                                 </select>
                             }
+                            else if (question.Format == QuestionFormat.Slider)
+                            {
+                                    <div class="basic-form__line">
+                                        <div class="basic-form__ansvers">
+                                            <div class="basic-range">
+                                                <center>
+                                                    <span class="range">1</span>
+                                                </center>
+                                                @if (Model.EditQuestionViewModel.ShowValue) {<span class="list-inline">@Model.EditQuestionViewModel.ExtremePointLeft</span>}
+                                                else {<span style="visibility:hidden">@Model.EditQuestionViewModel.ExtremePointLeft</span>} 
+                                                <input type="range"
+                                                       min="@Model.EditQuestionViewModel.MinimumValue"
+                                                       max="@Model.EditQuestionViewModel.MaximumValue"
+                                                       value="1"
+                                                       step="@Model.EditQuestionViewModel.Resolution"
+                                                       onchange="showValue(this)" />
+                                                <span>@Model.EditQuestionViewModel.ExtremePointRight</span>
+                                                <script type="text/javascript">
+                                                    var showValue = function (currentSlider) {
+                                                        $($($(currentSlider).parent().children()[0]).children()[0]).html($(currentSlider).val());
+                                                        //document.getElementByClassName("range").innerHTML = newValue;
+                                                    }
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                            else if (question.Format == QuestionFormat.Matrix)
+                            {
+                                if (Model.EditQuestionViewModel.MatrixMultiple)
+                                {
+                                    <div class="row">
+                                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1"></div>
+                                        @foreach (var col in Model.EditQuestionViewModel.MatrixColumns)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(col.Text))
+                                            {
+                                                <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">@col.Text</div>
+                                            }
+                                        }
+                                    </div>
+                                    foreach (var row in Model.EditQuestionViewModel.MatrixRows)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(row.Text))
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">@row.Text</div>
+                                                @foreach (var col in Model.EditQuestionViewModel.MatrixColumns)
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(col.Text))
+                                                    { 
+                                                        <div><input name="@row.Text" type="checkbox" /></div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                }
+                                else if (!Model.EditQuestionViewModel.MatrixMultiple)
+                                {
+                                    <div class="row" style="text-align: center;">
+                                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1"></div>
+                                        @foreach (var col in Model.EditQuestionViewModel.MatrixColumns)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(col.Text))
+                                            {
+                                                <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">@col.Text</div>
+                                            }
+                                        }
+                                    </div>
+                                
+                                    foreach (var row in Model.EditQuestionViewModel.MatrixRows)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(row.Text))
+                                        {
+                                            <div class="row" style="text-align: center;">
+                                                <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">@row.Text</div>
+                                                @foreach (var col in Model.EditQuestionViewModel.MatrixColumns)
+                                                {
+                                                    if (!string.IsNullOrWhiteSpace(col.Text))
+                                                    {
+                                                        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1"><input name="@row.Text" type="radio" /></div>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                }
+                            }
+
                         </div>
                         <div class="col-md-2">
                             @if (question != Model.Questions.First())

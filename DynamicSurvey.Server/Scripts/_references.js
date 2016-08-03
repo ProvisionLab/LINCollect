@@ -226,3 +226,5 @@
 /// <reference path="_layout.js" />
 /// <reference path="editrespondent.js" />
 /// <reference path="vsdoc/jquery-2.1.0.js" />
+/// <reference path="../content/theme/assets/pages/scripts/login.min.js" />
+/// <reference path="editrelation.js" />

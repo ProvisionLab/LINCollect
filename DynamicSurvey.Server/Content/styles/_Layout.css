@@ -17,3 +17,6 @@
 .cke {
     z-index: 1000000 !important;
 }
+.question-block input {
+    margin-left: -10px;
+}

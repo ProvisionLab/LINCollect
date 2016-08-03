@@ -9,6 +9,11 @@
         RadioButton,
         GroupBox,
         DatePicker,
-        DropdownList
+        DropdownList,
+        Slider,
+        Matrix,
+        Matrix_Ch,
+        Matrix_Hor,
+        Matrix_Ver
     }
 }

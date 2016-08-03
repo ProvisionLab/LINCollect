@@ -10,6 +10,9 @@
                     @if (Model.QuestionId == null)
                     {
                         <text>Add Question</text>
+                        //Model.MatrixRows = new List<DynamicSurvey.Server.ViewModels.Surveys.MatrixRow>();
+                        //Model.MatrixColumns = new List<DynamicSurvey.Server.ViewModels.Surveys.MatrixCol>();
+                        Model.MatrixMultiple = true;
                     }
                     else
                     {
@@ -166,8 +169,106 @@
                                         </div>
                                     </div>
                                 </div>
+@*---------------------------------------------------------------------------------------------------------------------*@
                                 <div class="question-format-container" id="matrixQuestionFormatContainer">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <div>
+                                                <label style=""><b>Rows:</b> The variants at the left side of the matrix.</label>
+                                            </div>
+                                            @for (var i = 0; i < Model.MatrixRows.Count; i++)
+                                            {
+                                                <div class="answer-choice-row-1 row space-between-row">
+                                                    <input name="MatrixRows[@i].Id" type="hidden" class="choice-id" value="@Model.MatrixRows[i].Id" />
+                                                    <div class="col-md-8">
+                                                        <input name="MatrixRows[@i].Text" type="text" class="text form-control" value="@Model.MatrixRows[i].Text" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <a href="javascript:;" class="move-row-up-1 btn btn-icon-only green">
+                                                            <i class="fa fa-arrow-up">
+                                                            </i>
+                                                        </a>
+                                                        <a href="javascript:;" class="move-row-down-1 btn btn-icon-only green">
+                                                            <i class="fa fa-arrow-down">
+                                                            </i>
+                                                        </a>
+                                                        <a href="javascript:;" class="delete-row-1 btn btn-icon-only red">
+                                                            <i class="fa fa-remove">
+                                                            </i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="row space-between-row">
+                                                <div class="col-md-8">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button id="addRow1" type="button" class="btn green">Add Row</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <div>
+                                                <label style=""><b>Columns:</b> The variants at the top of the matrix.</label>
+                                            </div>
+                                            @for (var i = 0; i < Model.MatrixColumns.Count; i++)
+                                            {
+                                                <div class="answer-choice-row-2 row space-between-row">
+                                                    <input name="MatrixColumns[@i].Id" type="hidden" class="choice-id" value="@Model.MatrixColumns[i].Id" />
+                                                    <div class="col-md-8">
+                                                        <input name="MatrixColumns[@i].Text" type="text" class="text form-control" value="@Model.MatrixColumns[i].Text" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <a href="javascript:;" class="move-row-up-2 btn btn-icon-only green">
+                                                            <i class="fa fa-arrow-up">
+                                                            </i>
+                                                        </a>
+                                                        <a href="javascript:;" class="move-row-down-2 btn btn-icon-only green">
+                                                            <i class="fa fa-arrow-down">
+                                                            </i>
+                                                        </a>
+                                                        <a href="javascript:;" class="delete-row-2 btn btn-icon-only red">
+                                                            <i class="fa fa-remove">
+                                                            </i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="row space-between-row">
+                                                <div class="col-md-8">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button id="addRow2" type="button" class="btn green">Add Row</button>
+                                                </div>
+                                            </div>
+                                            <div id="matrixQuestionFormatContainer" class="row space-between-row">
+                                                <div class="col-md-4">
+                                                    <label class="control-label">Choose matrix format:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="radio-list">
+                                                        <label class="radio-list">
+                                                            @*<input name="MatrixMiltiple" type="radio" @if (true) { <text> checked="checked" </text>  } value="@Model.MatrixMiltiple" />*@
+                                                            <input name="MatrixMultiple" type="radio" @if (Model.MatrixMultiple) { <text> checked="checked" </text>  } value="true" />
+                                                            Multiple choice
+                                                        </label>
+                                                        <label class="radio-list">
+                                                            @*<input name="MatrixSingleRow" type="radio" value="@Model.MatrixSingleRow" />*@
+                                                            <input name="MatrixMultiple" type="radio" @if (!Model.MatrixMultiple) { <text> checked="checked" </text>  } value="false" />
+                                                            Single in Row
+                                                        </label>
+                                                        @*<label class="radio-list">
+                                                            <input name="MatrixSingleColumn" type="radio" value="@Model.MatrixSingleColumn" />
+                                                            Single in Column
+                                                        </label>*@
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+@*---------------------------------------------------------------------------------------------------------------------*@
                                 <div class="question-format-container" id="sliderQuestionFormatContainer">
                                     <div class="form-group">
                                         <label class="control-label col-md-3">Extreme points: <span class="required">*</span></label>

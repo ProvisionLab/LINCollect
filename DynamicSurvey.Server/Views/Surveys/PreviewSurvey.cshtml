@@ -3,4 +3,38 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@{ Html.RenderPartial("_EditSurveyMenu", EditSurveyMenu.PreviewSurvey); }
+@{
+    var editSurveyMenuViewModel = new EditSurveyMenuViewModel
+    {
+        EditSurveyMenu = EditSurveyMenu.PreviewSurvey,
+        SurveyTemplateId = null//Model.SurveyTemplateId
+    };
+}
+
+@{ Html.RenderPartial("_EditSurveyMenu", editSurveyMenuViewModel); }
+
+<div class="form-group">
+    <div class="row space-between-row">
+        <div class="col-md-3">
+            <a href="@Url.Action("Start", "Surveys")" class="btn btn-block">
+                    1.Start
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="@Url.Action("AboutYou", "Surveys")" class="btn btn-block">
+                2.About you
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="@Url.Action("Relation", "Surveys")" class="btn btn-block">
+                n.Relationship n
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="@Url.Action("Finish", "Surveys")" class="btn btn-block">
+                4.Finish
+            </a>
+        </div>
+    </div>
+    <p class="preview-menu-instruction">Click to jump between steps or go back.</p>
+</div>

@@ -8,6 +8,7 @@ using DynamicSurvey.Server.Services;
 using DynamicSurvey.Server.ViewModels;
 using DynamicSurvey.Server.ViewModels.Surveys;
 using Survey = DynamicSurvey.Server.DAL.Entities.Survey;
+using DynamicSurvey.Server.Models;
 
 namespace DynamicSurvey.Server.Controllers
 {
@@ -29,32 +30,43 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult Index()
         {
-
-            var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
-            return View(new SurveysViewModel
+            if (AdminAuth.IsAutorizedFlag)
             {
-                Surveys = res
-            });
+                var res = _surveysRepository.GetSurveys(Session.GetCurrentUser());
+                return View(new SurveysViewModel
+                {
+                    Surveys = res
+                });
+            }
+            else { return Redirect("/Profile/Login"); }
         }
 
         public ActionResult CopySurvey(ulong sourceId)
         {
-            var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
-            survey.Id = 0;
-            survey.Title = survey.Title + "_Copy";
-            var id = _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
-            return View("AddSurvey", id);
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                var survey = _surveysRepository.GetSurveys(Session.GetCurrentUser()).Single(s => s.Id == sourceId);
+                survey.Id = 0;
+                survey.Title = survey.Title + "_Copy";
+                var id = _surveysRepository.AddSurvey(Session.GetCurrentUser(), survey);
+                return View("AddSurvey", id);
+            }
+            else { return Redirect("/Profile/Login"); }
         }
 
         public ActionResult AddSurvey(ulong sourceId)
         {
-            var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
-
-            if (res == null)
+            if (AdminAuth.IsAutorizedFlag)
             {
-                return RedirectToAction("Index");
+                var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
+
+                if (res == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                return View(res);
             }
-            return View(res);
+            else { return Redirect("/Profile/Login"); }
         }
 
         [HttpPost]
@@ -65,13 +77,17 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult Details(ulong sourceId)
         {
-            var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
-
-            if (res == null)
+            if (AdminAuth.IsAutorizedFlag)
             {
-                return RedirectToAction("Index");
+                var res = _surveysRepository.GetSurveyById(Session.GetCurrentUser(), sourceId);
+
+                if (res == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                return View(res);
             }
-            return View(res);
+            else { return Redirect("/Profile/Login"); }
         }
 
         [HttpPost]
@@ -83,28 +99,32 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditSurvey(int? surveyTemplateId)
         {
-            EditSurveyViewModel editSurveyViewModel;
-
-            if (TempData[ViewModelTempDataKey] != null)
+            if (AdminAuth.IsAutorizedFlag)
             {
-                editSurveyViewModel = (EditSurveyViewModel) TempData[ViewModelTempDataKey];
+                EditSurveyViewModel editSurveyViewModel;
 
-                // Populate ViewModel with languages again
-                editSurveyViewModel.Languages = _surveyService.GetLanguages();
+                if (TempData[ViewModelTempDataKey] != null)
+                {
+                    editSurveyViewModel = (EditSurveyViewModel)TempData[ViewModelTempDataKey];
 
-                var modelState = (ModelStateDictionary) TempData[ModelStateTempDateKey];
-                ModelState.Merge(modelState);
+                    // Populate ViewModel with languages again
+                    editSurveyViewModel.Languages = _surveyService.GetLanguages();
 
-                // Fill TempData with ViewModel and ModelState in case the page will be refreshed
-                TempData[ViewModelTempDataKey] = editSurveyViewModel;
-                TempData[ModelStateTempDateKey] = ModelState;
+                    var modelState = (ModelStateDictionary)TempData[ModelStateTempDateKey];
+                    ModelState.Merge(modelState);
+
+                    // Fill TempData with ViewModel and ModelState in case the page will be refreshed
+                    TempData[ViewModelTempDataKey] = editSurveyViewModel;
+                    TempData[ModelStateTempDateKey] = ModelState;
+                }
+                else
+                {
+                    editSurveyViewModel = _surveyService.GetEditSurveyViewModel(surveyTemplateId);
+                }
+
+                return View(editSurveyViewModel);
             }
-            else
-            {
-                editSurveyViewModel = _surveyService.GetEditSurveyViewModel(surveyTemplateId);
-            }
-
-            return View(editSurveyViewModel);
+            else { return Redirect("/Profile/Login"); }
         }
 
         [HttpPost]
@@ -138,14 +158,18 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult EditRespondent(EditRespondentRequestModel request)
         {
-            if (request.SurveyTemplateId == null)
+            if (AdminAuth.IsAutorizedFlag)
             {
-                return RedirectToAction("EditSurvey");
+                if (request.SurveyTemplateId == null)
+                {
+                    return RedirectToAction("EditSurvey");
+                }
+
+                var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(request);
+
+                return View(editRespondentViewModel);
             }
-
-            var editRespondentViewModel = _surveyService.GetEditRespondentViewModel(request);
-
-            return View(editRespondentViewModel);
+            else { return Redirect("/Profile/Login"); }
         }
 
         [HttpPost]
@@ -189,12 +213,56 @@ namespace DynamicSurvey.Server.Controllers
 
         public ActionResult Relationships()
         {
-            return View();
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                return View();
+            }
+            else { return Redirect("/Profile/Login"); }
         }
 
         public ActionResult PreviewSurvey()
         {
-            return View();
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                return View();
+            }
+            else { return Redirect("/Profile/Login"); }
+        }
+
+        public ActionResult Start()
+        {
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                return View();
+            }
+            else { return Redirect("/Profile/Login"); }
+        }
+
+        public ActionResult AboutYou()
+        {
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                return View();
+            }
+            else { return Redirect("/Profile/Login"); }
+        }
+
+        public ActionResult Relation()
+        {
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                return View();
+            }
+            else { return Redirect("/Profile/Login"); }
+        }
+
+        public ActionResult Finish()
+        {
+            if (AdminAuth.IsAutorizedFlag)
+            {
+                return View();
+            }
+            else { return Redirect("/Profile/Login"); }
         }
     }
 }
