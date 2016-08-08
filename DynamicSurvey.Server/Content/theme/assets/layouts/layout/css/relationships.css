@@ -1,0 +1,68 @@
+.show {
+    display: block;
+}
+.relations-table td {
+    border-top: 0 !important;
+}
+.relations-table td:last-child {
+    float: right;
+}
+.btn-small {
+    margin-right: 5px !important;
+    padding: 3px 7px !important;
+}
+.maximum-nodes input {
+    width: initial;
+    display: inline;
+}
+.maximum-nodes p {
+    display: inline;
+    padding-left: 5px;
+}
+.add-nodes p {
+     display: inline;
+ }
+.add-nodes span {
+    font-weight: bold;
+}
+.btn-selected {
+    background-color: #0000C0 !important;
+}
+.node-list {
+    width: initial;
+    display: inline-block;
+    margin-right: 10px;
+}
+.node-list + button {
+    float: initial;
+    margin: 0 0 6px 0;
+    padding: 8px 14px 8px;
+}
+.fa-plus-circle, .fa-minus-circle {
+    font-size: 18px;
+    color:  orange;
+    cursor: pointer;
+}
+.sheet-row {
+    padding-top: 15px;
+}
+.sheet-name, .relation-name {
+    line-height: 1.8;
+}
+.sheet-name a {
+    float: right;
+}
+.relation-name a {
+    float: right;
+}
+.sheet-name span {
+    margin-left: 20px;
+    color: blue;
+}
+.relation-name span {
+    margin-left: 20px;
+    color: blue;
+}
+.form-row-separated {
+    padding: 15px;
+}

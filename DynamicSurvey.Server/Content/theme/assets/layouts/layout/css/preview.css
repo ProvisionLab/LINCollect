@@ -1,0 +1,34 @@
+.preview-menu-instruction {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 12px;
+}
+.survey-name + a {
+    float: right;
+}
+.relationships-list {
+    margin: 10px 50px 10px 10px;
+    height: initial;
+    border: solid grey 1px;
+    padding: 15px;
+}
+.selected-relationships {
+    margin: 0 10px 0 0;
+}
+.fa-plus-circle, .fa-minus-circle {
+    font-size: 18px;
+    color:  orange;
+    cursor: pointer;
+}
+.relationships-list span {
+    font-size: 18px;
+    color:  blue;
+    cursor: pointer;
+}
+.relationships-list span:hover {
+    text-decoration: underline;
+}
+.add-relation-to-selected p {
+    margin: 5px 0 0 20px;
+    font-size: 12px;
+}

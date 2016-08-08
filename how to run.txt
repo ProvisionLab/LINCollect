@@ -1,0 +1,19 @@
+0.Должен быть установлен .NetFramework 4.6 (обязательно ОН)
+
+1.Установить MySQL, user "root" - password "00000"
+
+2.запустить файл "DbBootstrapper" для создания локальной БД
+
+3.В таблице "survey_field" базы данных добавить колонки:
+	- extrime_left (string)
+	- extrime_right (string)
+	- show_value (bool)
+	- min_value (int)
+	- max_value (int)
+	- resolution (int)
+	- row_name (string)
+	- col_name (string)
+
+4.Стартовый проект в студии "DynamicSurvey.Server"
+
+5.В приложении username "LINCollectAdmin", password "collect2016"
