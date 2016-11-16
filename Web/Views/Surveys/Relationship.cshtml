@@ -1,0 +1,220 @@
+﻿@model Web.Models.ViewModels.RelationshipView
+
+@{
+    ViewBag.Title = "Relationship - Survey";
+}
+
+<div class="row">
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn btn-block blue" href="/Surveys/Edit/@ViewBag.SurveyId">Survey Options</a>
+    </div>
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn btn-block blue" href="/Surveys/Respondent/@ViewBag.SurveyId">About Respondent</a>
+    </div>
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn-block purple" href="#">Relationship</a>
+    </div>
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn btn-block blue" href="/Surveys/Preview/@ViewBag.SurveyId">Preview Survey</a>
+    </div>
+</div>
+
+<h3 class="font-green-haze">Survey - Relationships</h3>
+
+<table class="table table-bordered table-hover">
+    @foreach (var item in Model.RelationshipItems.OrderBy(x => x.OrderId))
+    {
+        <tr class="@(Model.SelectedItem?.Id == item.Id ? "active" : "" )">
+            <td>
+                @item.OrderId
+            </td>
+            <td>
+                <a href="#" class="rel @((Model.SelectedItem?.Id == item.Id && !ViewBag.IsQuestion) ? "active" : "" )" onclick="showBlock(false, @item.Id)">option</a> | <a href="#" onclick="showBlock(true, @item.Id)" class="rel @((ViewBag.IsQuestion && Model.SelectedItem?.Id == item.Id) ? "active" : "" )">question</a>
+            </td>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.NodeList
+            </td>
+            <td class="text-right">
+                <a href="#" onclick="changeRelPosition(@item.Id, false)">up</a> | <a href="#" onclick="changeRelPosition(@item.Id, true)">down</a> | <a href="#" onclick="deleteRelationship(@item.Id, @item.SurveyId, @item.OrderId)">delete</a>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td colspan="5" class="text-right">
+            <a href="#" onclick="addRelationship(@ViewBag.SurveyId)">Add relationship</a>
+        </td>
+    </tr>
+</table>
+<div class="form-horizontal">
+    <input type="hidden" value="false" name="isNext" id="isNext" />
+    <div class="form-group">
+        <div class="col-md-4 text-left">
+            <a class="btn btn-default" href="#" onclick="saveRelOptions(false, true)">Save/Previous</a>
+        </div>
+        <div class="col-md-8 text-right">
+            @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
+            <input type="button" value="Save" class="btn btn-default" onclick="saveRelOptions(false, false)" />
+            <input type="submit" value="Save/Next Step" class="btn btn-default" onclick="saveRelOptions(true, false)" />
+        </div>
+    </div>
+</div>
+<div id="r-options" class="@(ViewBag.IsQuestion ? "hidden" : "" )">
+    @Html.Partial("GetRelationshipItem", Model.SelectedItem)
+</div>
+<div id="r-questions" class="@(ViewBag.IsQuestion ? "" : "hidden" )">
+    @if (!Model.SelectedItem.Questions.Any())
+    {
+        <div class="form-group">
+            <div class="col-xs-12">
+                This section has no questions.Please click button to add the first question.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.Partial("_RQuestions", Model.SelectedItem.Questions)
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-12 text-right">
+            <button type="button" class="btn btn-sm purple" data-toggle="modal" data-target="#addQuestionModal">
+                Insert question
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addQuestionLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addQuestionLabel">Add Question</h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("Relationship", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successRel" }, new { @id = "question-options" }))
+                {
+                    @Html.Action("EditRQuestion", "Surveys", new { id = 0, relId = Model.SelectedItem.Id })
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn purple" onclick="addQuestion()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    @Scripts.Render("~/bundles/unobtrusive")
+    @Scripts.Render("~/bundles/slider")
+
+    <script>
+        function saveRelOptions(isNext, isBack) { debugger
+            $('#isNext').val(isNext)
+            $('#isBack').val(isBack)
+            $('#getRelItemForm #GeneratorName').val(CKEDITOR.instances['GeneratorName'].getData());
+            $('#getRelItemForm').submit();
+        }
+        function showBlock(isQ, rId) {
+            Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?questions=' + isQ + '&relId=' + rId);
+        }
+        function successRel(data) {
+            if (data.success) {
+                Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?questions=true'); 3
+            }
+        }
+        function removeRow(btn) {
+            $(btn).parents('tr').remove();
+        }
+        function addAnswerRow(btn) {
+            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answer.Text" class="form-control" /></td><td><input type="text" name="Answer.Value" class="form-control" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answer.Default" /></td><td class="text-right"><a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
+        }
+        function addRowsRow(btn) {
+            $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control"></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));
+        }
+        function changeCb(cb, format) {
+            $('.answers-table input[type="checkbox"]').prop('checked', false);
+            $(cb).prop('checked', true);
+        }
+        function addQuestion() {
+            $('#question-options #Text').val(CKEDITOR.instances['Text'].getData());
+            $('#question-options #Introducing').val(CKEDITOR.instances['Introducing'].getData());
+            $('#question-options').submit();
+        }
+        function updateAnswer(code) {
+            $('.formats *[data-format]').each(function () {
+                if (!$(this).hasClass('hidden')) {
+                    $(this).addClass('hidden');
+                }
+                if ($(this).attr('data-format').indexOf(code) != -1) {
+                    $(this).removeClass('hidden');
+                }
+            });
+        }
+        $(document).ready(function () {
+            $('div[id*="slider"]').slider();
+        });
+        function addRelationship(id)
+        {
+            $.ajax({
+                type: "POST",
+                url: '/Surveys/AddRelationsip/?id=' + id,
+                data: null
+            }).success(function (data) {
+                debugger
+                if (!data.success) {
+                    alert('Error:' + data.error);
+                } else {
+                    Redirect('/Surveys/Relationship/' + data.id + '/?questions=false&relId='+ data.relId);
+                }
+            });
+        }
+
+        function deleteRelationship(id, suId, roid) {
+            if (confirm("Delete Relationship #" + roid)) {
+                $.ajax({
+                    type: "POST",
+                    url: '/Surveys/DeleteRelationsip/?id=' + id,
+                    data: null
+                }).success(function (data) {
+                    if (!data.success) {
+                        alert('Error:' + data.error);
+                    } else {
+                        Redirect('/Surveys/Relationship/' + suId + '/?questions=false');
+                    }
+                });
+            }
+        }
+
+        function changeRelPosition(id, isInc) {
+            $.ajax({
+                type: "POST",
+                url: '/Surveys/ChangeRelationshipPosition/?id=' + id + '&isInc=' + isInc,
+                data: null
+            }).success(function (data) {
+                if (!data.success) {
+                    alert('Error:' + data.error);
+                } else {
+                    window.location.reload();
+                }
+        });
+        }
+        //function changeRlPosition(action, id) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: '/Surveys/ChangeRQuestionPosition/?id=' + id + '&isInc=' + action,
+        //        data: null
+        //    }).success(function (data) {
+        //        if (!data.success) {
+        //            alert('Error:' + data.error);
+        //        } else {
+        //            window.location.reload();
+        //        }
+        //    });
+        //}
+    </script>
+}

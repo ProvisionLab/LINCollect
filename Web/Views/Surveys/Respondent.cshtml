@@ -1,0 +1,149 @@
+﻿@model Web.Data.Respondent
+
+@{
+    ViewBag.Title = "Respondent - Survey";
+}
+
+<div class="row">
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn btn-block blue" href="/Surveys/Edit/@Model.SurveyId">Survey Options</a>
+    </div>
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn-block purple" href="#">About Respondent</a>
+    </div>
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn btn-block blue" href="/Surveys/Relationship/@Model.SurveyId">Relationship</a>
+    </div>
+    <div class="col-sm-3 col-xs-12 text-center">
+        <a class="btn btn btn-block blue" href="/Surveys/Preview/@Model.SurveyId">Preview Survey</a>
+    </div>
+</div>
+
+<h3 class="font-green-haze">Survey - Respondent</h3>
+
+<div class="form-horizontal">
+    <input type="hidden" value="false" name="isNext" id="isNext" />
+    <div class="form-group">
+        <span class="control-label col-md-4">
+            Question position<br />
+            <small>Edit questions that appear at the start of the survey</small>
+        </span>
+        <div class="col-md-8">
+            <label>
+                <input type="radio" name="IsAfterSurvey" value="true" onchange="updatePosition(@Model.SurveyId, true)" @(ViewBag.IsAfter ? "checked" : "") />
+                Start of Survey
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <label>
+                <input type="radio" name="IsAfterSurvey" value="true" onchange="updatePosition(@Model.SurveyId, false)" @(!ViewBag.IsAfter ? "checked" : "") />
+                End of Survey
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-left">
+            <a class="btn btn-default" href="/Surveys/Edit/@Model.SurveyId">Previous</a>
+        </div>
+        <div class="col-md-8 text-right">
+            @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
+            <a class="btn btn-default" href="/Surveys/Relationship/@Model.SurveyId">Next Step</a>
+        </div>
+    </div>
+    @if (!Model.Questions.Any())
+    {
+        <div class="form-group">
+            <div class="col-xs-12">
+                This section has no questions.Please click button to add the first question.
+            </div>
+        </div>
+    }
+    else
+    {
+        @Html.Partial("_Questions", Model.Questions)
+    }
+    <div class="form-group">
+        <div class="col-md-12 text-right">
+            <button type="button" class="btn btn-sm purple" data-toggle="modal" data-target="#addQuestionModal">
+                Insert question
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-4 text-left">
+            <a class="btn btn-default" href="/Surveys/Edit/@Model.SurveyId">Previous</a>
+        </div>
+        <div class="col-md-8 text-right">
+            @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
+            <a class="btn btn-default" href="/Surveys/Relationship/@Model.SurveyId">Next Step</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addQuestionLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addQuestionLabel">Add Question</h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("Respondent", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successResp" }, new { @id = "question-options" }))
+                {
+                    @Html.Action("EditQuestion", "Surveys", new { id = 0, respId = Model.Id, isAfter = Model.IsAfterSurvey}) 
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn purple" onclick="addQuestion()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/unobtrusive")
+    @Scripts.Render("~/bundles/slider")
+
+    <script>
+        function removeRow(btn) {
+            $(btn).parents('tr').remove();
+        }
+        function addAnswerRow(btn) {
+            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answer.Text" class="form-control" /></td><td><input type="text" name="Answer.Value" class="form-control" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answer.Default" /></td><td class="text-right"><a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
+        }
+        function addRowsRow(btn) {
+            $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control" ></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));
+        }
+        function changeCb(cb, format) {
+            $('.answers-table input[type="checkbox"]').prop('checked', false);
+            $(cb).prop('checked', true);
+        }
+        function addQuestion() {
+            $('#question-options #Text').val(CKEDITOR.instances['Text'].getData());
+            $('#question-options #Introducing').val(CKEDITOR.instances['Introducing'].getData());
+            $('#question-options').submit();
+        }
+        function successResp(data) {
+            if (data.success) {
+                window.location.reload();
+            }
+        }
+        function updatePosition(id, value) {
+            Redirect('/Surveys/Respondent/' + id + '/?isAfter=' + value);
+        }
+        function updateAnswer(code) {
+            $('.formats *[data-format]').each(function () {
+                if (!$(this).hasClass('hidden')) {
+                    $(this).addClass('hidden');
+                }
+                if ($(this).attr('data-format').indexOf(code) != -1) {
+                    $(this).removeClass('hidden');
+                }
+            });
+        }
+        $(document).ready(function () {
+            $('div[id*="slider"]').slider();
+        });
+    </script>
+}

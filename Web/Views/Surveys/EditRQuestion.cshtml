@@ -1,0 +1,162 @@
+﻿@model Web.Data.RQuestion
+
+
+<input type="hidden" name="IsAfterSurvey" id="IsAfterSurvey" value="@Model.IsAfterSurvey" />
+<input type="hidden" name="RelationshipItemId" id="RelationshipItemId" value="@Model.RelationshipItemId" />
+<input type="hidden" name="Id" id="Id" value="@Model.Id" />
+<input type="hidden" name="OrderId" id="OrderId" value="@Model.OrderId" />
+<div class="form-horizontal">
+    <div class="form-group">
+        <span class="control-label col-md-12">Introdution (optional)</span>
+        <div class="col-md-12">
+            <textarea style="height:200px" class="form-control ckeditor" name="Introducing" id="Introducing">
+                @Model.Introducing
+            </textarea>
+            <small>Text instructing your respondent to give an answer.</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <span class="control-label col-md-12">* Question</span>
+        <div class="col-md-12">
+            <textarea style="height:200px" class="form-control ckeditor" name="Text" id="Text">
+                @Model.Text
+            </textarea>
+            <small>Text instructing your respondent to give an answer.</small>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <span class="control-label col-md-12">* Short Name</span>
+        <div class="col-md-12">
+            <input type="number" name="ShortName" id="ShortName" value="@Model.ShortName" class="form-control" min="1" step="1" max="9" required  />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <span class="control-label col-md-12">Properties</span>
+        <div class="col-md-12">
+            <label>
+                <input type="checkbox" name="IsCompulsory" id="IsCompulsory" value="true" @(Model.IsCompulsory ? "checked" : "" ) />
+                Compulsory
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <span class="control-label col-md-12">* Format</span>
+        <div class="row">
+            <div class="col-md-12">
+                @foreach (var item in (List<Web.Data.QuestionFormat>)ViewBag.Formats)
+                {
+                    <div class="col-sm-4">
+                        <label>
+                            <input type="radio" @(Model.QuestionFormatId == item.Id ? "checked" : "") name="FormatCode" id="QuestionFormatId" value="@item.Code" onchange="updateAnswer(this.value)" />
+                            @item.Name
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="form-group formats">
+        <div class="col-md-12">
+            <div data-format="text" class="hidden">
+                <label>* Rows:</label>
+                <input type="text" name="TextRowsCount" value="@Model.TextRowsCount" class="form-control" />
+            </div>
+            <div data-format="choice_across,choice_down,drop_down,matrix" class="hidden">
+                <div data-format="choice_across" class="hidden">
+                    Include annotation: <input type="checkbox" name="IsAnnotation" value="true" @(Model.IsAnnotation.HasValue && Model.IsAnnotation.Value ? "checked" : "") />
+                    <br />
+                </div>
+                <div data-format="matrix" class="hidden">
+                    <b>Rows:</b> These questions are displayed down the left hand side.
+                    <table class="table rows">
+                        <tbody>
+                            @foreach (var item in Model.Rows.Split(','))
+                            {
+                                <tr>
+                                    <td style="width:90%"><input type="text" value="@item" name="Answer.Rows" class="form-control"></td>
+                                    <td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2" class="text-right">
+                                    <a href="#" onclick="addRowsRow(this);">add row</a>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <b>Columns:</b> These choices are displayed across the page.
+                </div>
+                <small>
+                    <b>Important:</b> The "Text for user" field is the text respondents will see. The 'coding' field is the data which is exported.
+                </small>
+                <table class="table answers-table">
+                    <thead>
+                        <tr>
+                            <th>Text for user</th>
+                            <th>Coding</th>
+                            <th>Default</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Answers)
+                        {
+                            <tr>
+                                <td><input type="text" name="Answer.Text" value="@item.Text" class="form-control" /></td>
+                                <td><input type="text" name="Answer.Value" value="@item.Value" class="form-control" /></td>
+                                <td><input type="checkbox" @(item.IsDefault ? "checked" : "") onchange="changeCb(this);" value="true" name="Answer.Default" /></td>
+                                <td class="text-right"><a href="#" onclick="removeRow(this);">delete</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right">
+                                <a href="#" onclick="addAnswerRow(this);">add row</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div data-format="choice_across,choice_down" class="hidden">
+                    Allow multiple values:
+                    <label>
+                        <input type="radio" name="IsMultiple" value="true" @(Model.IsMultiple.HasValue && Model.IsMultiple.Value ? "checked" : "") />
+                        Yes
+                    </label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <label>
+                        <input type="radio" name="IsMultiple" value="false" @(!Model.IsMultiple.HasValue || !Model.IsMultiple.Value ? "checked" : "") />
+                        No
+                    </label>
+                </div>
+            </div>
+            <div data-format="slider" class="hidden">
+                <label>* Extreme points:</label><br />
+                <input type="text" name="TextMin" value="@Model.TextMin" class="form-control" />
+                <small>Appears to left of slider</small><br />
+                <input type="text" name="TextMax" value="@Model.TextMax" class="form-control" />
+                <small>Appears to right  of slider</small><br /><br />
+                <label>* Values:</label><br />
+                <input type="text" name="ValueMin" value="@Model.ValueMin" class="form-control" style="display: inline-block; width:49%" /><span style="width:2%">-</span><input type="text" name="ValueMax" value="@Model.ValueMax" class="form-control"style="display: inline-block; width:49%" />
+                <small class="text-center" style="width: 100%;display: inline-block;">Miniumum and maximum values for slider</small><br /><br />
+                <label>* Resolution:</label><br />
+                @{
+                    if (Model.Resolution == 0)
+                    {
+                        Model.Resolution = 1;
+                    }
+                }
+                <input type="text" name="Resolution" value="@Model.Resolution" class="form-control" />
+                <small class="text-center" style="width: 100%;display: inline-block;">The step value. e.g. 0.5 will allow 1, 1.5, 2, 2.5 etc</small><br /><br />
+                <label>Show Value:</label>
+                <input type="checkbox" name="IsShowValue" @(Model.IsShowValue.HasValue && Model.IsShowValue.Value ? "checked" : "") /><br />
+                <small>Show user the value of the slider</small>
+            </div>
+        </div>
+    </div>
+</div>

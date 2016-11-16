@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="@Url.Action("Index", "Home")"><img src="~/Content/img/logo.png" alt="LINCOllect" title="LINCollect" class="logo" /></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Survey", "Index", "Surveys")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        <br />
+        <br />
+        <br />
+        @RenderBody()
+        <hr />
+        <footer class="text-right">
+            <p>&copy; @DateTime.Now.Year - LINCollect</p>
+        </footer>
+        <div class="scroll-to-top">
+            <span class="fa-stack fa-lg">
+                <i class="fa fa-circle-thin fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-arrow-up fa-stack-1x fa-inverse"></i>
+            </span>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/ckeditor/adapters/jquery.js"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        function Redirect(url) {
+            var ua = navigator.userAgent.toLowerCase(),
+                isIE = ua.indexOf('msie') !== -1,
+                version = parseInt(ua.substr(4, 2), 10);
+
+            // Internet Explorer 8 and lower
+            if (isIE && version < 9) {
+                var link = document.createElement('a');
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+            }
+
+                // All other browsers
+            else { window.location.href = url; }
+        };
+    </script>
+</body>
+</html>

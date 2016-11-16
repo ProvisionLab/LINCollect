@@ -1,0 +1,105 @@
+﻿@model Web.Data.RelationshipItem
+
+@using (Html.BeginForm("GetRelationshipItem", "Surveys", FormMethod.Post, new { @id = "getRelItemForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <input type="hidden" value="false" name="isNext" id="isNext" />
+        <input type="hidden" value="false" name="isBack" id="isBack" />
+        <input type="hidden" value="@Model.Id" name="RelId" />
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.SurveyId)
+        @Html.HiddenFor(model => model.CreateDateUtc)
+        @Html.HiddenFor(model => model.UpdateDateUtc)
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Relationship Set Name</span>
+            <div class="col-md-10">
+                <input type="text" name="Name" value="@Model.Name" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Select a node list</span>
+            <div class="col-md-10">
+                <input type="text" name="NodeList" value="@Model.NodeList" class="form-control" />
+                <label><input type="checkbox" name="SortNodeList" value="true" @(Model.SortNodeList ? "checked" : "") /> <small>Sort list by name alphabetically</small></label> 
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">* Question Layout</span>
+            <div class="col-md-10">
+                @Html.DropDownList("QuestionLayoutId", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Maximum Nodes</span>
+            <div class="col-md-10">
+                <input type="text" name="MaximumNodes" value="@Model.MaximumNodes" class="form-control" />
+                <small>Enter '0' for unlimited nodes</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Add nodes</span>
+            <div class="col-md-10 padding-top-7">
+                <input type="checkbox" name="AddNodes" value="true" @(Model.AddNodes ? "checked" : "") />
+                <small><b>Note:</b> Click on '+ node ?' to add questions about added nodes.</small>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Hide added nodes</span>
+            <div class="col-md-10 padding-top-7">
+                <input type="checkbox" name="HideAddedNodes" value="true" @(Model.HideAddedNodes ? "checked" : "") />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Allow select all nodes</span>
+            <div class="col-md-10 padding-top-7">
+                <input type="checkbox" name="AllowSelectAllNodes" value="true" @(Model.AllowSelectAllNodes ? "checked" : "") />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Can skip</span>
+            <div class="col-md-10 padding-top-7">
+                <input type="checkbox" name="CanSkip" value="true" @(Model.CanSkip ? "checked" : "") />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Use drop down search</span>
+            <div class="col-md-10 padding-top-7">
+                <input type="checkbox" name="UseDDSearch" value="true" @(Model.UseDDSearch ? "checked" : "") />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Super user view added nodes</span>
+            <div class="col-md-10 padding-top-7">
+                <input type="checkbox" name="SuperUserViewNodes" value="true" @(Model.SuperUserViewNodes ? "checked" : "") />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">* Node Selection</span>
+            <div class="col-md-10">
+                @Html.DropDownList("NodeSelectionId", null, htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="control-label col-md-2">Super user view added nodes</span>
+            <div class="col-md-10">
+                <textarea rows="3" class="form-control ckeditor" name="GeneratorName" id="GeneratorName">@Model.GeneratorName</textarea>
+            </div>
+        </div>
+
+        
+    </div>
+}

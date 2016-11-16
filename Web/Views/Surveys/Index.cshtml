@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Web.Models.ViewModels.SurveyView>
+
+@{
+    ViewBag.Title = "Surveys";
+}
+
+<h3 class="font-green-haze">Surveys</h3>
+<p>
+    Here you can create a new survey or edit an existing one. Once you have published a new survey you can not modify it. To modify a survey you need to take it off-line first.
+</p>
+<p>
+    @Html.ActionLink("Create New Survey", "Create", null, new { @class= "btn purple" })
+</p>
+<table class="table">
+    <tr>
+        <th class="col-xs-1">
+            Status
+        </th>
+        <th class="col-xs-1">
+            Action
+        </th>
+        <th class="col-xs-6">
+            Name
+        </th>
+        <th class="col-xs-1">
+            Data
+        </th>
+        <th class="col-xs-3">
+            Actions
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Status)
+        </td>
+        <td>
+            Publish
+        </td>
+        <td>
+            @item.Name (@item.Language)
+        </td>
+        <td>
+            Download
+        </td>
+        <td class="text-right">
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Clear", "Clear", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id }) | 
+            @Html.ActionLink("Clone", "Clone", new { id = item.Id })
+        </td>
+    </tr>
+}
+</table>

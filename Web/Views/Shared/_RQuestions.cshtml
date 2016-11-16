@@ -1,0 +1,211 @@
+﻿@model IEnumerable<Web.Data.RQuestion>
+
+@if (Model.Any())
+{
+    foreach (var item in Model.OrderBy(x => x.OrderId))
+    {
+        <hr class="question" />
+        <div class="form-group question">
+            <div class="col-md-8">@Html.Raw(item.Introducing)</div>
+            <div class="col-md-4 text-right">
+                <a href="#" onclick="editRespQuestion(@item.Id, @item.RelationshipItemId)">edit</a> | <a href="#" onclick="changeQPosition(false, @item.Id)">up</a> | <a href="#" onclick="changeQPosition(true, @item.Id)">down</a> | <a href="#" onclick="deleteQuestion(@item.Id, @item.OrderId)">delete</a>
+            </div>
+        </div>
+        <div class="form-group question">
+            <div class="col-md-12">
+                <b>
+                    <span class="order-id">@item.OrderId.@(item.IsCompulsory ? " *" : "")</span> @Html.Raw(item.Text)
+                </b>
+            </div>
+            <div class="col-xs-12">
+                    @if (item.QuestionFormat.Code == "text")
+                    {
+                        if (item.TextRowsCount > 1)
+                        {
+                            <textarea rows="@item.TextRowsCount" class="form-control"></textarea>
+                        }
+                        else
+                        {
+                            <input type="text" class="form-control" />
+                        }
+                    }
+                    else if (item.QuestionFormat.Code == "choice_across")
+                    {
+                        if (item.IsMultiple.HasValue && item.IsMultiple.Value == true)
+                        {
+                            foreach (var answer in item.Answers)
+                            {
+                                <label>
+                                    @answer.Text <br />
+                                    <input type="checkbox" name="@item.Id" value="@answer.Value" />
+                                </label>
+                            }
+                        }
+                        else
+                        {
+                            foreach (var answer in item.Answers)
+                            {
+                                <label>
+                                    @answer.Text <br />
+                                    <input type="radio" name="@item.Id" value="@answer.Value" />
+                                </label>
+                            }
+                        }
+                        if (item.IsAnnotation.HasValue && item.IsAnnotation.Value)
+                        {
+                            <textarea rows="2" class="form-control"></textarea>
+                        }
+                    }
+                    else if (item.QuestionFormat.Code == "choice_down")
+                    {
+                        if (item.IsMultiple.HasValue && item.IsMultiple.Value == true)
+                        {
+                            foreach (var answer in item.Answers)
+                            {
+                                <label>
+                                    <input type="checkbox" name="@item.Id" value="@answer.Value" />
+                                    @answer.Text
+                                </label><br />
+                            }
+                        }
+                        else
+                        {
+                            foreach (var answer in item.Answers)
+                            {
+                                <label>
+                                    <input type="radio" name="@item.Id" value="@answer.Value" />
+                                    @answer.Text
+                                </label><br />
+                            }
+                        }
+                    }
+                    else if (item.QuestionFormat.Code == "drop_down")
+                    {
+                        <select class="form-control">
+                            @foreach (var answer in item.Answers)
+                            {
+                                <option value="@answer.Value">@answer.Text</option>
+                            }
+                        </select>
+                    }
+                    else if (item.QuestionFormat.Code == "matrix")
+                    {
+                        <table>
+                            <tr>
+                                <th></th>
+                                @foreach (var answer in item.Answers)
+                                {
+                                    <th>
+                                        @answer.Text
+                                    </th>
+                                }
+                            </tr>
+                            @{
+                                var rows = item.Rows.Split(',');
+                            }
+                            @for (int i = 0; i < rows.Length; i++)
+                            {
+                                <tr>
+                                    <td>@rows[i]</td>
+                                    @foreach (var col in item.Answers)
+                                    {
+                                        <td>
+                                            <input type="radio" name="@i" value="@col.Value" />
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </table>
+                                }
+                                else if (item.QuestionFormat.Code == "slider")
+                                {
+                                    <div class="col-xs-1">@item.TextMin</div>
+                                    <div class="col-xs-3">
+                                        <div id="slider-@item.Id" data-slider-min="@item.ValueMin" data-slider-max="@item.ValueMax" data-slider-step="@(item.Resolution == 0 ? 1 : item.Resolution)"
+                                             @((item.IsShowValue.HasValue && item.IsShowValue.Value) ? "" : "data-slider-tooltip='hide'")></div>
+                                    </div>
+                                    <div class="col-xs-1">@item.TextMax</div>
+                                }
+            </div>
+        </div>
+    }
+<!-- Modal -->
+<div class="modal fade" id="editQuestionModal" tabindex="-1" role="dialog" aria-labelledby="editQuestionLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addQuestionLabel">Edit Question</h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("Relationship", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successRel" }, new { @id = "question-options-edit" }))
+                {
+
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn purple" onclick="editQuestionSubmit()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function editQuestionSubmit() {
+        $('#question-options-edit #Text').val(CKEDITOR.instances['Text'].getData());
+        $('#question-options-edit #Introducing').val(CKEDITOR.instances['Introducing'].getData());
+        $('#question-options-edit').submit();
+    }
+    function editRespQuestion(id, relId) {
+        $.ajax({
+            type: "POST",
+            url: '/Surveys/EditRQuestion/?id=' + id + '&relId=' + relId,
+            data: null
+        }).success(function (data) {
+            $('#editQuestionModal #question-options-edit').empty().html(data);
+            CKEDITOR.replace('Introducing');
+            CKEDITOR.replace('Text');
+
+            $('input[name="FormatCode"]:checked').val();
+            $('.formats *[data-format]').each(function () {
+                if (!$(this).hasClass('hidden')) {
+                    $(this).addClass('hidden');
+                }
+                if ($(this).attr('data-format').indexOf($('input[name="FormatCode"]:checked').val()) != -1) {
+                    $(this).removeClass('hidden');
+                }
+            });
+        });
+        $('#editQuestionModal').modal('show');
+    }
+
+    function changeQPosition(action, id) {
+        $.ajax({
+            type: "POST",
+            url: '/Surveys/ChangeRQuestionPosition/?id=' + id + '&isInc=' + action,
+            data: null
+        }).success(function (data) {
+            if(!data.success) {
+                alert('Error:' + data.error);
+            } else {
+                window.location.reload();
+            }
+        });
+    }
+    function deleteQuestion(id, number) {
+        if(confirm("Delete Question #" + number)) {
+            $.ajax({
+                type: "POST",
+                url: '/Surveys/DeleteRQuestion/?id=' + id,
+                data: null
+            }).success(function (data) {
+                if(!data.success) {
+                    alert('Error:' + data.error);
+                } else {
+                    window.location.reload();
+                }
+            });
+        }
+    }
+</script>
+}
