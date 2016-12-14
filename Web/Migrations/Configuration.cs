@@ -55,14 +55,6 @@ namespace Web.Migrations
                 new NodeSelection { Name = "Normal", Code = "n" },
                 new NodeSelection { Name = "Filtered", Code = "f" },
                 new NodeSelection { Name = "Automatic", Code = "a" });
-
-            context.SurveyFiles.AddOrUpdate(sf => sf.Id, 
-                new SurveyFile
-                {
-                    Name = "Default template",
-                    Link = "Content\\files\\templates\\Lincollect_default_template.xlsx",
-                    UserId = "ac3d340a-bd03-4fac-84f9-92c74c283e6a"
-                });
         }
     }
 }

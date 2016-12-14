@@ -46,6 +46,8 @@ namespace Web.Models
         public virtual DbSet<NodeSelection> NodeSelections { get; set; }
         public virtual DbSet<RAnswer> RAnswers { get; set; }
         public virtual DbSet<RQuestion> RQuestions { get; set; }
+        public virtual DbSet<NAnswer> NAnswers { get; set; }
+        public virtual DbSet<NQuestion> NQuestions { get; set; }
         public virtual DbSet<RelationshipItem> RelationshipItems { get; set; }
     }
 }

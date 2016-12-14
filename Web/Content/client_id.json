@@ -1,0 +1,12 @@
+{
+  "web": {
+    "client_id": "555419438916-8lg52oq5ufkfotqlqd18qekiasfnijks.apps.googleusercontent.com",
+    "project_id": "winter-sensor-149718",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://accounts.google.com/o/oauth2/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "c76e0VLql9EoYpBe9L0MOAjH",
+    "redirect_uris": [ "http://localhost:44314/callback", "http://lincollect-com-ua.1gb.ua/callback" ],
+    "javascript_origins": [ "http://localhost:44314/", "http://localhost", "http://lincollect-com-ua.1gb.ua", "http://nabusteam-001-site5.atempurl.com:44314", "http://nabusteam-001-site5.atempurl.com:44314" ]
+  }
+}

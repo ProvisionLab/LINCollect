@@ -28,6 +28,7 @@ namespace Web
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
+                      "~/Scripts/wizard/jquery.bootstrap.wizard.min.js",
                       "~/Scripts/main.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ckeditor").Include(

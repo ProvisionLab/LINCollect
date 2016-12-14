@@ -27,6 +27,7 @@
         public RelationshipItem()
         {
             Questions = new HashSet<RQuestion>();
+            NodeQuestions = new HashSet<NQuestion>();
         }
 
         public int Id { get; set; }
@@ -65,5 +66,6 @@
         public string GeneratorName { get; set; }
 
         public virtual ICollection<RQuestion> Questions { get; set; }
+        public virtual ICollection<NQuestion> NodeQuestions { get; set; }
     }
 }

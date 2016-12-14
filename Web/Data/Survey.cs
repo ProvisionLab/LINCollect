@@ -29,8 +29,7 @@
         public int SurveyStatusId { get; set; }
         public virtual SurveyStatus Status { get; set; }
 
-        [Required]
-        public int SurveyFileId { get; set; }
+        public int? SurveyFileId { get; set; }
         public virtual SurveyFile SurveyFile { get; set; }
 
         [Required]

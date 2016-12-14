@@ -17,7 +17,7 @@
     <div class="form-group">
         <span class="control-label col-md-12">* Question</span>
         <div class="col-md-12">
-            <textarea style="height:200px" class="form-control ckeditor" name="Text" id="Text">
+            <textarea style="height:200px" class="form-control ckeditor required" name="Text" id="Text">
                 @Model.Text
             </textarea>
             <small>Text instructing your respondent to give an answer.</small>
@@ -27,7 +27,7 @@
     <div class="form-group">
         <span class="control-label col-md-12">* Short Name</span>
         <div class="col-md-12">
-            <input type="text" name="ShortName" id="ShortName" value="@Model.ShortName" class="form-control" />
+            <input type="text" name="ShortName" id="ShortName" value="@Model.ShortName" class="form-control" required />
         </div>
     </div>
 
@@ -42,7 +42,7 @@
     </div>
 
     <div class="form-group">
-        <span class="control-label col-md-12">* Format</span>
+        <span class="control-label col-md-12 format-group-section">* Format</span>
         <div class="row">
             <div class="col-md-12">
                 @foreach (var item in (List<Web.Data.QuestionFormat>)ViewBag.Formats)
@@ -61,7 +61,7 @@
         <div class="col-md-12">
             <div data-format="text" class="hidden">
                 <label>* Rows:</label>
-                <input type="number" name="TextRowsCount" value="@Model.TextRowsCount" class="form-control"  min="1" step="1" max="9" required/>
+                <input type="number" name="TextRowsCount" value="@Model.TextRowsCount" class="form-control" min="1" step="1" max="9" required />
             </div>
             <div data-format="choice_across,choice_down,drop_down,matrix" class="hidden">
                 <div data-format="choice_across" class="hidden">
@@ -108,8 +108,8 @@
                             <tr>
                                 <td><input type="text" name="Answer.Text" value="@item.Text" class="form-control" /></td>
                                 <td><input type="text" name="Answer.Value" value="@item.Value" class="form-control" /></td>
-                                <td><input type="checkbox" @(item.IsDefault ? "checked" : "") onchange="changeCb(this);" value="true" name="Answer.Default" /></td>
-                                <td class="text-right"><a href="#" onclick="removeRow(this);">delete</a></td>
+                                <td><input type="checkbox" @(item.IsDefault ? "checked" : "") onchange="changeCb(this);" value="@item.Value" name="Answer.Default" /></td>
+                                <td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td>
                             </tr>
                         }
                     </tbody>
@@ -144,7 +144,7 @@
                 <input type="text" name="ValueMin" value="@Model.ValueMin" class="form-control" style="display: inline-block; width:49%" /><span style="width:2%">-</span><input type="text" name="ValueMax" value="@Model.ValueMax" class="form-control" style="display: inline-block; width:49%" />
                 <small class="text-center" style="width: 100%;display: inline-block;">Miniumum and maximum values for slider</small><br /><br />
                 <label>* Resolution:</label><br />
-                @{ 
+                @{
                     if (Model.Resolution == 0)
                     {
                         Model.Resolution = 1;

@@ -37,7 +37,7 @@
                             {
                                 <label>
                                     @answer.Text <br />
-                                    <input type="checkbox" name="@item.Id" value="@answer.Value" />
+                                    <input type="checkbox" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />
                                 </label>
                             }
                         }
@@ -47,7 +47,7 @@
                             {
                                 <label>
                                     @answer.Text <br />
-                                    <input type="radio" name="@item.Id" value="@answer.Value" />
+                                    <input type="radio" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />
                                 </label>
                             }
                         }
@@ -63,7 +63,7 @@
                             foreach (var answer in item.Answers)
                             {
                                 <label>
-                                    <input type="checkbox" name="@item.Id" value="@answer.Value" />
+                                    <input type="checkbox" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
                                     @answer.Text
                                 </label><br />
                             }
@@ -73,7 +73,7 @@
                             foreach (var answer in item.Answers)
                             {
                                 <label>
-                                    <input type="radio" name="@item.Id" value="@answer.Value" />
+                                    <input type="radio" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
                                     @answer.Text
                                 </label><br />
                             }
@@ -84,7 +84,7 @@
                         <select class="form-control">
                             @foreach (var answer in item.Answers)
                             {
-                                <option value="@answer.Value">@answer.Text</option>
+                                <option value="@answer.Value" @(answer.IsDefault ? "selected='selected'" : "")>@answer.Text</option>
                             }
                         </select>
                     }
@@ -110,7 +110,7 @@
                                     @foreach (var col in item.Answers)
                                     {
                                         <td>
-                                            <input type="radio" name="@i" value="@col.Value" />
+                                            <input type="radio" name="@i" value="@col.Value" @(col.IsDefault ? "checked" : "") />
                                         </td>
                                     }
                                 </tr>
@@ -157,6 +157,7 @@
         $('#question-options-edit').submit();
     }
     function editRespQuestion(id, relId) {
+        ShowLoader();
         $.ajax({
             type: "POST",
             url: '/Surveys/EditRQuestion/?id=' + id + '&relId=' + relId,
@@ -175,11 +176,14 @@
                     $(this).removeClass('hidden');
                 }
             });
+        }).always(function () {
+            HideLoader();
         });
         $('#editQuestionModal').modal('show');
     }
 
     function changeQPosition(action, id) {
+        ShowLoader();
         $.ajax({
             type: "POST",
             url: '/Surveys/ChangeRQuestionPosition/?id=' + id + '&isInc=' + action,
@@ -190,10 +194,13 @@
             } else {
                 window.location.reload();
             }
+        }).always(function () {
+            HideLoader();
         });
     }
     function deleteQuestion(id, number) {
         if(confirm("Delete Question #" + number)) {
+            ShowLoader();
             $.ajax({
                 type: "POST",
                 url: '/Surveys/DeleteRQuestion/?id=' + id,
@@ -204,6 +211,8 @@
                 } else {
                     window.location.reload();
                 }
+            }).always(function () {
+                HideLoader();
             });
         }
     }

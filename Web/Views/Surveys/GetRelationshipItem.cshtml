@@ -21,10 +21,15 @@
         </div>
 
         <div class="form-group">
-            <span class="control-label col-md-2">Select a node list</span>
-            <div class="col-md-10">
-                <input type="text" name="NodeList" value="@Model.NodeList" class="form-control" />
+            <span class="control-label col-md-2">* Select a node list</span>
+            <div class="col-md-8">
+                @Html.DropDownList("NodeList", null, htmlAttributes: new { @class = "form-control" })
                 <label><input type="checkbox" name="SortNodeList" value="true" @(Model.SortNodeList ? "checked" : "") /> <small>Sort list by name alphabetically</small></label> 
+            </div>
+            <div class="col-xs-2">
+                <button type="button" class="btn btn-block" data-toggle="modal" data-target="#addFileModal">
+                    Manage
+                </button>
             </div>
         </div>
 
@@ -46,7 +51,7 @@
         <div class="form-group">
             <span class="control-label col-md-2">Add nodes</span>
             <div class="col-md-10 padding-top-7">
-                <input type="checkbox" name="AddNodes" value="true" @(Model.AddNodes ? "checked" : "") />
+                <input type="checkbox" name="AddNodes" value="true" @(Model.AddNodes ? "checked" : "") onclick="checkNode(this, @Model.Id)" />
                 <small><b>Note:</b> Click on '+ node ?' to add questions about added nodes.</small>
             </div>
         </div>
@@ -94,7 +99,7 @@
         </div>
 
         <div class="form-group">
-            <span class="control-label col-md-2">Super user view added nodes</span>
+            <span class="control-label col-md-2">Name Generator Question</span>
             <div class="col-md-10">
                 <textarea rows="3" class="form-control ckeditor" name="GeneratorName" id="GeneratorName">@Model.GeneratorName</textarea>
             </div>
@@ -103,3 +108,23 @@
         
     </div>
 }
+<!-- Modal -->
+<div class="modal fade" id="addFileModal" tabindex="-1" role="dialog" aria-labelledby="addFileLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addFileLabel">Manage Nodel list</h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("MailingList", "Sheet", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successFile", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "file-options" }))
+                {
+                    @Html.Action("MailingList", "Sheet")
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="closeFileManager()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

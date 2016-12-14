@@ -1,4 +1,19 @@
-﻿body {
+﻿.company-prew {
+    cursor:pointer;
+}
+
+#loader
+{
+    position: absolute;
+    top: 49%;
+    margin-top: 0px;
+    width: 100px;
+    height: 100px;
+    z-index: 99999;
+    left: 49%;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
     background-color: #303a47 !important;

@@ -5,8 +5,7 @@
 }
 
 <h2>Survey - Create</h2>
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Surveys", FormMethod.Post, new { id = "createForm", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
@@ -15,7 +14,7 @@
         <div class="form-group">
             <span class="control-label col-md-2">* Survey Name</span>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -23,7 +22,7 @@
         <div class="form-group">
             <span class="control-label col-md-2">* Language</span>
             <div class="col-md-10">
-                @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("LanguageId", null, htmlAttributes: new { @class = "form-control", @required = "required" })
                 @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -33,10 +32,12 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-xs-10">
-                        @Html.DropDownList("SurveyFileId", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.DropDownList("SurveyFileId", null, htmlAttributes: new { @class = "form-control", @required = "required" })
                     </div>
                     <div class="col-xs-2">
-                        <input type="button" class="btn btn-block" value="Manage" onclick="javascript: void(0);" />
+                        <button type="button" class="btn btn-block" data-toggle="modal" data-target="#addFileModal">
+                            Manage
+                        </button>
                     </div>
                 </div>
             </div>
@@ -47,10 +48,23 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-xs-10">
-                        @Html.EditorFor(model => model.Banner, new { htmlAttributes = new { @class = "form-control", type = "file" } })
+                        @Html.HiddenFor(model => model.Banner)
+                        @if (Model.Banner?.Length > 0)
+                        {
+                            <div class="row">
+                                <div class="col-xs-4"><strong style="line-height: 30px;" id="BannerTitle">@Model.Banner</strong></div>
+                                <div class="col-xs-8">
+                                    <input type="file" class="form-control" name="BannerFile" id="BannerFile" accept="image/jpeg, image/png, image/gif" />
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="file" class="form-control" name="BannerFile" id="BannerFile" accept="image/jpeg, image/png, image/gif" />
+                        }
                     </div>
                     <div class="col-xs-2">
-                        <input type="button" class="btn btn-block" value="Clear" onclick="javascript:document.getElementById('Banner').value = ''" />
+                        <input type="button" class="btn btn-block" value="Clear" onclick="javascript: $('#BannerFile').val(''); $('#BannerTitle').html(''); $('#Banner').val('');" />
                     </div>
                 </div>
             </div>
@@ -80,22 +94,102 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 text-right">
                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
-                <input type="submit" value="Save" class="btn btn-default" />
-                <input type="submit" value="Save/Next Step" class="btn btn-default" onclick="setNext()" />
+                <input type="button" value="Save" class="btn btn-default" onclick="submitCreateForm()" />
+                <input type="button" value="Save/Next Step" class="btn btn-default" onclick="setNext()" />
             </div>
         </div>
     </div>
 }
-
-<script>
-    function isNext() {
-        $('#isNext').val('true'); return true;
-    }
-</script>
+<!-- Modal -->
+<div class="modal fade" id="addFileModal" tabindex="-1" role="dialog" aria-labelledby="addFileLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addFileLabel">Manage Mailing list</h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("MailingList", "Sheet", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successFile", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "file-options" }))
+                {
+                    @Html.Action("MailingList", "Sheet")
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="closeFileManager()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
+@Scripts.Render("~/bundles/unobtrusive")
+@Scripts.Render("~/bundles/slider")
     <script>
-        function setNext() {
+        function closeFileManager() {
+            window.location.reload();
+        };
+
+        function SubmitFile() {
+           $('#file-options').submit();
+        };
+        function deleteFile(id) {
+            if (confirm("Delete File #" + id)) {
+                ShowLoader();
+                $.ajax({
+                    type: "POST",
+                    url: '/Sheet/DeleteMailingList/?id=' + id,
+                    data: null
+                }).success(function (data) {
+                    if (!data.success) {
+                        alert('Error: ' + data.Error);
+                    } else {
+                        $('.file-' + data.id).remove();
+                    }
+                }).always(function () {
+                    HideLoader();
+                });
+            }
+        };
+        function useUserFile() {
+            ShowLoader();
+            $.ajax({
+                type: "POST",
+                url: '/Sheet/UserFile/?link=' + $('#fileLink').val() + '&name=' + $('#fileLinkName').val(),
+                data: null
+            }).success(function (data) {
+                if (!data.success) {
+                    alert('Error: ' + data.Error);
+                } else {
+                    $('#file-table').append($('<tr class="file-' + data.Data.Id + '"><td>' + data.Data.Name + '</td><td class="text-right"><a href="https://docs.google.com/spreadsheets/d/' + data.Data.Link + '/edit#gid=0" target="_blank">show</a> | <a href="#" onclick="deleteFile(' + data.Data.Id + ')">delete</a></td></tr>'));
+                    $('#fileLink').val(''); $('#fileLinkName').val('');
+                }
+            }).always(function () {
+                HideLoader();
+            });
+        };
+        function successFile(data) {
+            $('#fileName').val('');
+            $('#file-table').append($('<tr class="file-' + data.Data.Id + '"><td>' + data.Data.Name + '</td><td class="text-right"><a href="https://docs.google.com/spreadsheets/d/' + data.Data.Link + '/edit#gid=0" target="_blank">show</a> | <a href="#" onclick="deleteFile(' + data.Data.Id + ')">delete</a></td></tr>'));
+        };
+        function isNext() {
             $('#isNext').val('true'); return true;
+        }
+        function setNext() {
+            $('#isNext').val('true');
+            submitCreateForm();
+        };
+
+        function submitCreateForm() {
+            var valid = true;
+            $('input[required], select[required]').each(function (i) {
+                if ($(this).val() == null || $(this).val().length == 0) {
+                    $(this).parent().addClass('has-error');
+                    $(this).focus();
+                    valid = false;
+                }
+            });
+            if(valid) {
+                $('#createForm').submit();
+            }
         };
     </script>
 

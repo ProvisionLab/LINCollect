@@ -44,7 +44,7 @@
             </span>
         </div>
     </div>
-
+    <img src="@Url.Content("~/Content/img/giphy.gif")" id="loader" style="display:none;" />
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/ckeditor/ckeditor.js"></script>
@@ -67,6 +67,38 @@
                 // All other browsers
             else { window.location.href = url; }
         };
+        function deleteSurvay(id, name) {
+            if (confirm('Delete Survey "' + name + '"')) {
+                Redirect('/Surveys/Delete/' + id);
+            }
+        };
+        function ShowLoader() {
+            $('#loader').show();
+        };
+        function HideLoader() {
+            $('#loader').hide();
+        };
+        function qrup(el) {
+            var row = $(el).closest('tr');
+            row.insertBefore(row.prev());
+        };
+        function qrdown(el) {
+            var row = $(el).closest('tr');
+            row.insertAfter(row.next());
+        };
+
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $(e.target).find('input[type="text"]').val('');
+                $(e.target).find('input[type="checkbox"]').prop('checked', false);
+                $(e.target).find('input[name="FormatCode"]').prop("checked", false)
+                updateAnswer('hide all');
+                $(e.target).find('#Text').val('');
+                $(e.target).find('#Introducing').val('');
+                CKEDITOR.instances['Text'].setData();
+                CKEDITOR.instances['Introducing'].setData();
+            });
+        });
     </script>
 </body>
 </html>

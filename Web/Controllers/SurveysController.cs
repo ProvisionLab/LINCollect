@@ -22,72 +22,17 @@ using Web.Models.ViewModels;
 
 namespace Web.Controllers
 {
-//    Client ID
-//219448834024-bvltvn8onr69r1mpe8n686an4hekq2a4.apps.googleusercontent.com
+    //    Client ID
+    //555419438916-8lg52oq5ufkfotqlqd18qekiasfnijks.apps.googleusercontent.com
+
 
     [Authorize]
     public class SurveysController : Controller
     {
-        static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
-        static string ApplicationName = "LinCollect";
+        //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
+        //static string ApplicationName = "LinCollect";
 
         private ApplicationDbContext db = new ApplicationDbContext();
-
-        public async Task<ActionResult> Text()
-        {
-            UserCredential credential;
-
-            using (var stream =
-                new FileStream(Server.MapPath("~") + "Content\\client_secret.json", FileMode.Open, FileAccess.Read))
-            {
-                string credPath = System.Environment.GetFolderPath(
-                    System.Environment.SpecialFolder.Personal);
-                credPath = Path.Combine(credPath, ".credentials/sheets.googleapis.com-dotnet-quickstart.json");
-
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    Scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + credPath);
-            }
-
-            // Create Google Sheets API service.
-            var service = new SheetsService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
-
-            // Define request parameters.
-            String spreadsheetId = "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms";
-            String range = "Class Data!A2:E";
-            SpreadsheetsResource.ValuesResource.GetRequest request =
-                    service.Spreadsheets.Values.Get(spreadsheetId, range);
-
-            // Prints the names and majors of students in a sample spreadsheet:
-            // https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-            ValueRange response = request.Execute();
-            IList<IList<Object>> values = response.Values;
-            if (values != null && values.Count > 0)
-            {
-                Console.WriteLine("Name, Major");
-                foreach (var row in values)
-                {
-                    // Print columns A and E, which correspond to indices 0 and 4.
-                    Console.WriteLine("{0}, {1}", row[0], row[4]);
-                }
-            }
-            else
-            {
-                Console.WriteLine("No data found.");
-            }
-            Console.Read();
-
-
-            return View();
-        }
 
         public async Task<ActionResult> Index()
         {
@@ -98,7 +43,8 @@ namespace Web.Controllers
                 Language = x.Language.Name,
                 Status = x.Status.Name,
                 SurveyStatusId = x.SurveyStatusId,
-            });
+                UpdateDateUtc = x.UpdateDateUtc
+            }).OrderByDescending(x => x.UpdateDateUtc);
             return View(await surveyViews.ToListAsync());
         }
 
@@ -114,12 +60,27 @@ namespace Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public async Task<ActionResult> Create(Survey survey, bool isNext = false)
+        public async Task<ActionResult> Create(Survey survey, HttpPostedFileBase BannerFile, bool isNext = false)
         {
+            var userId = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
                 survey.CreateDateUtc = survey.UpdateDateUtc = DateTime.UtcNow;
                 survey.SurveyStatusId = 1;
+
+                if (BannerFile != null)
+                {
+                    string path = System.Web.HttpContext.Current.Server.MapPath("~/Content/files/banners/");
+
+                    try
+                    {
+                        var fileName = BannerFile.FileName.Split('\\').LastOrDefault();
+                        BannerFile.SaveAs(path + fileName);
+                        survey.Banner = fileName;
+                    }
+                    catch (Exception ex) { var t = ex.Message; }
+                }
+
                 db.Surveys.Add(survey);
                 await db.SaveChangesAsync();
                 if (isNext)
@@ -132,12 +93,13 @@ namespace Web.Controllers
                 }
             }
             ViewBag.LanguageId = new SelectList(db.Languages, "Id", "Name", survey.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles, "Id", "Name", survey.SurveyFileId);
+            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", survey.SurveyFileId);
             return View(survey);
         }
 
         public async Task<ActionResult> Edit(int? id)
         {
+            var userId = User.Identity.GetUserId();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -148,16 +110,31 @@ namespace Web.Controllers
                 return HttpNotFound();
             }
             ViewBag.LanguageId = new SelectList(db.Languages, "Id", "Name", surveyView.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles, "Id", "Name", surveyView.SurveyFileId);
+            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", surveyView.SurveyFileId);
             return View(surveyView);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<ActionResult> Edit(Survey survey, bool isNext = false)
+        public async Task<ActionResult> Edit(Survey survey, HttpPostedFileBase BannerFile, bool isNext = false)
         {
+            var userId = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
+                if (BannerFile != null)
+                {
+                    string path = System.Web.HttpContext.Current.Server.MapPath("~/Content/files/banners/");
+
+                    try
+                    {
+                        //if (System.IO.File.Exists(path + BannerFile.FileName))
+                        //    System.IO.File.Delete(path + BannerFile.FileName);
+                        var fileName = BannerFile.FileName.Split('\\').LastOrDefault();
+                        BannerFile.SaveAs(path + fileName);
+                        survey.Banner = fileName;
+                    }
+                    catch (Exception ex) { var t = ex.Message; }
+                }
                 survey.UpdateDateUtc = DateTime.UtcNow;
                 db.Entry(survey).State = EntityState.Modified;
                 await db.SaveChangesAsync();
@@ -166,9 +143,7 @@ namespace Web.Controllers
                     return RedirectToAction("Respondent", new { id = survey.Id });
                 }
             }
-            ViewBag.LanguageId = new SelectList(db.Languages, "Id", "Name", survey.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles, "Id", "Name", survey.SurveyFileId);
-            return View(survey);
+            return RedirectToAction("Edit", new { @id = survey.Id });
         }
 
         public async Task<ActionResult> Delete(int? id)
@@ -180,12 +155,227 @@ namespace Web.Controllers
             var surveyView = await db.Surveys.FindAsync(id);
             if (surveyView == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("Index");
             }
-            return View(surveyView);
+            try
+            {
+                db.Database.ExecuteSqlCommand("exec DeleteSurvay {0}", id);
+            }
+            catch { }
+            return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> Respondent(int? id, bool isAfter = true)
+        public async Task<ActionResult> Clone(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var survey = await db.Surveys.FindAsync(id);
+            if (survey == null)
+            {
+                return RedirectToAction("Index");
+            }
+            try
+            {
+                var newSurvey = db.Surveys.Create();
+
+                newSurvey.Name = "Copy of " + survey.Name;
+                newSurvey.Banner = survey.Banner;
+                newSurvey.CreateDateUtc = DateTime.UtcNow;
+                newSurvey.UpdateDateUtc = DateTime.UtcNow;
+                newSurvey.LanguageId = survey.LanguageId;
+                newSurvey.Status = survey.Status;
+                newSurvey.SurveyFileId = survey.SurveyFileId;
+                newSurvey.SurveyStatusId = survey.SurveyStatusId;
+                newSurvey.Introduction = survey.Introduction;
+                newSurvey.Landing = survey.Landing;
+                newSurvey.Thanks = survey.Thanks;
+                newSurvey.UserId = survey.UserId;
+
+                db.Surveys.Add(newSurvey);
+                db.SaveChanges();
+                #region // Respondents
+                foreach (var item in survey.Respondents)
+                {
+                    var _resp = new Data.Respondent()
+                    {
+                        CreateDateUtc = DateTime.Now,
+                        UpdateDateUtc = DateTime.UtcNow,
+                        SurveyId = newSurvey.Id,
+                        IsAfterSurvey = item.IsAfterSurvey,
+                    };
+
+                    db.Respondents.Add(_resp);
+                    db.SaveChanges();
+
+                    foreach (var item2 in item.Questions)
+                    {
+                        var _q = new Question()
+                        {
+                            CreateDateUtc = DateTime.UtcNow,
+                            UpdateDateUtc = DateTime.UtcNow,
+                            Introducing = item2.Introducing,
+                            IsAfterSurvey = item2.IsAfterSurvey,
+                            IsAnnotation = item2.IsAnnotation,
+                            IsCompulsory = item2.IsCompulsory,
+                            IsMultiple = item2.IsMultiple,
+                            IsShowValue = item2.IsShowValue,
+                            OrderId = item2.OrderId,
+                            QuestionFormatId = item2.QuestionFormatId,
+                            RespondentId = _resp.Id,
+                            Rows = item2.Rows,
+                            ShortName = item2.ShortName,
+                            Text = item2.Text,
+                            TextMax = item2.TextMax,
+                            TextMin = item2.TextMin,
+                            TextRowsCount = item2.TextRowsCount,
+                            ValueMax = item2.ValueMax,
+                            ValueMin = item2.ValueMin
+                        };
+                        db.Question.Add(_q);
+                        db.SaveChanges();
+
+                        foreach (var item3 in item2.Answers)
+                        {
+                            db.Answers.Add(new Answer()
+                            {
+                                CreateDateUtc = DateTime.UtcNow,
+                                UpdateDateUtc = DateTime.UtcNow,
+                                IsDefault = item3.IsDefault,
+                                OrderId = item3.OrderId,
+                                QuestionId = _q.Id,
+                                Text = item3.Text,
+                                Value = item3.Value
+                            });
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                #endregion
+
+                #region // RelationshipItems
+                foreach (var item in survey.RelationshipItems)
+                {
+                    var _rel = new RelationshipItem()
+                    {
+                        CreateDateUtc = DateTime.Now,
+                        UpdateDateUtc = DateTime.UtcNow,
+                        SurveyId = newSurvey.Id,
+                        AddNodes = item.AddNodes,
+                        AllowSelectAllNodes = item.AllowSelectAllNodes,
+                        CanSkip = item.CanSkip,
+                        GeneratorName = item.GeneratorName,
+                        HideAddedNodes = item.HideAddedNodes,
+                        MaximumNodes = item.MaximumNodes,
+                        Name = item.Name,
+                        NodeList = item.NodeList,
+                        NodeSelectionId = item.NodeSelectionId,
+                        OrderId = item.OrderId,
+                        QuestionLayoutId = item.QuestionLayoutId,
+                        SortNodeList = item.SortNodeList,
+                        SuperUserViewNodes = item.SuperUserViewNodes,
+                        UseDDSearch = item.UseDDSearch
+                    };
+                    db.RelationshipItems.Add(_rel);
+                    db.SaveChanges();
+
+                    foreach (var item2 in item.Questions)
+                    {
+                        var _rq = new RQuestion()
+                        {
+                            CreateDateUtc = DateTime.UtcNow,
+                            UpdateDateUtc = DateTime.UtcNow,
+                            Introducing = item2.Introducing,
+                            IsAfterSurvey = item2.IsAfterSurvey,
+                            IsAnnotation = item2.IsAnnotation,
+                            IsCompulsory = item2.IsCompulsory,
+                            IsMultiple = item2.IsMultiple,
+                            IsShowValue = item2.IsShowValue,
+                            OrderId = item2.OrderId,
+                            QuestionFormatId = item2.QuestionFormatId,
+                            RelationshipItemId = _rel.Id,
+                            Rows = item2.Rows,
+                            ShortName = item2.ShortName,
+                            Text = item2.Text,
+                            TextMax = item2.TextMax,
+                            TextMin = item2.TextMin,
+                            TextRowsCount = item2.TextRowsCount,
+                            ValueMax = item2.ValueMax,
+                            ValueMin = item2.ValueMin,
+                        };
+                        db.RQuestions.Add(_rq);
+                        db.SaveChanges();
+
+                        foreach (var item3 in item2.Answers)
+                        {
+                            db.RAnswers.Add(new RAnswer()
+                            {
+                                CreateDateUtc = DateTime.UtcNow,
+                                UpdateDateUtc = DateTime.UtcNow,
+                                IsDefault = item3.IsDefault,
+                                OrderId = item3.OrderId,
+                                RQuestionId = _rq.Id,
+                                Text = item3.Text,
+                                Value = item3.Value
+                            });
+                            db.SaveChanges();
+                        }
+                    }
+                    //node
+                    foreach (var item22 in item.NodeQuestions)
+                    {
+                        var _nq = new NQuestion()
+                        {
+                            CreateDateUtc = DateTime.UtcNow,
+                            UpdateDateUtc = DateTime.UtcNow,
+                            Introducing = item22.Introducing,
+                            IsAfterSurvey = item22.IsAfterSurvey,
+                            IsAnnotation = item22.IsAnnotation,
+                            IsCompulsory = item22.IsCompulsory,
+                            IsMultiple = item22.IsMultiple,
+                            IsShowValue = item22.IsShowValue,
+                            OrderId = item22.OrderId,
+                            QuestionFormatId = item22.QuestionFormatId,
+                            RelationshipItemId = _rel.Id,
+                            Rows = item22.Rows,
+                            ShortName = item22.ShortName,
+                            Text = item22.Text,
+                            TextMax = item22.TextMax,
+                            TextMin = item22.TextMin,
+                            TextRowsCount = item22.TextRowsCount,
+                            ValueMax = item22.ValueMax,
+                            ValueMin = item22.ValueMin,
+                        };
+                        db.NQuestions.Add(_nq);
+                        db.SaveChanges();
+
+                        foreach (var item32 in item22.Answers)
+                        {
+                            db.NAnswers.Add(new NAnswer()
+                            {
+                                CreateDateUtc = DateTime.UtcNow,
+                                UpdateDateUtc = DateTime.UtcNow,
+                                IsDefault = item32.IsDefault,
+                                OrderId = item32.OrderId,
+                                NQuestionId = _nq.Id,
+                                Text = item32.Text,
+                                Value = item32.Value
+                            });
+                            db.SaveChanges();
+                        }
+                    }
+                }
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                var i = 1;
+            }
+            return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> Respondent(int? id, bool isAfter = false)
         {
             if (id == null)
             {
@@ -247,7 +437,7 @@ namespace Web.Controllers
                             UpdateDateUtc = DateTime.UtcNow,
                             Text = _text[i],
                             Value = _val[i],
-                            IsDefault = false,
+                            IsDefault = _val[i] == Request.Form["Answer.Default"],
                             OrderId = i
                         });
                 }
@@ -383,6 +573,49 @@ namespace Web.Controllers
             return PartialView(model);
         }
 
+        public ActionResult EditNQuestion(int id, int relId, bool isAfter = true)
+        {
+            var model = db.NQuestions.Find(id);
+            var _answers = new List<NAnswer>();
+            for (int i = 0; i < 5; i++)
+            {
+                _answers.Add(new NAnswer()
+                {
+                    OrderId = i + 1,
+                    Text = "",
+                    Value = "",
+                });
+            }
+            if (model == null)
+            {
+                model = new NQuestion()
+                {
+                    TextRowsCount = 1,
+                    IsMultiple = false,
+                    IsAnnotation = false,
+                    IsCompulsory = false,
+                    IsShowValue = false,
+                    OrderId = 0,
+                    TextMin = "Strongly Agree",
+                    TextMax = "Strongly Disagree",
+                    ValueMin = "0",
+                    ValueMax = "5",
+                    Rows = ",,,,",
+                    Answers = _answers,
+                    RelationshipItemId = relId,
+                    IsAfterSurvey = isAfter
+                };
+            }
+            if (string.IsNullOrEmpty(model.Rows))
+                model.Rows = ",,,,";
+
+            if (model.Answers.Count == 0)
+                model.Answers = _answers;
+
+            ViewBag.Formats = db.QuestionFormats.ToList();
+            return PartialView(model);
+        }
+
 
         public async Task<ActionResult> DeleteQuestion(int id)
         {
@@ -415,6 +648,27 @@ namespace Web.Controllers
                 await db.SaveChangesAsync();
 
                 db.Database.ExecuteSqlCommand("exec SortRelationQuestions {0}", _RelId);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+
+
+        }
+
+        public async Task<ActionResult> DeleteNQuestion(int id)
+        {
+            try
+            {
+                var _Question = await db.NQuestions.FindAsync(id);
+                var _RelId = _Question.RelationshipItemId;
+                db.NQuestions.Remove(_Question);
+                await db.SaveChangesAsync();
+
+                db.Database.ExecuteSqlCommand("exec SortRelationNodeQuestions {0}", _RelId);
 
                 return Json(new { success = true });
             }
@@ -504,6 +758,45 @@ namespace Web.Controllers
             }
         }
 
+        public async Task<ActionResult> ChangeNQuestionPosition(int id, bool isInc)
+        {
+            try
+            {
+                var _q = await db.NQuestions.FindAsync(id);
+                var count = db.NQuestions.Count(x => x.RelationshipItemId == _q.RelationshipItemId);
+                if (isInc)
+                {
+                    if (_q.OrderId < count)
+                    {
+                        _q.OrderId += 1;
+
+                        var buff = db.NQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
+                        if (buff != null)
+                            buff.OrderId -= 1;
+                    }
+
+                }
+                else
+                {
+                    if (_q.OrderId > 1)
+                    {
+                        _q.OrderId -= 1;
+
+                        var buff = db.NQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
+                        if (buff != null)
+                            buff.OrderId += 1;
+                    }
+                }
+
+                await db.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -513,8 +806,9 @@ namespace Web.Controllers
             base.Dispose(disposing);
         }
 
-        public async Task<ActionResult> Relationship(int? id, bool questions = false, int? relId = null)
+        public async Task<ActionResult> Relationship(int? id, bool questions = false, int? relId = null, bool node = false)
         {
+            var userId = User.Identity.GetUserId();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -542,10 +836,13 @@ namespace Web.Controllers
                     SurveyId = id.Value,
                     CreateDateUtc = DateTime.UtcNow,
                     UpdateDateUtc = DateTime.UtcNow,
-                    OrderId = 1
+                    OrderId = 1,
+                    NodeList = survey.SurveyFileId.ToString()
                 };
                 db.RelationshipItems.Add(rel);
                 db.SaveChanges();
+
+                model.RelationshipItems.Add(rel);
             }
             if (!relId.HasValue)
                 model.SelectedItem = model.RelationshipItems.OrderBy(x => x.OrderId).FirstOrDefault();
@@ -555,6 +852,8 @@ namespace Web.Controllers
             ViewBag.QuestionLayoutId = new SelectList(db.QuestionLayouts, "Id", "Name", model.SelectedItem?.QuestionLayoutId);
             ViewBag.NodeSelectionId = new SelectList(db.NodeSelections, "Id", "Name", model.SelectedItem?.NodeSelectionId);
             ViewBag.IsQuestion = questions;
+            ViewBag.IsNode = node;
+            ViewBag.NodeList = new SelectList(db.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", model.SelectedItem?.NodeList);
             return View(model);
         }
 
@@ -563,6 +862,7 @@ namespace Web.Controllers
         {
             try
             {
+                var survey = await db.Surveys.FindAsync(id);
                 var count = db.RelationshipItems.Count(x => x.SurveyId == id);
                 var rel = new RelationshipItem()
                 {
@@ -573,7 +873,8 @@ namespace Web.Controllers
                     SurveyId = id,
                     CreateDateUtc = DateTime.UtcNow,
                     UpdateDateUtc = DateTime.UtcNow,
-                    OrderId = count + 1
+                    OrderId = count + 1,
+                    NodeList = survey.SurveyFileId.ToString()
                 };
                 db.RelationshipItems.Add(rel);
                 db.SaveChanges();
@@ -584,7 +885,7 @@ namespace Web.Controllers
             {
                 return Json(new { success = false, error = ex.Message });
             }
-            
+
         }
         [HttpPost]
         public async Task<ActionResult> DeleteRelationsip(int id)
@@ -681,7 +982,7 @@ namespace Web.Controllers
                             UpdateDateUtc = DateTime.UtcNow,
                             Text = _text[i],
                             Value = _val[i],
-                            IsDefault = false,
+                            IsDefault = _val[i] == Request.Form["Answer.Default"],
                             OrderId = i
                         });
                 }
@@ -715,6 +1016,93 @@ namespace Web.Controllers
             }
 
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        [ValidateInput(false)]
+        public async Task<JsonResult> RelationshipN(NQuestion question)
+        {
+            var Answers = new List<NAnswer>();
+            var code = Request.Form["FormatCode"];
+            if (code == null)
+                return Json(new { success = false });
+            question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
+            question.QuestionFormatId = db.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
+            //[8]: "Answer.Rows"
+            //[9]: "Answer.Text"
+            //[10]: "Answer.Value"
+            if ("choice_across,choice_down,drop_down,matrix".Contains(code) && Request.Form["Answer.Text"] != null)
+            {
+                var _text = Request.Form["Answer.Text"].Split(',');
+                var _val = Request.Form["Answer.Value"].Split(',');
+
+                if (code == "matrix" && Request.Form["Answer.Rows"] != null)
+                    question.Rows = string.Join(",", Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
+
+                for (int i = 0; i < _text.Length; i++)
+                {
+                    if (_text[i].Length > 0)
+                        Answers.Add(new NAnswer()
+                        {
+                            NQuestionId = question.Id,
+                            CreateDateUtc = DateTime.UtcNow,
+                            UpdateDateUtc = DateTime.UtcNow,
+                            Text = _text[i],
+                            Value = _val[i],
+                            IsDefault = _val[i] == Request.Form["Answer.Default"],
+                            OrderId = i
+                        });
+                }
+            }
+            try
+            {
+                var orderId = db.NQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
+                if (question.OrderId == 0)
+                    question.OrderId = orderId;
+
+                if (question.Id == 0)
+                {
+                    question.Answers = Answers;
+                    db.NQuestions.Add(question);
+                }
+                else
+                {
+                    var answers = db.NAnswers.Where(x => x.NQuestionId == question.Id);
+                    db.NAnswers.RemoveRange(answers);
+                    db.SaveChanges();
+                    db.Entry(question).State = EntityState.Modified;
+                    db.SaveChanges();
+                    db.NAnswers.AddRange(Answers);
+                }
+
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false });
+            }
+
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddNode(int id, bool addNode)
+        {
+            try
+            {
+                var item = db.RelationshipItems.Find(id);
+
+                if (item != null)
+                    item.AddNodes = addNode;
+
+                await db.SaveChangesAsync();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
         }
 
         public async Task<ActionResult> GetRelationshipItem(int id)
@@ -752,6 +1140,9 @@ namespace Web.Controllers
 
             if (bool.Parse(Request.Form["isBack"]))
                 return RedirectToAction("Respondent", new { id = buff.SurveyId });
+
+            if (bool.Parse(Request.Form["isNext"]))
+                return RedirectToAction("Index", "Preview", new { id = buff.SurveyId });
 
             return RedirectToAction("Relationship", new { id = buff.SurveyId, questions = false, relId = buff.Id });
         }

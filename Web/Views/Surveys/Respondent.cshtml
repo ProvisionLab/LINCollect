@@ -30,12 +30,12 @@
         </span>
         <div class="col-md-8">
             <label>
-                <input type="radio" name="IsAfterSurvey" value="true" onchange="updatePosition(@Model.SurveyId, true)" @(ViewBag.IsAfter ? "checked" : "") />
+                <input type="radio" name="IsAfterSurvey" value="false" onchange="updatePosition(@Model.SurveyId, false)" @(!ViewBag.IsAfter ? "checked" : "") />
                 Start of Survey
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <label>
-                <input type="radio" name="IsAfterSurvey" value="true" onchange="updatePosition(@Model.SurveyId, false)" @(!ViewBag.IsAfter ? "checked" : "") />
+                <input type="radio" name="IsAfterSurvey" value="true" onchange="updatePosition(@Model.SurveyId, true)" @(ViewBag.IsAfter ? "checked" : "") />
                 End of Survey
             </label>
         </div>
@@ -88,7 +88,7 @@
                 <h4 class="modal-title" id="addQuestionLabel">Add Question</h4>
             </div>
             <div class="modal-body">
-                @using (Ajax.BeginForm("Respondent", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successResp" }, new { @id = "question-options" }))
+                @using (Ajax.BeginForm("Respondent", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successResp", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "question-options" }))
                 {
                     @Html.Action("EditQuestion", "Surveys", new { id = 0, respId = Model.Id, isAfter = Model.IsAfterSurvey}) 
                 }
@@ -122,7 +122,33 @@
         function addQuestion() {
             $('#question-options #Text').val(CKEDITOR.instances['Text'].getData());
             $('#question-options #Introducing').val(CKEDITOR.instances['Introducing'].getData());
-            $('#question-options').submit();
+            var valid = true;
+            $('#question-options input[required], #question-options select[required], #question-options textarea.required').each(function (i) {
+                if ($(this).val() == null || $(this).val().length == 0) {
+                    $(this).parent().addClass('has-error');
+                    $(this).focus();
+                    if($(this).prop("tagName").toLowerCase() == "textarea") {
+                        $('#cke_' + $(this).attr('id')).attr('style', 'border-color: #b94a48');
+                        $('#cke_' + $(this).attr('id')).focus();
+                    }
+                    valid = false;
+                }
+                else {
+                    $(this).parent().removeClass('has-error');
+                    if($(this).prop("tagName").toLowerCase() == "textarea") {
+                        $('#cke_' + $(this).attr('id')).attr('style', '');
+                    }
+                }
+            });
+            
+            if(!$('input[name="FormatCode"]').prop('checked')) {
+                $('.format-group-section').css('color', '#b94a48');
+            } else {
+                $('.format-group-section').css('color', 'initial');
+            }
+            if(valid) {
+                $('#question-options').submit();
+            }
         }
         function successResp(data) {
             if (data.success) {

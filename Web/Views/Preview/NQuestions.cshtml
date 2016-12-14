@@ -1,0 +1,132 @@
+﻿@model IEnumerable<Web.Data.NQuestion>
+
+@if (Model.Any())
+{
+    foreach (var item in Model.OrderBy(x => x.OrderId))
+    {
+        <hr class="question" />
+        if (!string.IsNullOrEmpty(item.Introducing))
+        {
+            <div class="form-group question">
+                <div class="col-md-12">@Html.Raw(item.Introducing)</div>
+            </div>
+        }
+        <div class="form-group question">
+            <div class="col-md-12">
+                <b>
+                    <span class="order-id">@item.OrderId.@(item.IsCompulsory ? " *" : "")</span> @Html.Raw(item.Text)
+                </b>
+            </div>
+            <div class="col-xs-12">
+                @if (item.QuestionFormat.Code == "text")
+                    {
+                        if (item.TextRowsCount > 1)
+                        {
+                        <textarea rows="@item.TextRowsCount" class="form-control"></textarea>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" />
+                    }
+                }
+                else if (item.QuestionFormat.Code == "choice_across")
+                {
+                    if (item.IsMultiple.HasValue && item.IsMultiple.Value == true)
+                    {
+                        foreach (var answer in item.Answers)
+                        {
+                            <label>
+                                @answer.Text <br />
+                                <input type="checkbox" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                            </label>
+                        }
+                    }
+                    else
+                    {
+                        foreach (var answer in item.Answers)
+                        {
+                            <label>
+                                @answer.Text <br />
+                                <input type="radio" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                            </label>
+                        }
+                    }
+                    if (item.IsAnnotation.HasValue && item.IsAnnotation.Value)
+                    {
+                        <textarea rows="2" class="form-control"></textarea>
+                    }
+                }
+                else if (item.QuestionFormat.Code == "choice_down")
+                {
+                    if (item.IsMultiple.HasValue && item.IsMultiple.Value == true)
+                    {
+                        foreach (var answer in item.Answers)
+                        {
+                            <label>
+                                <input type="checkbox" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                                @answer.Text
+                            </label><br />
+                        }
+                    }
+                    else
+                    {
+                        foreach (var answer in item.Answers)
+                        {
+                            <label>
+                                <input type="radio" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                                @answer.Text
+                            </label><br />
+                        }
+                    }
+                }
+                else if (item.QuestionFormat.Code == "drop_down")
+                {
+                    <select class="form-control">
+                        @foreach (var answer in item.Answers)
+                        {
+                            <option value="@answer.Value" @(answer.IsDefault ? "selected='selected'" : "")>@answer.Text</option>
+                        }
+                    </select>
+                }
+                else if (item.QuestionFormat.Code == "matrix")
+                {
+                    <table>
+                        <tr>
+                            <th></th>
+                            @foreach (var answer in item.Answers)
+                            {
+                                <th>
+                                    @answer.Text
+                                </th>
+                            }
+                        </tr>
+                        @{
+                            var rows = item.Rows.Split(',');
+                        }
+                        @for (int i = 0; i < rows.Length; i++)
+                        {
+                            <tr>
+                                <td>@rows[i]</td>
+                                @foreach (var col in item.Answers)
+                                {
+                                    <td>
+                                        <input type="radio" name="@i" value="@col.Value" @(col.IsDefault ? "checked" : "")/>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                            }
+                            else if (item.QuestionFormat.Code == "slider")
+                            {
+                                <div class="col-xs-3">@item.TextMin</div>
+                                <div class="col-xs-6">
+                                    <div id="slider-@item.Id" data-slider-min="@item.ValueMin" data-slider-max="@item.ValueMax" data-slider-step="@(item.Resolution == 0 ? 1 : item.Resolution)" data-slider-tooltip="show"
+                                         @((item.IsShowValue.HasValue && item.IsShowValue.Value) ? "" : "data-slider-tooltip='hide'")></div>
+                                </div>
+                                    <div class="col-xs-3">@item.TextMax</div>
+                            }
+            </div>
+        </div>
+                                }
+                            }

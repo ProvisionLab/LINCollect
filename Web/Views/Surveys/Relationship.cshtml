@@ -29,7 +29,9 @@
                 @item.OrderId
             </td>
             <td>
-                <a href="#" class="rel @((Model.SelectedItem?.Id == item.Id && !ViewBag.IsQuestion) ? "active" : "" )" onclick="showBlock(false, @item.Id)">option</a> | <a href="#" onclick="showBlock(true, @item.Id)" class="rel @((ViewBag.IsQuestion && Model.SelectedItem?.Id == item.Id) ? "active" : "" )">question</a>
+                <a href="#" class="rel @((Model.SelectedItem?.Id == item.Id && !ViewBag.IsQuestion && !ViewBag.IsNode) ? "active" : "" )" onclick="showBlock(false, @item.Id)">option</a> | 
+                <a href="#" style="@(item.AddNodes ? "" : "display:none")" onclick="showBlock(false, @item.Id, true)" class="add-node-@item.Id rel @((ViewBag.IsNode && Model.SelectedItem?.Id == item.Id) ? "active" : "" )">+ node ?</a> <span class="add-node-@item.Id" style="@(item.AddNodes ? "" : "display:none")">|</span>
+                <a href="#" onclick="showBlock(true, @item.Id, false)" class="rel @((ViewBag.IsQuestion && Model.SelectedItem?.Id == item.Id) ? "active" : "" )">question</a>
             </td>
             <td>
                 @item.Name
@@ -61,7 +63,7 @@
         </div>
     </div>
 </div>
-<div id="r-options" class="@(ViewBag.IsQuestion ? "hidden" : "" )">
+<div id="r-options" class="@((ViewBag.IsQuestion || ViewBag.IsNode) ? "hidden" : "" )">
     @Html.Partial("GetRelationshipItem", Model.SelectedItem)
 </div>
 <div id="r-questions" class="@(ViewBag.IsQuestion ? "" : "hidden" )">
@@ -69,7 +71,7 @@
     {
         <div class="form-group">
             <div class="col-xs-12">
-                This section has no questions.Please click button to add the first question.
+                This section has no questions. Please click button to add the first question.
             </div>
         </div>
     }
@@ -87,7 +89,30 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
+<div id="r-questions" class="@(ViewBag.IsNode ? "" : "hidden" )">
+    @if (!Model.SelectedItem.NodeQuestions.Any())
+    {
+        <div class="form-group">
+            <div class="col-xs-12">
+                This section has no questions. Please click button to add the first question.
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="form-group">
+            @Html.Partial("_NQuestions", Model.SelectedItem.NodeQuestions)
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-12 text-right">
+            <button type="button" class="btn btn-sm purple" data-toggle="modal" data-target="#addNQuestionModal">
+                Insert question
+            </button>
+        </div>
+    </div>
+</div>
+<!-- Modals -->
 <div class="modal fade" id="addQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addQuestionLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -96,7 +121,7 @@
                 <h4 class="modal-title" id="addQuestionLabel">Add Question</h4>
             </div>
             <div class="modal-body">
-                @using (Ajax.BeginForm("Relationship", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successRel" }, new { @id = "question-options" }))
+                @using (Ajax.BeginForm("Relationship", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successRel", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "question-options" }))
                 {
                     @Html.Action("EditRQuestion", "Surveys", new { id = 0, relId = Model.SelectedItem.Id })
                 }
@@ -108,23 +133,68 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="addNQuestionModal" tabindex="-1" role="dialog" aria-labelledby="addNQuestionLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addNQuestionLabel">Add Question</h4>
+            </div>
+            <div class="modal-body">
+                @using (Ajax.BeginForm("RelationshipN", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successRelN", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "question-options-n" }))
+                {
+                    @Html.Action("EditNQuestion", "Surveys", new { id = 0, relId = Model.SelectedItem.Id })
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn purple" onclick="addQuestionN()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts {
     @Scripts.Render("~/bundles/unobtrusive")
     @Scripts.Render("~/bundles/slider")
 
     <script>
-        function saveRelOptions(isNext, isBack) { debugger
-            $('#isNext').val(isNext)
-            $('#isBack').val(isBack)
+        function checkNode(el, id) {
+            
+            var addNode = false;
+            if ($(el).prop('checked')) {
+                $('.add-node-' + id).show();
+                addNode = true;
+            } else {
+                $('.add-node-' + id).hide();
+            }
+
+            ShowLoader();
+            $.ajax({
+                type: "POST",
+                url: '/Surveys/AddNode/?id=' + id + '&addNode=' + addNode,
+                data: null
+            }).always(function () {
+                HideLoader();
+            });
+        }
+
+        function saveRelOptions(isNext, isBack) {
+            $('#getRelItemForm #isNext').val(isNext);
+            $('#getRelItemForm #isBack').val(isBack);
             $('#getRelItemForm #GeneratorName').val(CKEDITOR.instances['GeneratorName'].getData());
             $('#getRelItemForm').submit();
         }
-        function showBlock(isQ, rId) {
-            Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?questions=' + isQ + '&relId=' + rId);
+        function showBlock(isQ, rId, node) {
+            Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?questions=' + isQ + '&relId=' + rId + '&node=' + node);
         }
         function successRel(data) {
             if (data.success) {
-                Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?questions=true'); 3
+                Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?questions=true');
+            }
+        }
+        function successRelN(data) {
+            if (data.success) {
+                Redirect('/Surveys/Relationship/@ViewBag.SurveyId/?node=true');
             }
         }
         function removeRow(btn) {
@@ -143,7 +213,66 @@
         function addQuestion() {
             $('#question-options #Text').val(CKEDITOR.instances['Text'].getData());
             $('#question-options #Introducing').val(CKEDITOR.instances['Introducing'].getData());
-            $('#question-options').submit();
+
+            var valid = true;
+            $('#question-options input[required], #question-options select[required], #question-options textarea.required').each(function (i) {
+                if ($(this).val() == null || $(this).val().length == 0) {
+                    $(this).parent().addClass('has-error');
+                    $(this).focus();
+                    if($(this).prop("tagName").toLowerCase() == "textarea") {
+                        $('#cke_' + $(this).attr('id')).attr('style', 'border-color: #b94a48');
+                        $('#cke_' + $(this).attr('id')).focus();
+                    }
+                    valid = false;
+                }
+                else {
+                    $(this).parent().removeClass('has-error');
+                    if($(this).prop("tagName").toLowerCase() == "textarea") {
+                        $('#cke_' + $(this).attr('id')).attr('style', '');
+                    }
+                }
+            });
+            
+            if(!$('input[name="FormatCode"]').prop('checked')) {
+                $('.format-group-section').css('color', '#b94a48');
+            } else {
+                $('.format-group-section').css('color', 'initial');
+            }
+            if (valid) {
+                $('#question-options').submit();
+            }
+        }
+
+        function addQuestionN() {
+            $('#question-options-n #TextN').val(CKEDITOR.instances['TextN'].getData());
+            $('#question-options-n #IntroducingN').val(CKEDITOR.instances['IntroducingN'].getData());
+            var valid = true;
+            $('#question-options-n input[required], #question-options-n select[required], #question-options-n textarea.required').each(function (i) {
+                if ($(this).val() == null || $(this).val().length == 0) {
+                    $(this).parent().addClass('has-error');
+                    $(this).focus();
+                    if($(this).prop("tagName").toLowerCase() == "textarea") {
+                        $('#cke_' + $(this).attr('id')).attr('style', 'border-color: #b94a48');
+                        $('#cke_' + $(this).attr('id')).focus();
+                    }
+                    valid = false;
+                }
+                else {
+                    $(this).parent().removeClass('has-error');
+                    if($(this).prop("tagName").toLowerCase() == "textarea") {
+                        $('#cke_' + $(this).attr('id')).attr('style', '');
+                    }
+                }
+            });
+            
+            if(!$('input[name="FormatCode"]').prop('checked')) {
+                $('.format-group-section').css('color', '#b94a48');
+            } else {
+                $('.format-group-section').css('color', 'initial');
+            }
+            if (valid) {
+                $('#question-options-n').submit();
+            }
         }
         function updateAnswer(code) {
             $('.formats *[data-format]').each(function () {
@@ -155,27 +284,28 @@
                 }
             });
         }
-        $(document).ready(function () {
-            $('div[id*="slider"]').slider();
-        });
+        
         function addRelationship(id)
         {
+            ShowLoader();
             $.ajax({
                 type: "POST",
                 url: '/Surveys/AddRelationsip/?id=' + id,
                 data: null
             }).success(function (data) {
-                debugger
                 if (!data.success) {
                     alert('Error:' + data.error);
                 } else {
                     Redirect('/Surveys/Relationship/' + data.id + '/?questions=false&relId='+ data.relId);
                 }
+            }).always(function () {
+                HideLoader();
             });
         }
 
         function deleteRelationship(id, suId, roid) {
             if (confirm("Delete Relationship #" + roid)) {
+                ShowLoader();
                 $.ajax({
                     type: "POST",
                     url: '/Surveys/DeleteRelationsip/?id=' + id,
@@ -186,11 +316,14 @@
                     } else {
                         Redirect('/Surveys/Relationship/' + suId + '/?questions=false');
                     }
+                }).always(function () {
+                    HideLoader();
                 });
             }
         }
 
         function changeRelPosition(id, isInc) {
+            ShowLoader();
             $.ajax({
                 type: "POST",
                 url: '/Surveys/ChangeRelationshipPosition/?id=' + id + '&isInc=' + isInc,
@@ -201,20 +334,61 @@
                 } else {
                     window.location.reload();
                 }
-        });
+            }).always(function () {
+                HideLoader();
+            });
         }
-        //function changeRlPosition(action, id) {
-        //    $.ajax({
-        //        type: "POST",
-        //        url: '/Surveys/ChangeRQuestionPosition/?id=' + id + '&isInc=' + action,
-        //        data: null
-        //    }).success(function (data) {
-        //        if (!data.success) {
-        //            alert('Error:' + data.error);
-        //        } else {
-        //            window.location.reload();
-        //        }
-        //    });
-        //}
+
+        $(document).ready(function () {
+            $('div[id*="slider"]').slider();
+        });
+
+        //node list
+        function closeFileManager() {
+            window.location.reload();
+        };
+
+        function SubmitFile() {
+            $('#file-options').submit();
+        };
+        function deleteFile(id) {
+            if (confirm("Delete File #" + id)) {
+                ShowLoader();
+                $.ajax({
+                    type: "POST",
+                    url: '/Sheet/DeleteMailingList/?id=' + id,
+                    data: null
+                }).success(function (data) {
+                    if (!data.success) {
+                        alert('Error: ' + data.Error);
+                    } else {
+                        $('.file-' + data.id).remove();
+                    }
+                }).always(function () {
+                    HideLoader();
+                });
+            }
+        };
+        function useUserFile() {
+            ShowLoader();
+            $.ajax({
+                type: "POST",
+                url: '/Sheet/UserFile/?link=' + $('#fileLink').val() + '&name=' + $('#fileLinkName').val(),
+                data: null
+            }).success(function (data) {
+                if (!data.success) {
+                    alert('Error: ' + data.Error);
+                } else {
+                    $('#file-table').append($('<tr class="file-' + data.Data.Id + '"><td>' + data.Data.Name + '</td><td class="text-right"><a href="https://docs.google.com/spreadsheets/d/' + data.Data.Link + '/edit#gid=0" target="_blank">show</a> | <a href="#" onclick="deleteFile(' + data.Data.Id + ')">delete</a></td></tr>'));
+                    $('#fileLink').val(''); $('#fileLinkName').val('');
+                }
+            }).always(function () {
+                HideLoader();
+            });
+        };
+        function successFile(data) {
+            $('#fileName').val('');
+            $('#file-table').append($('<tr class="file-' + data.Data.Id + '"><td>' + data.Data.Name + '</td><td class="text-right"><a href="https://docs.google.com/spreadsheets/d/' + data.Data.Link + '/edit#gid=0" target="_blank">show</a> | <a href="#" onclick="deleteFile(' + data.Data.Id + ')">delete</a></td></tr>'));
+        };
     </script>
 }

@@ -12,6 +12,19 @@ namespace Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.LowercaseUrls = true;
+            
+            routes.MapRoute(
+                name: "preview",
+                url: "Surveys/Preview/{id}",
+                defaults: new { controller = "Preview", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "authorize",
+                url: "authorize",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
 
             routes.MapRoute(
                 name: "Default",

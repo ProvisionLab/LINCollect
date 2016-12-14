@@ -56,6 +56,10 @@
       <HintPath>..\packages\Google.Apis.Auth.1.19.0\lib\net45\Google.Apis.Auth.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Google.Apis.Auth.Mvc4, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.Mvc.1.19.0\lib\net45\Google.Apis.Auth.Mvc4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.Auth.1.19.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
       <Private>True</Private>
@@ -257,9 +261,13 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PreviewController.cs" />
+    <Compile Include="Controllers\SheetController.cs" />
     <Compile Include="Controllers\SurveysController.cs" />
+    <Compile Include="Data\NAnswer.cs" />
     <Compile Include="Data\RAnswer.cs" />
     <Compile Include="Data\Answer.cs" />
+    <Compile Include="Data\NQuestion.cs" />
     <Compile Include="Data\RQuestion.cs" />
     <Compile Include="Data\QuestionFormat.cs" />
     <Compile Include="Data\Question.cs" />
@@ -343,6 +351,22 @@
     <Compile Include="Migrations\201611121301418_SurveyFilesFix.Designer.cs">
       <DependentUpon>201611121301418_SurveyFilesFix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611192007177_NodeQuestions.cs" />
+    <Compile Include="Migrations\201611192007177_NodeQuestions.Designer.cs">
+      <DependentUpon>201611192007177_NodeQuestions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611192013282_SPSortRelationNodeQuestions.cs" />
+    <Compile Include="Migrations\201611192013282_SPSortRelationNodeQuestions.Designer.cs">
+      <DependentUpon>201611192013282_SPSortRelationNodeQuestions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611252138286_FixDelfile.cs" />
+    <Compile Include="Migrations\201611252138286_FixDelfile.Designer.cs">
+      <DependentUpon>201611252138286_FixDelfile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611261044451_DeleteSurvay.cs" />
+    <Compile Include="Migrations\201611261044451_DeleteSurvay.Designer.cs">
+      <DependentUpon>201611261044451_DeleteSurvay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -350,6 +374,7 @@
     <Compile Include="Models\ViewModels\Entity.cs" />
     <Compile Include="Models\ViewModels\LanguageView.cs" />
     <Compile Include="Models\ViewModels\EditMenu.cs" />
+    <Compile Include="Models\ViewModels\PreviewView.cs" />
     <Compile Include="Models\ViewModels\SurveyStatusView.cs" />
     <Compile Include="Models\ViewModels\RelationshipView.cs" />
     <Compile Include="Models\ViewModels\SurveyView.cs" />
@@ -362,6 +387,7 @@
     <Content Include="Content\components-md.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\img\giphy.gif" />
     <Content Include="Content\img\logo.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -419,7 +445,12 @@
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\client_secret.json" />
     <Content Include="Content\files\templates\Lincollect_default_template.xlsx" />
+    <Content Include="Content\client_id.json" />
+    <Content Include="Content\LinCollect-b595904b4096.json" />
+    <Content Include="Content\Google.Apis.Auth.OAuth2.Responses.TokenResponse-Александр" />
     <None Include="Properties\PublishProfiles\1gb.pubxml" />
+    <None Include="Properties\PublishProfiles\2gb.pubxml" />
+    <None Include="Properties\PublishProfiles\file.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ckeditor\adapters\jquery.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />
@@ -727,8 +758,12 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\slider\css\slider.css" />
     <Content Include="Scripts\slider\js\bootstrap-slider.js" />
+    <Content Include="Scripts\wizard\jquery.bootstrap.wizard.js" />
+    <Content Include="Scripts\wizard\jquery.bootstrap.wizard.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -778,9 +813,17 @@
     <Content Include="Views\Surveys\EditRQuestion.cshtml" />
     <Content Include="Views\Shared\_EditMenu.cshtml" />
     <Content Include="Views\Surveys\Text.cshtml" />
+    <Content Include="Views\Shared\_NQuestions.cshtml" />
+    <Content Include="Views\Surveys\EditNQuestion.cshtml" />
+    <Content Include="Views\Sheet\MailingList.cshtml" />
+    <Content Include="Views\Preview\Index.cshtml" />
+    <Content Include="Views\Preview\Questions.cshtml" />
+    <Content Include="Views\Preview\RQuestions.cshtml" />
+    <Content Include="Views\Preview\NQuestions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\files\banners\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -844,6 +887,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611121301418_SurveyFilesFix.resx">
       <DependentUpon>201611121301418_SurveyFilesFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611192007177_NodeQuestions.resx">
+      <DependentUpon>201611192007177_NodeQuestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611192013282_SPSortRelationNodeQuestions.resx">
+      <DependentUpon>201611192013282_SPSortRelationNodeQuestions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611252138286_FixDelfile.resx">
+      <DependentUpon>201611252138286_FixDelfile.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611261044451_DeleteSurvay.resx">
+      <DependentUpon>201611261044451_DeleteSurvay.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
