@@ -82,6 +82,12 @@ namespace Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult Index(int? id, FormCollection col)
+        {
+            return RedirectToAction("Index");
+        }
+
         private List<string> GetCompanies(string fileId, ref string error)
         {
             var service = new SheetsService(new BaseClientService.Initializer()
@@ -105,7 +111,7 @@ namespace Web.Controllers
                 return new List<string>();
             }
         }
-        
+
         public static ServiceAccountCredential GetServiceCredentials()
         {
             ServiceAccountCredential credential;

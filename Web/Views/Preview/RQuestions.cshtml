@@ -2,7 +2,6 @@
 
 @if (Model.Any())
 {
-    <div class="pull-right"><button class="btn btn-primary">Save answers</button></div>
     foreach (var item in Model.OrderBy(x => x.OrderId))
     {
         <hr class="question" />
@@ -23,11 +22,11 @@
                     {
                         if (item.TextRowsCount > 1)
                         {
-                        <textarea rows="@item.TextRowsCount" class="form-control"></textarea>
+                        <textarea rows="@item.TextRowsCount" class="form-control @(item.IsCompulsory ? "required" : "")"></textarea>
                     }
                     else
                     {
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" @(item.IsCompulsory ? "required" : "") />
                     }
                 }
                 else if (item.QuestionFormat.Code == "choice_across")
@@ -54,7 +53,7 @@
                     }
                     if (item.IsAnnotation.HasValue && item.IsAnnotation.Value)
                     {
-                        <textarea rows="2" class="form-control"></textarea>
+                        <textarea rows="2" class="form-control @(item.IsCompulsory ? "required" : "")"></textarea>
                     }
                 }
                 else if (item.QuestionFormat.Code == "choice_down")
@@ -82,7 +81,7 @@
                 }
                 else if (item.QuestionFormat.Code == "drop_down")
                 {
-                    <select class="form-control">
+                    <select class="form-control" @(item.IsCompulsory ? "required" : "")>
                         @foreach (var answer in item.Answers)
                         {
                             <option value="@answer.Value" @(answer.IsDefault ? "selected='selected'" : "")>@answer.Text</option>

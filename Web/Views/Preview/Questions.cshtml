@@ -2,7 +2,6 @@
 
 @if (Model.Any())
 {
-    <div class="pull-right"><button class="btn btn-primary">Save answers</button></div>
     foreach (var item in Model.OrderBy(x => x.OrderId))
     {
         <hr class="question" />
@@ -23,11 +22,11 @@
                     {
                         if (item.TextRowsCount > 1)
                         {
-                        <textarea rows="@item.TextRowsCount" class="form-control"></textarea>
+                        <textarea name="q-@item.Id" rows="@item.TextRowsCount" class="form-control @(item.IsCompulsory ? "required" : "")"  ></textarea>
                     }
                     else
                     {
-                        <input type="text" class="form-control" />
+                        <input type="text" name="q-@item.Id" class="form-control" @(item.IsCompulsory ? "required" : "") />
                     }
                 }
                 else if (item.QuestionFormat.Code == "choice_across")
@@ -38,7 +37,7 @@
                         {
                             <label>
                                 @answer.Text <br />
-                                <input type="checkbox" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />
+                                <input type="checkbox" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />
                             </label>
                         }
                     }
@@ -48,13 +47,13 @@
                         {
                             <label>
                                 @answer.Text <br />
-                                <input type="radio" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                                <input type="radio" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
                             </label>
                         }
                     }
                     if (item.IsAnnotation.HasValue && item.IsAnnotation.Value)
                     {
-                        <textarea rows="2" class="form-control"></textarea>
+                        <textarea name="qa-@item.Id" rows="2" class="form-control @(item.IsCompulsory ? "required" : "")"></textarea>
                     }
                 }
                 else if (item.QuestionFormat.Code == "choice_down")
@@ -64,7 +63,7 @@
                         foreach (var answer in item.Answers)
                         {
                             <label>
-                                <input type="checkbox" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                                <input type="checkbox" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
                                 @answer.Text
                             </label><br />
                         }
@@ -74,7 +73,7 @@
                         foreach (var answer in item.Answers)
                         {
                             <label>
-                                <input type="radio" name="@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
+                                <input type="radio" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
                                 @answer.Text
                             </label><br />
                         }
@@ -82,7 +81,7 @@
                 }
                 else if (item.QuestionFormat.Code == "drop_down")
                 {
-                    <select class="form-control">
+                    <select name="q-@item.Id" class="form-control" @(item.IsCompulsory ? "required" : "")>
                         @foreach (var answer in item.Answers)
                         {
                             <option value="@answer.Value" @(answer.IsDefault ? "selected='selected'" : "")>@answer.Text</option>
@@ -111,7 +110,7 @@
                                 @foreach (var col in item.Answers)
                                 {
                                     <td>
-                                        <input type="radio" name="@i" value="@col.Value" @(col.IsDefault ? "checked" : "")/>
+                                        <input type="radio" name="q-@(item.Id)=a-@i" value="@col.Value" @(col.IsDefault ? "checked" : "")/>
                                     </td>
                                 }
                             </tr>
