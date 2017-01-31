@@ -29,32 +29,32 @@ namespace Web.Migrations
             //        LockoutEnabled= true,
             //        AccessFailedCount = 0
             //    });
-            context.Languages.AddOrUpdate(l => l.ShortCode,
-                new Language { Name = "English", Code = "en-US", ShortCode = "en" },
-                new Language { Name = "Deutsch", Code = "de-DE", ShortCode = "de" },
-                new Language { Name = "Russian", Code = "ru-RU", ShortCode = "ru" },
-                new Language { Name = "Ukranian", Code = "uk-ua", ShortCode = "uk" });
+            //context.Languages.AddOrUpdate(l => l.ShortCode,
+            //    new Language { Name = "English", Code = "en-US", ShortCode = "en" },
+            //    new Language { Name = "Deutsch", Code = "de-DE", ShortCode = "de" },
+            //    new Language { Name = "Russian", Code = "ru-RU", ShortCode = "ru" },
+            //    new Language { Name = "Ukranian", Code = "uk-ua", ShortCode = "uk" });
 
-            context.SurveyStatuses.AddOrUpdate(s => s.Id,
-                new SurveyStatus { Name = "Offline" },
-                new SurveyStatus { Name = "Published" });
+            //context.SurveyStatuses.AddOrUpdate(s => s.Id,
+            //    new SurveyStatus { Name = "Offline" },
+            //    new SurveyStatus { Name = "Published" });
 
-            context.QuestionFormats.AddOrUpdate(qf => qf.Code,
-                new QuestionFormat { Name = "Text", Code = "text" },
-                new QuestionFormat { Name = "Choice Across", Code = "choice_across" },
-                new QuestionFormat { Name = "Choice Down", Code = "choice_down" },
-                new QuestionFormat { Name = "Drop Down", Code = "drop_down" },
-                new QuestionFormat { Name = "Matrix", Code = "matrix" },
-                new QuestionFormat { Name = "Slider", Code = "slider" });
+            //context.QuestionFormats.AddOrUpdate(qf => qf.Code,
+            //    new QuestionFormat { Name = "Text", Code = "text" },
+            //    new QuestionFormat { Name = "Choice Across", Code = "choice_across" },
+            //    new QuestionFormat { Name = "Choice Down", Code = "choice_down" },
+            //    new QuestionFormat { Name = "Drop Down", Code = "drop_down" },
+            //    new QuestionFormat { Name = "Matrix", Code = "matrix" },
+            //    new QuestionFormat { Name = "Slider", Code = "slider" });
 
-            context.QuestionLayouts.AddOrUpdate(ql => ql.Code,
-                new QuestionLayout { Name = "QuestionCentric", Code = "qc" },
-                new QuestionLayout { Name = "PersonCentric", Code = "pc" });
+            //context.QuestionLayouts.AddOrUpdate(ql => ql.Code,
+            //    new QuestionLayout { Name = "QuestionCentric", Code = "qc" },
+            //    new QuestionLayout { Name = "PersonCentric", Code = "pc" });
 
-            context.NodeSelections.AddOrUpdate(ql => ql.Code,
-                new NodeSelection { Name = "Normal", Code = "n" },
-                new NodeSelection { Name = "Filtered", Code = "f" },
-                new NodeSelection { Name = "Automatic", Code = "a" });
+            //context.NodeSelections.AddOrUpdate(ql => ql.Code,
+            //    new NodeSelection { Name = "Normal", Code = "n" },
+            //    new NodeSelection { Name = "Filtered", Code = "f" },
+            //    new NodeSelection { Name = "Automatic", Code = "a" });
         }
     }
 }
