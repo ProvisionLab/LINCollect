@@ -9,8 +9,8 @@
     <div class="form-group">
         <span class="control-label col-md-12">Introdution (optional)</span>
         <div class="col-md-12">
-            <textarea style="height:200px" class="form-control ckeditor" name="Introducing" id="IntroducingN">
-                @Model.Introducing
+            <textarea style="height:200px" class="form-control ckeditor" name="Introducing" id="Introducing">
+                @Html.Raw(Model.Introducing)
             </textarea>
             <small>Text instructing your respondent to give an answer.</small>
         </div>
@@ -19,7 +19,7 @@
         <span class="control-label col-md-12">* Question</span>
         <div class="col-md-12">
             <textarea style="height:200px" class="form-control ckeditor required" name="Text" id="TextN">
-                @Model.Text
+                @Html.Raw(@Model.Text)
             </textarea>
             <small>Text instructing your respondent to give an answer.</small>
         </div>

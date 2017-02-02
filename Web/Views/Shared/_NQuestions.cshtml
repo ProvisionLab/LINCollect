@@ -152,7 +152,7 @@
 </div>
 <script>
     function editQuestionSubmit() {
-        $('#question-options-edit #Text').val(CKEDITOR.instances['Text'].getData());
+        $('#question-options-edit #Text').val(CKEDITOR.instances['TextN'].getData());
         $('#question-options-edit #Introducing').val(CKEDITOR.instances['Introducing'].getData());
         $('#question-options-edit').submit();
     }
@@ -162,10 +162,10 @@
             type: "POST",
             url: '/Surveys/EditNQuestion/?id=' + id + '&relId=' + relId,
             data: null
-        }).success(function (data) {
+        }).success(function (data) {debugger
             $('#editQuestionModal #question-options-edit').empty().html(data);
-            CKEDITOR.replace('Introducing');
-            CKEDITOR.replace('Text');
+            CKEDITOR.instances['Text'].setData();
+            CKEDITOR.instances['Introducing'].setData();
 
             $('input[name="FormatCode"]:checked').val();
             $('.formats *[data-format]').each(function () {

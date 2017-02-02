@@ -165,8 +165,9 @@
             data: null
         }).success(function (data) {
             $('#editQuestionModal #question-options-edit').empty().html(data);
-            CKEDITOR.replace('Introducing');
-            CKEDITOR.replace('Text');
+            debugger
+            CKEDITOR.instances['Text'].setData();
+            CKEDITOR.instances['Introducing'].setData();
 
             $('input[name="FormatCode"]:checked').val();
             $('.formats *[data-format]').each(function () {
