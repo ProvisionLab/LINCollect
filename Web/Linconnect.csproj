@@ -456,6 +456,7 @@
     <None Include="Properties\PublishProfiles\1gb.pubxml" />
     <None Include="Properties\PublishProfiles\2gb.pubxml" />
     <None Include="Properties\PublishProfiles\file.pubxml" />
+    <None Include="Properties\PublishProfiles\StageNabusinternal.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ckeditor\adapters\jquery.js" />
     <Content Include="Scripts\ckeditor\build-config.js" />

@@ -21,9 +21,9 @@ namespace Web.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+        public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
+            Database.SetInitializer(new ApplicationDbInitializer());
         }
 
         public static ApplicationDbContext Create()
@@ -50,4 +50,46 @@ namespace Web.Models
         public virtual DbSet<NQuestion> NQuestions { get; set; }
         public virtual DbSet<RelationshipItem> RelationshipItems { get; set; }
     }
-}
+
+
+
+
+    public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
+    {
+        protected override void Seed(ApplicationDbContext context)
+        {
+            context.Languages.AddRange( new Language[]{
+                new Language { Name = "English", Code = "en-US", ShortCode = "en" },
+                new Language { Name = "Deutsch", Code = "de-DE", ShortCode = "de" },
+                new Language { Name = "Russian", Code = "ru-RU", ShortCode = "ru" },
+                new Language { Name = "Ukranian", Code = "uk-ua", ShortCode = "uk" }});
+
+            context.SurveyStatuses.AddRange(new SurveyStatus[] {
+                new SurveyStatus { Name = "Offline" },
+                new SurveyStatus { Name = "Published" }});
+
+            context.QuestionFormats.AddRange( new QuestionFormat[] {
+                new QuestionFormat { Name = "Text", Code = "text" },
+                new QuestionFormat { Name = "Choice Across", Code = "choice_across" },
+                new QuestionFormat { Name = "Choice Down", Code = "choice_down" },
+                new QuestionFormat { Name = "Drop Down", Code = "drop_down" },
+                new QuestionFormat { Name = "Matrix", Code = "matrix" },
+                new QuestionFormat { Name = "Slider", Code = "slider" }});
+
+            context.QuestionLayouts.AddRange(new QuestionLayout[] {
+                new QuestionLayout { Name = "QuestionCentric", Code = "qc" },
+                new QuestionLayout { Name = "PersonCentric", Code = "pc" }});
+
+            context.NodeSelections.AddRange( new NodeSelection[] {
+                new NodeSelection { Name = "Normal", Code = "n" },
+                new NodeSelection { Name = "Filtered", Code = "f" },
+                new NodeSelection { Name = "Automatic", Code = "a" }});
+
+            context.SaveChanges();
+
+            base.Seed(context);
+        }
+    }
+
+
+}    
