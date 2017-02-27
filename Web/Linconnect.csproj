@@ -453,6 +453,7 @@
     <Content Include="Content\client_id.json" />
     <Content Include="Content\LinCollect-b595904b4096.json" />
     <Content Include="Content\Google.Apis.Auth.OAuth2.Responses.TokenResponse-Александр" />
+    <Content Include="Content\LinCollect-7a500f9e0d6a.p12" />
     <None Include="Properties\PublishProfiles\1gb.pubxml" />
     <None Include="Properties\PublishProfiles\2gb.pubxml" />
     <None Include="Properties\PublishProfiles\file.pubxml" />
