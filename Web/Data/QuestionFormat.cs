@@ -1,8 +1,11 @@
-﻿namespace Web.Data
+﻿
+
+namespace Web.Data
 {
     using System.ComponentModel.DataAnnotations;
+    using Interfaces;
 
-    public partial class QuestionFormat
+    public partial class QuestionFormat: IEntity
     {
         public int Id { get; set; }
 

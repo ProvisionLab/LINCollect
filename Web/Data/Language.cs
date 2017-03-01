@@ -1,8 +1,11 @@
-﻿namespace Web.Data
+﻿
+
+namespace Web.Data
 {
     using System.ComponentModel.DataAnnotations;
+    using Interfaces;
 
-    public partial class Language
+    public partial class Language: IEntity
     {
         public int Id { get; set; }
 

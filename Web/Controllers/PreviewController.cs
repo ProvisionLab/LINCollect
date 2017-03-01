@@ -12,23 +12,28 @@ using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using Web.Models;
 using Web.Models.ViewModels;
+using Web.Services.Implementations;
+using Web.Services.Interfaces;
 
 namespace Web.Controllers
 {
     [Authorize]
     public class PreviewController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        static string[] Scopes = { SheetsService.Scope.SpreadsheetsReadonly };
-        static string ApplicationName = "LinCollect";
+        private readonly IGoogleSheetsService _googleSheetsService;
+        private readonly ApplicationDbContext _dbContext;
+        public PreviewController(IGoogleSheetsService googleSheetsService, ApplicationDbContext dbContext)
+        {
+            _googleSheetsService = googleSheetsService;
+            _dbContext = dbContext;
+        }
 
         public ActionResult Index(int? id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var survey = db.Surveys.Find(id);
+            var survey = _dbContext.Surveys.Find(id);
             if (survey == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
@@ -48,7 +53,7 @@ namespace Web.Controllers
             foreach (var item in model.Items)
             {
                 var fileId = int.Parse(item.NodeList);
-                var file = db.SurveyFiles.Find(fileId);
+                var file = _dbContext.SurveyFiles.Find(fileId);
 
                 if (file == null)
                     model.Companies.Add(new Companies() { RelationshipId = item.Id, Names = new List<string>() });
@@ -59,7 +64,7 @@ namespace Web.Controllers
                     {
                         RelationshipId = item.Id,
                         RelationshipName = item.Name,
-                        Names = GetCompanies(file.Link, ref error),
+                        Names = _googleSheetsService.GetCompanies(file.Link, ref error),
                         Error = !String.IsNullOrEmpty(error) ? String.Format(error, file.Name, file.Link) : String.Empty
                     };
                     if (item.SortNodeList)
@@ -76,45 +81,6 @@ namespace Web.Controllers
         public ActionResult Index(int? id, FormCollection col)
         {
             return RedirectToAction("Index");
-        }
-
-        private List<string> GetCompanies(string fileId, ref string error)
-        {
-            var service = new SheetsService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = GetServiceCredentials(),
-                ApplicationName = ApplicationName,
-            });
-
-            try
-            {
-                var buff = service.Spreadsheets.Get(fileId);
-                buff.IncludeGridData = true;
-                var copy = buff.Execute();
-
-                return copy.Sheets.Skip(1).FirstOrDefault().Data.FirstOrDefault()
-                    .RowData.Select(x => x.Values.FirstOrDefault().FormattedValue).Skip(1).ToList();
-            }
-            catch (Exception ex)
-            {
-                error = "Not have access to the file '{0}' or is not 'Node List' sheet. Open <a target='_blank' href='https://docs.google.com/spreadsheets/d/{1}'>THIS LINK</a> to fix problem.";
-                return new List<string>();
-            }
-        }
-
-        public static ServiceAccountCredential GetServiceCredentials()
-        {
-            ServiceAccountCredential credential;
-            string credentialPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
-            credentialPath = Path.Combine(credentialPath, "LinCollect-7a500f9e0d6a.p12");
-
-            var certificate = new X509Certificate2(credentialPath, "notasecret", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable);
-            credential = new ServiceAccountCredential(new ServiceAccountCredential.Initializer("linc-809@winter-sensor-149718.iam.gserviceaccount.com")
-            {
-                Scopes = Scopes
-            }.FromCertificate(certificate));
-
-            return credential;
         }
     }
 }

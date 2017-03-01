@@ -24,11 +24,16 @@ namespace Web.Controllers
         //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
         //static string ApplicationName = "LinCollect";
 
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ApplicationDbContext _dbContext;
+
+        public SurveysController(ApplicationDbContext dbContextContext)
+        {
+            _dbContext = dbContextContext;
+        }
 
         public async Task<ActionResult> Index()
         {
-            var surveyViews = db.Surveys.Select(x => new SurveyView()
+            var surveyViews = _dbContext.Surveys.Select(x => new SurveyView()
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -43,8 +48,8 @@ namespace Web.Controllers
         public ActionResult Create()
         {
             var model = new Survey();
-            ViewBag.LanguageId = new SelectList(db.Languages, "Id", "Name");
-            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles, "Id", "Name");
+            ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name");
+            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles, "Id", "Name");
             model.UserId = User.Identity.GetUserId();
             return View(model);
         }
@@ -73,8 +78,8 @@ namespace Web.Controllers
                     catch (Exception ex) { var t = ex.Message; }
                 }
 
-                db.Surveys.Add(survey);
-                await db.SaveChangesAsync();
+                _dbContext.Surveys.Add(survey);
+                await _dbContext.SaveChangesAsync();
                 if (isNext)
                 {
                     return RedirectToAction("Respondent", new { id = survey.Id });
@@ -84,8 +89,8 @@ namespace Web.Controllers
                     return RedirectToAction("Edit", new { id = survey.Id });
                 }
             }
-            ViewBag.LanguageId = new SelectList(db.Languages, "Id", "Name", survey.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", survey.SurveyFileId);
+            ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name", survey.LanguageId);
+            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", survey.SurveyFileId);
             return View(survey);
         }
 
@@ -96,13 +101,13 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var surveyView = await db.Surveys.FindAsync(id);
+            var surveyView = await _dbContext.Surveys.FindAsync(id);
             if (surveyView == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.LanguageId = new SelectList(db.Languages, "Id", "Name", surveyView.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(db.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", surveyView.SurveyFileId);
+            ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name", surveyView.LanguageId);
+            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", surveyView.SurveyFileId);
             return View(surveyView);
         }
 
@@ -128,8 +133,8 @@ namespace Web.Controllers
                     catch (Exception ex) { var t = ex.Message; }
                 }
                 survey.UpdateDateUtc = DateTime.UtcNow;
-                db.Entry(survey).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                _dbContext.Entry(survey).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
                 if (isNext)
                 {
                     return RedirectToAction("Respondent", new { id = survey.Id });
@@ -144,14 +149,14 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var surveyView = await db.Surveys.FindAsync(id);
+            var surveyView = await _dbContext.Surveys.FindAsync(id);
             if (surveyView == null)
             {
                 return RedirectToAction("Index");
             }
             try
             {
-                db.Database.ExecuteSqlCommand("exec DeleteSurvay {0}", id);
+                _dbContext.Database.ExecuteSqlCommand("exec DeleteSurvay {0}", id);
             }
             catch { }
             return RedirectToAction("Index");
@@ -163,14 +168,14 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var survey = await db.Surveys.FindAsync(id);
+            var survey = await _dbContext.Surveys.FindAsync(id);
             if (survey == null)
             {
                 return RedirectToAction("Index");
             }
             try
             {
-                var newSurvey = db.Surveys.Create();
+                var newSurvey = _dbContext.Surveys.Create();
 
                 newSurvey.Name = "Copy of " + survey.Name;
                 newSurvey.Banner = survey.Banner;
@@ -185,8 +190,8 @@ namespace Web.Controllers
                 newSurvey.Thanks = survey.Thanks;
                 newSurvey.UserId = survey.UserId;
 
-                db.Surveys.Add(newSurvey);
-                db.SaveChanges();
+                _dbContext.Surveys.Add(newSurvey);
+                _dbContext.SaveChanges();
                 #region // Respondents
                 foreach (var item in survey.Respondents)
                 {
@@ -198,8 +203,8 @@ namespace Web.Controllers
                         IsAfterSurvey = item.IsAfterSurvey,
                     };
 
-                    db.Respondents.Add(_resp);
-                    db.SaveChanges();
+                    _dbContext.Respondents.Add(_resp);
+                    _dbContext.SaveChanges();
 
                     foreach (var item2 in item.Questions)
                     {
@@ -225,12 +230,12 @@ namespace Web.Controllers
                             ValueMax = item2.ValueMax,
                             ValueMin = item2.ValueMin
                         };
-                        db.Question.Add(_q);
-                        db.SaveChanges();
+                        _dbContext.Question.Add(_q);
+                        _dbContext.SaveChanges();
 
                         foreach (var item3 in item2.Answers)
                         {
-                            db.Answers.Add(new Answer()
+                            _dbContext.Answers.Add(new Answer()
                             {
                                 CreateDateUtc = DateTime.UtcNow,
                                 UpdateDateUtc = DateTime.UtcNow,
@@ -240,7 +245,7 @@ namespace Web.Controllers
                                 Text = item3.Text,
                                 Value = item3.Value
                             });
-                            db.SaveChanges();
+                            _dbContext.SaveChanges();
                         }
                     }
                 }
@@ -269,8 +274,8 @@ namespace Web.Controllers
                         SuperUserViewNodes = item.SuperUserViewNodes,
                         UseDDSearch = item.UseDDSearch
                     };
-                    db.RelationshipItems.Add(_rel);
-                    db.SaveChanges();
+                    _dbContext.RelationshipItems.Add(_rel);
+                    _dbContext.SaveChanges();
 
                     foreach (var item2 in item.Questions)
                     {
@@ -296,12 +301,12 @@ namespace Web.Controllers
                             ValueMax = item2.ValueMax,
                             ValueMin = item2.ValueMin,
                         };
-                        db.RQuestions.Add(_rq);
-                        db.SaveChanges();
+                        _dbContext.RQuestions.Add(_rq);
+                        _dbContext.SaveChanges();
 
                         foreach (var item3 in item2.Answers)
                         {
-                            db.RAnswers.Add(new RAnswer()
+                            _dbContext.RAnswers.Add(new RAnswer()
                             {
                                 CreateDateUtc = DateTime.UtcNow,
                                 UpdateDateUtc = DateTime.UtcNow,
@@ -311,7 +316,7 @@ namespace Web.Controllers
                                 Text = item3.Text,
                                 Value = item3.Value
                             });
-                            db.SaveChanges();
+                            _dbContext.SaveChanges();
                         }
                     }
                     //node
@@ -339,12 +344,12 @@ namespace Web.Controllers
                             ValueMax = item22.ValueMax,
                             ValueMin = item22.ValueMin,
                         };
-                        db.NQuestions.Add(_nq);
-                        db.SaveChanges();
+                        _dbContext.NQuestions.Add(_nq);
+                        _dbContext.SaveChanges();
 
                         foreach (var item32 in item22.Answers)
                         {
-                            db.NAnswers.Add(new NAnswer()
+                            _dbContext.NAnswers.Add(new NAnswer()
                             {
                                 CreateDateUtc = DateTime.UtcNow,
                                 UpdateDateUtc = DateTime.UtcNow,
@@ -354,7 +359,7 @@ namespace Web.Controllers
                                 Text = item32.Text,
                                 Value = item32.Value
                             });
-                            db.SaveChanges();
+                            _dbContext.SaveChanges();
                         }
                     }
                 }
@@ -373,7 +378,7 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var survey = await db.Surveys.FindAsync(id);
+            var survey = await _dbContext.Surveys.FindAsync(id);
             if (survey == null)
             {
                 return HttpNotFound();
@@ -387,12 +392,12 @@ namespace Web.Controllers
                     UpdateDateUtc = DateTime.UtcNow,
                     IsAfterSurvey = isAfter
                 };
-                db.Respondents.Add(resp);
-                await db.SaveChangesAsync();
+                _dbContext.Respondents.Add(resp);
+                await _dbContext.SaveChangesAsync();
                 survey.Respondents.Add(resp);
             }
-            db.Entry(survey).State = EntityState.Modified;
-            ViewBag.Formats = db.QuestionFormats.ToList();
+            _dbContext.Entry(survey).State = EntityState.Modified;
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             ViewBag.IsAfter = isAfter;
             return View(survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey == isAfter));
         }
@@ -406,7 +411,7 @@ namespace Web.Controllers
             if (code == null)
                 return Json(new { success = false });
             question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
-            question.QuestionFormatId = db.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
+            question.QuestionFormatId = _dbContext.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
             //[8]: "Answer.Rows"
             //[9]: "Answer.Text"
             //[10]: "Answer.Value"
@@ -436,26 +441,26 @@ namespace Web.Controllers
             }
             try
             {
-                var orderId = db.Question.Where(x => x.RespondentId == question.RespondentId).Count() + 1;
+                var orderId = _dbContext.Question.Where(x => x.RespondentId == question.RespondentId).Count() + 1;
                 if (question.OrderId == 0)
                     question.OrderId = orderId;
 
                 if (question.Id == 0)
                 {
                     question.Answers = Answers;
-                    db.Question.Add(question);
+                    _dbContext.Question.Add(question);
                 }
                 else
                 {
-                    var answers = db.Answers.Where(x => x.QuestionId == question.Id);
-                    db.Answers.RemoveRange(answers);
-                    db.SaveChanges();
-                    db.Entry(question).State = EntityState.Modified;
-                    db.SaveChanges();
-                    db.Answers.AddRange(Answers);
+                    var answers = _dbContext.Answers.Where(x => x.QuestionId == question.Id);
+                    _dbContext.Answers.RemoveRange(answers);
+                    _dbContext.SaveChanges();
+                    _dbContext.Entry(question).State = EntityState.Modified;
+                    _dbContext.SaveChanges();
+                    _dbContext.Answers.AddRange(Answers);
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -468,20 +473,20 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<JsonResult> SetRespondentPosition(int id, bool value)
         {
-            var resp = db.Respondents.SingleOrDefault(x => x.Id == id);
+            var resp = _dbContext.Respondents.SingleOrDefault(x => x.Id == id);
             if (resp == null)
             {
                 return Json(new { success = false });
             }
             resp.IsAfterSurvey = value;
-            await db.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             return Json(new { success = true });
         }
 
         public ActionResult EditQuestion(int id, int respId, bool isAfter = true)
         {
-            var model = db.Question.Find(id);
+            var model = _dbContext.Question.Find(id);
             var _answers = new List<Answer>();
             for (int i = 0; i < 5; i++)
             {
@@ -518,13 +523,13 @@ namespace Web.Controllers
             if (model.Answers.Count == 0)
                 model.Answers = _answers;
 
-            ViewBag.Formats = db.QuestionFormats.ToList();
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             return PartialView(model);
         }
 
         public ActionResult EditRQuestion(int id, int relId, bool isAfter = true)
         {
-            var model = db.RQuestions.Find(id);
+            var model = _dbContext.RQuestions.Find(id);
             var _answers = new List<RAnswer>();
             for (int i = 0; i < 5; i++)
             {
@@ -561,13 +566,13 @@ namespace Web.Controllers
             if (model.Answers.Count == 0)
                 model.Answers = _answers;
 
-            ViewBag.Formats = db.QuestionFormats.ToList();
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             return PartialView(model);
         }
 
         public ActionResult EditNQuestion(int id, int relId, bool isAfter = true)
         {
-            var model = db.NQuestions.Find(id);
+            var model = _dbContext.NQuestions.Find(id);
             var _answers = new List<NAnswer>();
             for (int i = 0; i < 5; i++)
             {
@@ -604,7 +609,7 @@ namespace Web.Controllers
             if (model.Answers.Count == 0)
                 model.Answers = _answers;
 
-            ViewBag.Formats = db.QuestionFormats.ToList();
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             return PartialView(model);
         }
 
@@ -613,12 +618,12 @@ namespace Web.Controllers
         {
             try
             {
-                var _Question = await db.Question.FindAsync(id);
+                var _Question = await _dbContext.Question.FindAsync(id);
                 var _RespId = _Question.RespondentId;
-                db.Question.Remove(_Question);
-                await db.SaveChangesAsync();
+                _dbContext.Question.Remove(_Question);
+                await _dbContext.SaveChangesAsync();
 
-                db.Database.ExecuteSqlCommand("exec SortRespondentQuestions {0}", _RespId);
+                _dbContext.Database.ExecuteSqlCommand("exec SortRespondentQuestions {0}", _RespId);
 
                 return Json(new { success = true });
             }
@@ -634,12 +639,12 @@ namespace Web.Controllers
         {
             try
             {
-                var _Question = await db.RQuestions.FindAsync(id);
+                var _Question = await _dbContext.RQuestions.FindAsync(id);
                 var _RelId = _Question.RelationshipItemId;
-                db.RQuestions.Remove(_Question);
-                await db.SaveChangesAsync();
+                _dbContext.RQuestions.Remove(_Question);
+                await _dbContext.SaveChangesAsync();
 
-                db.Database.ExecuteSqlCommand("exec SortRelationQuestions {0}", _RelId);
+                _dbContext.Database.ExecuteSqlCommand("exec SortRelationQuestions {0}", _RelId);
 
                 return Json(new { success = true });
             }
@@ -655,12 +660,12 @@ namespace Web.Controllers
         {
             try
             {
-                var _Question = await db.NQuestions.FindAsync(id);
+                var _Question = await _dbContext.NQuestions.FindAsync(id);
                 var _RelId = _Question.RelationshipItemId;
-                db.NQuestions.Remove(_Question);
-                await db.SaveChangesAsync();
+                _dbContext.NQuestions.Remove(_Question);
+                await _dbContext.SaveChangesAsync();
 
-                db.Database.ExecuteSqlCommand("exec SortRelationNodeQuestions {0}", _RelId);
+                _dbContext.Database.ExecuteSqlCommand("exec SortRelationNodeQuestions {0}", _RelId);
 
                 return Json(new { success = true });
             }
@@ -676,15 +681,15 @@ namespace Web.Controllers
         {
             try
             {
-                var _q = await db.Question.FindAsync(id);
-                var count = db.Question.Count(x => x.RespondentId == _q.RespondentId);
+                var _q = await _dbContext.Question.FindAsync(id);
+                var count = _dbContext.Question.Count(x => x.RespondentId == _q.RespondentId);
                 if (isInc)
                 {
                     if (_q.OrderId < count)
                     {
                         _q.OrderId += 1;
 
-                        var buff = db.Question.FirstOrDefault(x => x.RespondentId == _q.RespondentId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.Question.FirstOrDefault(x => x.RespondentId == _q.RespondentId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId -= 1;
                     }
@@ -696,13 +701,13 @@ namespace Web.Controllers
                     {
                         _q.OrderId -= 1;
 
-                        var buff = db.Question.FirstOrDefault(x => x.RespondentId == _q.RespondentId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.Question.FirstOrDefault(x => x.RespondentId == _q.RespondentId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId += 1;
                     }
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -715,15 +720,15 @@ namespace Web.Controllers
         {
             try
             {
-                var _q = await db.RQuestions.FindAsync(id);
-                var count = db.RQuestions.Count(x => x.RelationshipItemId == _q.RelationshipItemId);
+                var _q = await _dbContext.RQuestions.FindAsync(id);
+                var count = _dbContext.RQuestions.Count(x => x.RelationshipItemId == _q.RelationshipItemId);
                 if (isInc)
                 {
                     if (_q.OrderId < count)
                     {
                         _q.OrderId += 1;
 
-                        var buff = db.RQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.RQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId -= 1;
                     }
@@ -735,13 +740,13 @@ namespace Web.Controllers
                     {
                         _q.OrderId -= 1;
 
-                        var buff = db.RQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.RQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId += 1;
                     }
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -754,15 +759,15 @@ namespace Web.Controllers
         {
             try
             {
-                var _q = await db.NQuestions.FindAsync(id);
-                var count = db.NQuestions.Count(x => x.RelationshipItemId == _q.RelationshipItemId);
+                var _q = await _dbContext.NQuestions.FindAsync(id);
+                var count = _dbContext.NQuestions.Count(x => x.RelationshipItemId == _q.RelationshipItemId);
                 if (isInc)
                 {
                     if (_q.OrderId < count)
                     {
                         _q.OrderId += 1;
 
-                        var buff = db.NQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.NQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId -= 1;
                     }
@@ -774,13 +779,13 @@ namespace Web.Controllers
                     {
                         _q.OrderId -= 1;
 
-                        var buff = db.NQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.NQuestions.FirstOrDefault(x => x.RelationshipItemId == _q.RelationshipItemId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId += 1;
                     }
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -793,7 +798,7 @@ namespace Web.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _dbContext.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -805,7 +810,7 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var survey = await db.Surveys.FindAsync(id);
+            var survey = await _dbContext.Surveys.FindAsync(id);
             if (survey == null)
             {
                 return HttpNotFound();
@@ -831,8 +836,8 @@ namespace Web.Controllers
                     OrderId = 1,
                     NodeList = survey.SurveyFileId.ToString()
                 };
-                db.RelationshipItems.Add(rel);
-                db.SaveChanges();
+                _dbContext.RelationshipItems.Add(rel);
+                _dbContext.SaveChanges();
 
                 model.RelationshipItems.Add(rel);
             }
@@ -841,11 +846,11 @@ namespace Web.Controllers
             else
                 model.SelectedItem = model.RelationshipItems.FirstOrDefault(x => x.Id == relId.Value);
 
-            ViewBag.QuestionLayoutId = new SelectList(db.QuestionLayouts, "Id", "Name", model.SelectedItem?.QuestionLayoutId);
-            ViewBag.NodeSelectionId = new SelectList(db.NodeSelections, "Id", "Name", model.SelectedItem?.NodeSelectionId);
+            ViewBag.QuestionLayoutId = new SelectList(_dbContext.QuestionLayouts, "Id", "Name", model.SelectedItem?.QuestionLayoutId);
+            ViewBag.NodeSelectionId = new SelectList(_dbContext.NodeSelections, "Id", "Name", model.SelectedItem?.NodeSelectionId);
             ViewBag.IsQuestion = questions;
             ViewBag.IsNode = node;
-            ViewBag.NodeList = new SelectList(db.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", model.SelectedItem?.NodeList);
+            ViewBag.NodeList = new SelectList(_dbContext.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", model.SelectedItem?.NodeList);
             return View(model);
         }
 
@@ -854,8 +859,8 @@ namespace Web.Controllers
         {
             try
             {
-                var survey = await db.Surveys.FindAsync(id);
-                var count = db.RelationshipItems.Count(x => x.SurveyId == id);
+                var survey = await _dbContext.Surveys.FindAsync(id);
+                var count = _dbContext.RelationshipItems.Count(x => x.SurveyId == id);
                 var rel = new RelationshipItem()
                 {
                     Name = "New Relationship",
@@ -868,8 +873,8 @@ namespace Web.Controllers
                     OrderId = count + 1,
                     NodeList = survey.SurveyFileId.ToString()
                 };
-                db.RelationshipItems.Add(rel);
-                db.SaveChanges();
+                _dbContext.RelationshipItems.Add(rel);
+                _dbContext.SaveChanges();
 
                 return Json(new { success = true, id = id, relId = rel.Id });
             }
@@ -884,18 +889,18 @@ namespace Web.Controllers
         {
             try
             {
-                var r = db.RelationshipItems.Find(id);
+                var r = _dbContext.RelationshipItems.Find(id);
                 var sId = r.SurveyId;
-                if (db.RelationshipItems.Count(x => x.SurveyId == sId) <= 1)
+                if (_dbContext.RelationshipItems.Count(x => x.SurveyId == sId) <= 1)
                     return Json(new { success = false, error = "You cann't delete the last relationship" });
 
-                var q = db.RQuestions.Where(x => x.RelationshipItemId == id);
-                db.RQuestions.RemoveRange(q);
-                db.SaveChanges();
-                db.RelationshipItems.Remove(r);
-                db.SaveChanges();
+                var q = _dbContext.RQuestions.Where(x => x.RelationshipItemId == id);
+                _dbContext.RQuestions.RemoveRange(q);
+                _dbContext.SaveChanges();
+                _dbContext.RelationshipItems.Remove(r);
+                _dbContext.SaveChanges();
 
-                db.Database.ExecuteSqlCommand("exec SortRelationship {0}", sId);
+                _dbContext.Database.ExecuteSqlCommand("exec SortRelationship {0}", sId);
 
                 return Json(new { success = true });
             }
@@ -909,15 +914,15 @@ namespace Web.Controllers
         {
             try
             {
-                var _q = await db.RelationshipItems.FindAsync(id);
-                var count = db.RelationshipItems.Count(x => x.SurveyId == _q.SurveyId);
+                var _q = await _dbContext.RelationshipItems.FindAsync(id);
+                var count = _dbContext.RelationshipItems.Count(x => x.SurveyId == _q.SurveyId);
                 if (isInc)
                 {
                     if (_q.OrderId < count)
                     {
                         _q.OrderId += 1;
 
-                        var buff = db.RelationshipItems.FirstOrDefault(x => x.SurveyId == _q.SurveyId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.RelationshipItems.FirstOrDefault(x => x.SurveyId == _q.SurveyId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId -= 1;
                     }
@@ -928,13 +933,13 @@ namespace Web.Controllers
                     {
                         _q.OrderId -= 1;
 
-                        var buff = db.RelationshipItems.FirstOrDefault(x => x.SurveyId == _q.SurveyId && x.OrderId == _q.OrderId);
+                        var buff = _dbContext.RelationshipItems.FirstOrDefault(x => x.SurveyId == _q.SurveyId && x.OrderId == _q.OrderId);
                         if (buff != null)
                             buff.OrderId += 1;
                     }
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -952,7 +957,7 @@ namespace Web.Controllers
             if (code == null)
                 return Json(new { success = false });
             question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
-            question.QuestionFormatId = db.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
+            question.QuestionFormatId = _dbContext.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
             //[8]: "Answer.Rows"
             //[9]: "Answer.Text"
             //[10]: "Answer.Value"
@@ -981,26 +986,26 @@ namespace Web.Controllers
             }
             try
             {
-                var orderId = db.RQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
+                var orderId = _dbContext.RQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
                 if (question.OrderId == 0)
                     question.OrderId = orderId;
 
                 if (question.Id == 0)
                 {
                     question.Answers = Answers;
-                    db.RQuestions.Add(question);
+                    _dbContext.RQuestions.Add(question);
                 }
                 else
                 {
-                    var answers = db.RAnswers.Where(x => x.RQuestionId == question.Id);
-                    db.RAnswers.RemoveRange(answers);
-                    db.SaveChanges();
-                    db.Entry(question).State = EntityState.Modified;
-                    db.SaveChanges();
-                    db.RAnswers.AddRange(Answers);
+                    var answers = _dbContext.RAnswers.Where(x => x.RQuestionId == question.Id);
+                    _dbContext.RAnswers.RemoveRange(answers);
+                    _dbContext.SaveChanges();
+                    _dbContext.Entry(question).State = EntityState.Modified;
+                    _dbContext.SaveChanges();
+                    _dbContext.RAnswers.AddRange(Answers);
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1019,7 +1024,7 @@ namespace Web.Controllers
             if (code == null)
                 return Json(new { success = false });
             question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
-            question.QuestionFormatId = db.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
+            question.QuestionFormatId = _dbContext.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
             //[8]: "Answer.Rows"
             //[9]: "Answer.Text"
             //[10]: "Answer.Value"
@@ -1048,26 +1053,26 @@ namespace Web.Controllers
             }
             try
             {
-                var orderId = db.NQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
+                var orderId = _dbContext.NQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
                 if (question.OrderId == 0)
                     question.OrderId = orderId;
 
                 if (question.Id == 0)
                 {
                     question.Answers = Answers;
-                    db.NQuestions.Add(question);
+                    _dbContext.NQuestions.Add(question);
                 }
                 else
                 {
-                    var answers = db.NAnswers.Where(x => x.NQuestionId == question.Id);
-                    db.NAnswers.RemoveRange(answers);
-                    db.SaveChanges();
-                    db.Entry(question).State = EntityState.Modified;
-                    db.SaveChanges();
-                    db.NAnswers.AddRange(Answers);
+                    var answers = _dbContext.NAnswers.Where(x => x.NQuestionId == question.Id);
+                    _dbContext.NAnswers.RemoveRange(answers);
+                    _dbContext.SaveChanges();
+                    _dbContext.Entry(question).State = EntityState.Modified;
+                    _dbContext.SaveChanges();
+                    _dbContext.NAnswers.AddRange(Answers);
                 }
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -1082,12 +1087,12 @@ namespace Web.Controllers
         {
             try
             {
-                var item = db.RelationshipItems.Find(id);
+                var item = _dbContext.RelationshipItems.Find(id);
 
                 if (item != null)
                     item.AddNodes = addNode;
 
-                await db.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
 
                 return Json(new { success = true });
             }
@@ -1099,9 +1104,9 @@ namespace Web.Controllers
 
         public async Task<ActionResult> GetRelationshipItem(int id)
         {
-            var item = await db.RelationshipItems.FindAsync(id);
-            ViewBag.QuestionLayoutId = new SelectList(db.QuestionLayouts, "Id", "Name", item.QuestionLayoutId);
-            ViewBag.NodeSelectionId = new SelectList(db.NodeSelections, "Id", "Name", item.NodeSelectionId);
+            var item = await _dbContext.RelationshipItems.FindAsync(id);
+            ViewBag.QuestionLayoutId = new SelectList(_dbContext.QuestionLayouts, "Id", "Name", item.QuestionLayoutId);
+            ViewBag.NodeSelectionId = new SelectList(_dbContext.NodeSelections, "Id", "Name", item.NodeSelectionId);
             return View(item);
         }
 
@@ -1111,7 +1116,7 @@ namespace Web.Controllers
         public async Task<ActionResult> GetRelationshipItem(RelationshipItem item)
         {
             int _id = int.Parse(Request.Form["RelId"]);
-            var buff = db.RelationshipItems.FirstOrDefault(x => x.Id == _id);
+            var buff = _dbContext.RelationshipItems.FirstOrDefault(x => x.Id == _id);
 
             buff.Name = item.Name;
             buff.UpdateDateUtc = DateTime.UtcNow;
@@ -1128,7 +1133,7 @@ namespace Web.Controllers
             buff.GeneratorName = item.GeneratorName;
             buff.SortNodeList = item.SortNodeList;
 
-            await db.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 
             if (bool.Parse(Request.Form["isBack"]))
                 return RedirectToAction("Respondent", new { id = buff.SurveyId });

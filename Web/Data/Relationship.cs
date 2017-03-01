@@ -1,10 +1,13 @@
-﻿namespace Web.Data
+﻿
+
+namespace Web.Data
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Interfaces;
 
-    public partial class QuestionLayout
+    public partial class QuestionLayout: IEntity
     {
         public int Id { get; set; }
         [StringLength(128)]

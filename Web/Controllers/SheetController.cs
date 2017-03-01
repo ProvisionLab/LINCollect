@@ -18,18 +18,23 @@ namespace Web.Controllers
     [Authorize]
     public class SheetController : Controller
     {
+        private readonly ApplicationDbContext _dbContext;
+        public SheetController(ApplicationDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };
         static string ApplicationName = "LinCollect";
-
-        private ApplicationDbContext db = new ApplicationDbContext();
 
         public async Task<ActionResult> MailingList()
         {
             var userId = User.Identity.GetUserId();
-            var files = db.SurveyFiles.Where(x => x.UserId == userId).ToList();
+            var files = _dbContext.SurveyFiles.Where(x => x.UserId == userId).ToList();
             return PartialView(files);
         }
 
+
+        //TODO: Investigate if code is using
         [HttpPost]
         [ValidateInput(false)]
         public async Task<JsonResult> MailingList(string Name)
@@ -37,14 +42,14 @@ namespace Web.Controllers
             if (string.IsNullOrEmpty(Name))
                 return Json(new { success = false, Error = "Enter file name" });
 
-            var file = db.SurveyFiles.Create();
+            var file = _dbContext.SurveyFiles.Create();
             try
             {
                 file.UserId = User.Identity.GetUserId();
                 file.Link = CopyFile(Name);
                 file.Name = Name;
-                db.SurveyFiles.Add(file);
-                await db.SaveChangesAsync();
+                _dbContext.SurveyFiles.Add(file);
+                await _dbContext.SaveChangesAsync();
 
             }
             catch (Exception ex)
@@ -65,15 +70,15 @@ namespace Web.Controllers
             if(string.IsNullOrEmpty(name))
                 return Json(new { success = false, Error = "Enter file name" });
 
-            var file = db.SurveyFiles.Create();
+            var file = _dbContext.SurveyFiles.Create();
             var _link = link.Replace("https://docs.google.com/spreadsheets/d/", "").Split('/').FirstOrDefault() ?? "";
             try
             {
                 file.UserId = User.Identity.GetUserId();
                 file.Link = _link;
                 file.Name = name;
-                db.SurveyFiles.Add(file);
-                await db.SaveChangesAsync();
+                _dbContext.SurveyFiles.Add(file);
+                await _dbContext.SaveChangesAsync();
 
             }
             catch (Exception ex)
@@ -92,9 +97,9 @@ namespace Web.Controllers
         {
             try
             {
-                var file = db.SurveyFiles.Find(id);
-                db.SurveyFiles.Remove(file);
-                await db.SaveChangesAsync();
+                var file = _dbContext.SurveyFiles.Find(id);
+                _dbContext.SurveyFiles.Remove(file);
+                await _dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

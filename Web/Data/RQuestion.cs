@@ -1,10 +1,13 @@
-﻿namespace Web.Data
+﻿
+
+namespace Web.Data
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Interfaces;
 
-    public partial class RQuestion
+    public partial class RQuestion: IEntity
     {
         public RQuestion() {
             Answers = new HashSet<RAnswer>();

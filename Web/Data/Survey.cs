@@ -1,11 +1,14 @@
-﻿namespace Web.Data
+﻿
+
+namespace Web.Data
 {
     using Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Interfaces;
 
-    public partial class Survey
+    public partial class Survey: IEntity
     {
         public Survey()
         {

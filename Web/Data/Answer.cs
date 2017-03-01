@@ -1,10 +1,12 @@
-﻿namespace Web.Data
+﻿
+
+namespace Web.Data
 {
     using System;
-    using System.Collections.Generic;
+    using Interfaces;
     using System.ComponentModel.DataAnnotations;
 
-    public partial class Answer
+    public partial class Answer: IEntity
     {
         public int Id { get; set; }
         
