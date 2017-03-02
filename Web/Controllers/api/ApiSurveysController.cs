@@ -13,12 +13,12 @@ using Web.Repositories.Interfaces;
 
 namespace Web.Controllers.api
 {
-    //[Route("api/survey")]
-    //public class ApiSurveysController : BaseApiController<SurveyModel>
-    //{
-    //    public ApiSurveysController(ICrudManager<SurveyModel> crudManager) : base(crudManager)
-    //    {
+    [Route("api/survey")]
+    public class ApiSurveysController : BaseApiController<SurveyModel>
+    {
+        public ApiSurveysController(ICrudManager<SurveyModel> crudManager) : base(crudManager)
+        {
 
-    //    }
-    //}
+        }
+    }
 }

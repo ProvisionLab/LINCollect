@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using Web.Models;
 using Web.Repositories.Base.Interfaces;
 using Web.Repositories.Implementations;
@@ -12,8 +8,10 @@ namespace Web.Repositories.Base.Implementations
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
+        private ISurveyFileRepository _surveyFileRepository;
         private SurveyRepository _surveyRepository;
+        private ITokenRepository _tokenRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -21,20 +19,26 @@ namespace Web.Repositories.Base.Implementations
         }
 
         public ISurveyRepository SurveyRepository
+            => _surveyRepository ?? (_surveyRepository = new SurveyRepository(_context));
+
+        public ITokenRepository TokenRepository
+            => _tokenRepository ?? (_tokenRepository = new TokenRepository(_context));
+
+        public ISurveyFileRepository SurveyFileRepository
+            => _surveyFileRepository ?? (_surveyFileRepository = new SurveyFileRepository(_context));
+
+        public async Task<int> SaveAsync()
         {
-            get
-            {
-                return _surveyRepository ?? (_surveyRepository = new SurveyRepository(_context));
-            }
-        }
-        public Task SaveAsync()
-        {
-            return _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
 
         public void Dispose()
         {
-            _context?.Dispose();
+            if (_context != null)
+            {
+                _context?.Dispose();
+                _context = null;
+            }
         }
     }
 }

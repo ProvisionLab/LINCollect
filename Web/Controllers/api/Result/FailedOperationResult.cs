@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 namespace Linconnect.Controllers.api.Result
@@ -9,25 +10,25 @@ namespace Linconnect.Controllers.api.Result
 	{
 		public string ErrorMessage { get; private set; }
 
-		public FailedOperationResult(int errorCode, string errorMessage)
+		public FailedOperationResult(HttpStatusCode errorCode, string errorMessage)
 			: base(errorCode)
 		{
 			ErrorMessage = errorMessage;
 		}
 
-		public FailedOperationResult(int errorCode, Exception ex)
+		public FailedOperationResult(HttpStatusCode errorCode, Exception ex)
 			: base(errorCode)
 		{
 			ErrorMessage = ex.Message;
 		}
 
 		public FailedOperationResult(Exception ex)
-			: base(500)
+			: base(HttpStatusCode.InternalServerError)
 		{
 			ErrorMessage = ex.Message;
 		}
 
-		public static FailedOperationResult Unauthorized = new FailedOperationResult(401, "Unautorized");
+		public static FailedOperationResult Unauthorized = new FailedOperationResult(HttpStatusCode.Unauthorized, "Unautorized");
 
 	}
 }

@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Net;
 
 namespace Linconnect.Controllers.api.Result
 {
 	public class OperationResultBase
 	{
-		public int HttpResponse {get; set;}
+		public HttpStatusCode HttpResponse {get; set;}
 
-		public OperationResultBase (int httpResponseCode)
+		public OperationResultBase (HttpStatusCode httpResponseCode)
 		{
 			HttpResponse = httpResponseCode;
 		}
 
-		public static OperationResultBase Ok = new OperationResultBase(200);
-		public static OperationResultBase Success = new OperationResultBase(200);
+		public static OperationResultBase Ok = new OperationResultBase(HttpStatusCode.OK);
+		public static OperationResultBase Success = new OperationResultBase(HttpStatusCode.OK);
 		// TODO: use enum
 	}
 
@@ -20,8 +21,9 @@ namespace Linconnect.Controllers.api.Result
 	{
 		public dynamic Result { get; set; }
 
-		public OperationResultDynamic() : base(200)
+		public OperationResultDynamic() : base(HttpStatusCode.OK)
 		{
+
 		}
 	}
 

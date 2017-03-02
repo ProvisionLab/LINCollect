@@ -14,10 +14,9 @@ using Web.Models.DTO;
 
 namespace Web.Controllers.api
 {
-    [Authorize]
+    [ApiAuthorize]
     [Route("api/file")]
     [InvalidModelStateFilter]
-    [AllowAnonymous]
     public class ApiSurveyFileController: BaseApiController<SurveyFileModel>
     {
         public ApiSurveyFileController(ISurveyFileManager surveyFileManager) : base(surveyFileManager)

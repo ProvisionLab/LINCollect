@@ -49,10 +49,8 @@ namespace Web.Models
         public virtual DbSet<NAnswer> NAnswers { get; set; }
         public virtual DbSet<NQuestion> NQuestions { get; set; }
         public virtual DbSet<RelationshipItem> RelationshipItems { get; set; }
+        public virtual DbSet<Token> Tokens { get; set; }
     }
-
-
-
 
     public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
     {

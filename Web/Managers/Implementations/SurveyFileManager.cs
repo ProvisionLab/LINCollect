@@ -14,7 +14,7 @@ namespace Web.Managers.Implementations
 {
     public class SurveyFileManager: CrudManager<SurveyFile, SurveyFileModel>,ISurveyFileManager
     {
-        public SurveyFileManager(IUnitOfWork unitOfWork, IRepository<SurveyFile> repository, IObjectMapper objectMapper) : base(unitOfWork, repository, objectMapper)
+        public SurveyFileManager(IUnitOfWork unitOfWork, IObjectMapper objectMapper) : base(unitOfWork, unitOfWork.SurveyFileRepository, objectMapper)
         {
         }
 

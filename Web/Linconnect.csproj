@@ -268,7 +268,7 @@
     <Compile Include="Controllers\api\ApiPreviewController.cs" />
     <Compile Include="Controllers\api\ApiSurveyFileController.cs" />
     <Compile Include="Controllers\api\Base\BaseApiController.cs" />
-    <Compile Include="Controllers\api\LoginController.cs" />
+    <Compile Include="Controllers\api\ApiLoginController.cs" />
     <Compile Include="Controllers\api\Request\AuthorizedRequest.cs" />
     <Compile Include="Controllers\api\Result\DataOperationResult.cs" />
     <Compile Include="Controllers\api\Result\FailedOperationResult.cs" />
@@ -293,6 +293,8 @@
     <Compile Include="Data\SurveyStatus.cs" />
     <Compile Include="Data\Language.cs" />
     <Compile Include="Data\Survey.cs" />
+    <Compile Include="Data\Token.cs" />
+    <Compile Include="Filters\ApiAuthorizeAttribute.cs" />
     <Compile Include="Filters\InvalidModelStateFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -305,7 +307,9 @@
     <Compile Include="Managers\Base\Interfaces\IModel.cs" />
     <Compile Include="Managers\Base\Interfaces\IObjectMapper.cs" />
     <Compile Include="Managers\Implementations\SurveyFileManager.cs" />
+    <Compile Include="Managers\Implementations\TokenManager.cs" />
     <Compile Include="Managers\Interfaces\ISurveyFileManager.cs" />
+    <Compile Include="Managers\Interfaces\ITokenManager.cs" />
     <Compile Include="Migrations\201610281759589_InitialCreate.cs" />
     <Compile Include="Migrations\201610281759589_InitialCreate.Designer.cs">
       <DependentUpon>201610281759589_InitialCreate.cs</DependentUpon>
@@ -394,14 +398,20 @@
     <Compile Include="Migrations\201611261044451_DeleteSurvay.Designer.cs">
       <DependentUpon>201611261044451_DeleteSurvay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703021354033_Token.cs" />
+    <Compile Include="Migrations\201703021354033_Token.Designer.cs">
+      <DependentUpon>201703021354033_Token.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DTO\SurveyFileModel.cs" />
     <Compile Include="Models\DTO\SurveyModel.cs" />
+    <Compile Include="Models\DTO\TokenModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MapperProfiles\SurveyFileProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyProfile.cs" />
+    <Compile Include="Models\MapperProfiles\TokenProfile.cs" />
     <Compile Include="Models\ViewModels\Entity.cs" />
     <Compile Include="Models\ViewModels\LanguageView.cs" />
     <Compile Include="Models\ViewModels\EditMenu.cs" />
@@ -416,8 +426,10 @@
     <Compile Include="Repositories\Base\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Repositories\Implementations\SurveyFileRepository.cs" />
     <Compile Include="Repositories\Implementations\SurveyRepository.cs" />
+    <Compile Include="Repositories\Implementations\TokenRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyFileRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />
     <Compile Include="Services\Implementations\GoogleSheetsService.cs" />
     <Compile Include="Services\Interfaces\IGoogleSheetsService.cs" />
     <Compile Include="Startup.cs" />
@@ -942,6 +954,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611261044451_DeleteSurvay.resx">
       <DependentUpon>201611261044451_DeleteSurvay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703021354033_Token.resx">
+      <DependentUpon>201703021354033_Token.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

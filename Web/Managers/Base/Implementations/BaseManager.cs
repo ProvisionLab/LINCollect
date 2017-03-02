@@ -9,18 +9,18 @@ namespace Web.Managers.Base.Implementations
 {
     public class BaseManager: IDisposable
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IObjectMapper _objectMapper;
+        protected IUnitOfWork UnitOfWork;
+        protected IObjectMapper ObjectMapper;
 
-        public BaseManager(IUnitOfWork unitOfWork, IObjectMapper objectMapper)
+        protected BaseManager(IUnitOfWork unitOfWork, IObjectMapper objectMapper)
         {
-            _unitOfWork = unitOfWork;
-            _objectMapper = objectMapper;
+            UnitOfWork = unitOfWork;
+            ObjectMapper = objectMapper;
         }
 
         public void Dispose()
         {
-            _unitOfWork?.Dispose();
+            UnitOfWork?.Dispose();
         }
     }
 }

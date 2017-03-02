@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 
 namespace Linconnect.Controllers.api.Result
@@ -10,19 +11,19 @@ namespace Linconnect.Controllers.api.Result
         public TData[] Data { get; set; }
 
         public DataOperationResult()
-            : base(200)
+            : base(HttpStatusCode.OK)
         {
 
         }
 
         public DataOperationResult(TData singleEntity)
-            : base(200)
+            : base(HttpStatusCode.OK)
         {
             Data = new TData[] { singleEntity };
         }
 
         public DataOperationResult(TData[] values)
-            : base(200)
+            : base(HttpStatusCode.OK)
         {
             Data = values;
         }

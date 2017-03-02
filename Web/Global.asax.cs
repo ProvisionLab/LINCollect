@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -18,14 +15,13 @@ using Web.Models;
 using Web.Repositories.Base.Implementations;
 using Web.Repositories.Base.Interfaces;
 using Web.Repositories.Implementations;
-using Web.Repositories.Interfaces;
 using Web.Services.Implementations;
 using Web.Services.Interfaces;
 using IObjectMapper = Web.Managers.Base.Interfaces.IObjectMapper;
 
 namespace Web
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -40,13 +36,12 @@ namespace Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             InitializeMapper();
-
         }
 
         protected IContainer InitializeApiIoC()
         {
             var builder = new ContainerBuilder();
-            
+
             return builder.Build();
         }
 
@@ -56,25 +51,30 @@ namespace Web
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).PropertiesAutowired();
 
+            builder.RegisterType<ApplicationDbContext>().AsSelf();
+
             builder.RegisterType<ObjectMapper>().As<IObjectMapper>().InstancePerLifetimeScope();
-            builder.RegisterType<GoogleSheetsService>().As<IGoogleSheetsService>().InstancePerRequest();
-
-
-            //Repositories
-            builder.RegisterType<SurveyRepository>().AsImplementedInterfaces().InstancePerLifetimeScope();
-            builder.RegisterType<SurveyFileRepository>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<GoogleSheetsService>().As<IGoogleSheetsService>().InstancePerDependency();
 
             //Managers
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerLifetimeScope();
-            builder.RegisterType<SurveyFileManager>().As<ISurveyFileManager>().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerDependency();
+            builder.RegisterType<SurveyFileManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<TokenManager>().AsImplementedInterfaces().InstancePerDependency();
 
-            builder.RegisterType<ApplicationDbContext>().AsSelf();
+            //Repositories
+            builder.RegisterType<SurveyRepository>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<SurveyFileRepository>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<TokenRepository>().AsImplementedInterfaces().InstancePerDependency();
+
+
+
+            
             return builder.Build();
         }
 
         protected void InitializeMapper()
         {
-            Mapper.Initialize(cfg=> cfg.AddProfiles(typeof(MvcApplication).Assembly));
+            Mapper.Initialize(cfg => cfg.AddProfiles(typeof(MvcApplication).Assembly));
         }
     }
 }

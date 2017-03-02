@@ -9,16 +9,11 @@ namespace Web.Managers.Base.Implementations
 {
     public class BaseCrudManager<TEntity>: BaseManager, IDisposable where TEntity: class
     {
-        private readonly IRepository<TEntity> _repository;
+        protected IRepository<TEntity> Repository { get; }
 
-        public IRepository<TEntity> Repository
+        protected BaseCrudManager(IUnitOfWork unitOfWork, IRepository<TEntity>  repository, IObjectMapper objectMapper) : base(unitOfWork, objectMapper)
         {
-            get { return _repository; }
-        }
-
-        public BaseCrudManager(IUnitOfWork unitOfWork, IRepository<TEntity>  repository, IObjectMapper objectMapper) : base(unitOfWork, objectMapper)
-        {
-            _repository = repository;
+            Repository = repository;
         }
     }
 }

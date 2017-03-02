@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using Linconnect.Controllers.api.Result;
 
 namespace Web.Filters
 {
@@ -16,7 +17,7 @@ namespace Web.Filters
         {
             if (!actionContext.ModelState.IsValid)
             {
-                actionContext.Response = actionContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, actionContext.ModelState);
+                actionContext.Response = actionContext.Request.CreateResponse(new OperationResultDynamic {HttpResponse = HttpStatusCode.BadRequest, Result = actionContext.ModelState});
             }
         }
     }
