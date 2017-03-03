@@ -178,7 +178,7 @@
             if (confirm("Delete File #" + id + '?')) {
                 ShowLoader();
                 $.ajax({
-                    type: "POST",
+                    type: "DELETE",
                     url: '/Sheet/DeleteMailingList/?id=' + id,
                     data: null
                 }).success(function (data) {
