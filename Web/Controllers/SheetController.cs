@@ -30,7 +30,7 @@ namespace Web.Controllers
         public async Task<ActionResult> EditForm(int id)
         {
             var file = await _dbContext.SurveyFiles.FindAsync(id);
-
+            file.Link = $"https://docs.google.com/spreadsheets/d/{file.Link}/edit#gid=0";
             return PartialView(file);
         }
 
@@ -49,11 +49,11 @@ namespace Web.Controllers
                 return Json(new { success = false, Error = "Enter file name" });
 
             var file = _dbContext.SurveyFiles.Create();
-            var _link = link.Replace("https://docs.google.com/spreadsheets/d/", "").Split('/').FirstOrDefault() ?? "";
+
             try
             {
                 file.UserId = User.Identity.GetUserId();
-                file.Link = _link;
+                file.Link = ParseLink(link);
                 file.Name = name;
                 _dbContext.SurveyFiles.Add(file);
                 await _dbContext.SaveChangesAsync();
@@ -84,7 +84,7 @@ namespace Web.Controllers
             try
             {
                 file = await _dbContext.SurveyFiles.FindAsync(id);
-                file.Link = link;
+                file.Link = ParseLink(link);
                 file.Name = name;
                 _dbContext.Entry(file).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
@@ -150,5 +150,12 @@ namespace Web.Controllers
 
             return newFile.SpreadsheetId;
         }
+        #region helpers
+
+        private string ParseLink(string link)
+        {
+            return link.Replace("https://docs.google.com/spreadsheets/d/", "").Split('/').FirstOrDefault() ?? "";
+        }
+        #endregion
     }
 }
