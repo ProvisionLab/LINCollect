@@ -21,9 +21,18 @@ namespace Web.Managers.Implementations
         {
         }
 
-        public Task<string> GetCurrentToken()
+        public async Task<TokenModel> GetCurrentTokenObjectAsync()
         {
-            return Task.FromResult(string.Empty);
+            var headerString = HttpContext.Current.Request.Headers["Authorization"];
+            if (!string.IsNullOrEmpty(headerString))
+            {
+                var headers = AuthenticationHeaderValue.Parse(headerString);
+                if (headers?.Parameter != null)
+                {
+                   return ObjectMapper.Map<Token, TokenModel>(await this.UnitOfWork.TokenRepository.GetByKeyAsync(headers.Parameter));
+                }
+            }
+            return null;
         }
 
         public Task<string> GenerateToken()
@@ -43,7 +52,7 @@ namespace Web.Managers.Implementations
                 var headers = AuthenticationHeaderValue.Parse(headerString);
                 if (headers?.Parameter != null)
                 {
-                    var currentToken = await UnitOfWork.TokenRepository.GetByKey(headers.Parameter);
+                    var currentToken = await UnitOfWork.TokenRepository.GetByKeyAsync(headers.Parameter);
                     if (currentToken != null)
                         return true;
                 }

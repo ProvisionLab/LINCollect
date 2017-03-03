@@ -1,0 +1,27 @@
+﻿@model Web.Data.SurveyFile
+
+<div class="form-horizontal">
+    @*<h4>Mailing list #@Model.Id</h4>*@
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-xs-2" })
+        <div class="col-xs-10">
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control", id = "newName" })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Link, htmlAttributes: new { @class = "control-label col-xs-2" })
+        <div class="col-xs-8">
+            @Html.TextBoxFor(model => model.Link, new { @class = "form-control", id = "newLink" })
+            @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-xs-2">
+            <input type="button" onclick="updateFile(@Model.Id)" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>

@@ -1,10 +1,8 @@
 ﻿@model Web.Data.Survey
-
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create - Survey";
 }
-
-<h2>Survey - Create</h2>
+<h3 class="font-green-haze">@ViewBag.Title </h3>
 @using (Html.BeginForm("Create", "Surveys", FormMethod.Post, new { id = "createForm", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -108,7 +106,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addFileLabel">Manage Mailing list</h4>
             </div>
-            <div class="modal-body">
+            <div id="surveyFile" class="modal-body">
                 @using (Ajax.BeginForm("MailingList", "Sheet", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successFile", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "file-options" }))
                 {
                     @Html.Action("MailingList", "Sheet")
@@ -124,12 +122,29 @@
 @Scripts.Render("~/bundles/unobtrusive")
 @Scripts.Render("~/bundles/slider")
     <script>
+        function updateFile(id) {
+            ShowLoader();
+            var newLink = $('#newLink').val();
+
+            var newName = $('#newName').val();
+
+            $.post("@Url.Action("UpdateMailingList", "Sheet")", { id: id, link: newLink, name: newName }).done(function (data) {
+                if (data.sucess) {
+                    $.get("@Url.Action("MailingList","Sheet")").done(function (data) {
+                        $("#surveyFile").html(data);
+                    });
+                }
+                HideLoader();
+            });
+
+        }
+
         function closeFileManager() {
             window.location.reload();
         };
 
         function SubmitFile() {
-           $('#file-options').submit();
+            $('#file-options').submit();
         };
         function deleteFile(id) {
             if (confirm("Delete File #" + id)) {
@@ -192,5 +207,4 @@
             }
         };
     </script>
-
 }

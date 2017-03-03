@@ -5,12 +5,13 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Web.Data.Interfaces;
 using Web.Models;
 using Web.Repositories.Base.Interfaces;
 
 namespace Web.Repositories.Base.Implementations
 {
-    public abstract class BaseRepository<TEntity>: IRepository<TEntity> where TEntity: class
+    public abstract class BaseRepository<TEntity>: IRepository<TEntity> where TEntity: class, IEntity
     {
         protected readonly ApplicationDbContext DbContext;
         protected readonly DbSet<TEntity> DbSet;

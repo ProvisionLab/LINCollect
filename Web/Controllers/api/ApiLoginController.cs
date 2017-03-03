@@ -64,11 +64,12 @@ namespace Web.Controllers.api
             }
         }
 
-        public IEnumerable<string> Get([FromUri] AuthorizedRequest user)
-        {
-            var _user = UserManager.FindByEmail(user.Username);
-            return new string[] { _user.Email, _user.Id };
-        }
+        //[ApiAuthorize]
+        //public IEnumerable<string> Get([FromUri] AuthorizedRequest user)
+        //{
+        //    var _user = UserManager.FindByEmail(user.Username);
+        //    return new string[] { _user.Email, _user.Id };
+        //}
 
 
         [HttpPost]
@@ -87,6 +88,7 @@ namespace Web.Controllers.api
             }
 
             var result = SignInManager.PasswordSignIn(user.Email, loginData.Password, true, false);
+
             if (result == SignInStatus.Success)
             {
                 var token = await _tokenManager.GenerateToken();
@@ -103,12 +105,13 @@ namespace Web.Controllers.api
         
         [HttpPut]
         [ApiAuthorize]
-        public OperationResultBase Logout()
+        public async Task<OperationResultBase> Logout()
         {
-           // var headers = Request.Headers.FirstOrDefault(h => h.Key.Equals("Authorization"));
-            var lol = User;
-            _tokenManager.GetCurrentToken();
-            return new OperationResultBase(HttpStatusCode.OK);
+            var token = await _tokenManager.GetCurrentTokenObjectAsync();
+
+            await _tokenManager.DeleteAsync(token.Id);
+
+            return new OperationResultDynamic() {HttpResponse = HttpStatusCode.OK, Result = "Sucessfully logout"};
         }
 
         // DELETE api/<controller>/5

@@ -5,6 +5,7 @@ using Google.Apis.Sheets.v4.Data;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,48 +27,25 @@ namespace Web.Controllers
         static string[] Scopes = { SheetsService.Scope.Spreadsheets };
         static string ApplicationName = "LinCollect";
 
-        public async Task<ActionResult> MailingList()
+        public async Task<ActionResult> EditForm(int id)
+        {
+            var file = await _dbContext.SurveyFiles.FindAsync(id);
+
+            return PartialView(file);
+        }
+
+        public ActionResult MailingList()
         {
             var userId = User.Identity.GetUserId();
             var files = _dbContext.SurveyFiles.Where(x => x.UserId == userId).ToList();
             return PartialView(files);
         }
 
-
-        //TODO: Investigate if code is using
-        [HttpPost]
-        [ValidateInput(false)]
-        public async Task<JsonResult> MailingList(string Name)
-        {
-            if (string.IsNullOrEmpty(Name))
-                return Json(new { success = false, Error = "Enter file name" });
-
-            var file = _dbContext.SurveyFiles.Create();
-            try
-            {
-                file.UserId = User.Identity.GetUserId();
-                file.Link = CopyFile(Name);
-                file.Name = Name;
-                _dbContext.SurveyFiles.Add(file);
-                await _dbContext.SaveChangesAsync();
-
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null)
-                {
-                    return Json(new { success = false, Error = ex.InnerException.Message + ex.Message });
-                }
-                return Json(new { success = false, Error = ex.Message });
-            }
-            return Json(new { success = true, Data = file });
-        }
-
         [HttpPost]
         [ValidateInput(false)]
         public async Task<JsonResult> UserFile(string link, string name)
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 return Json(new { success = false, Error = "Enter file name" });
 
             var file = _dbContext.SurveyFiles.Create();
@@ -93,6 +71,33 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
+        public async Task<JsonResult> UpdateMailingList(int id, string link, string name)
+        {
+            if (id < 1 || link == null || name == null)
+            {
+                return Json(new { sucess = false, error = "Data is not valid" });
+            }
+
+            SurveyFile file = null;
+
+            try
+            {
+                file = await _dbContext.SurveyFiles.FindAsync(id);
+                file.Link = link;
+                file.Name = name;
+                _dbContext.Entry(file).State = EntityState.Modified;
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false, Error = e.Message });
+            }
+
+            return Json(new { sucess = true, data = file });
+        }
+
+        [HttpDelete]
         public async Task<JsonResult> DeleteMailingList(int id)
         {
             try
@@ -103,7 +108,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, Error = ex.Message });
+                return Json(new { success = false, Error = "You can't delete this file. Some of survey use it!" });
             }
 
             return Json(new { success = true, id = id });

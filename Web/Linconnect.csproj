@@ -430,7 +430,9 @@
     <Compile Include="Repositories\Interfaces\ISurveyFileRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />
+    <Compile Include="Services\Implementations\CurrentUserService.cs" />
     <Compile Include="Services\Implementations\GoogleSheetsService.cs" />
+    <Compile Include="Services\Interfaces\ICurrentUserService.cs" />
     <Compile Include="Services\Interfaces\IGoogleSheetsService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -875,6 +877,7 @@
     <Content Include="Views\Preview\Questions.cshtml" />
     <Content Include="Views\Preview\RQuestions.cshtml" />
     <Content Include="Views\Preview\NQuestions.cshtml" />
+    <Content Include="Views\Sheet\EditForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

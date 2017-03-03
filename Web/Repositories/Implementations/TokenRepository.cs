@@ -13,7 +13,7 @@ namespace Web.Repositories.Implementations
         {
         }
 
-        public Task<Token> GetByKey(string key)
+        public Task<Token> GetByKeyAsync(string key)
         {
             return Task.FromResult(DbSet.FirstOrDefault(t => t.Key == key));
         }

@@ -1,28 +1,30 @@
 ﻿@model IEnumerable<Web.Data.SurveyFile>
 @if (Model != null && Model.Any())
 {
-<table class="table" id="file-table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr class="file-@item.Id">
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td class="text-right">
-                <a href="https://docs.google.com/spreadsheets/d/@item.Link/edit#gid=0" target="_blank">show</a> |
-                <a href="#" onclick="deleteFile(@item.Id)">delete</a>
-            </td>
+    <table class="table" id="file-table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr class="file-@item.Id">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td class="text-right">
+                    <a href="https://docs.google.com/spreadsheets/d/@item.Link/edit#gid=0" target="_blank">show</a> |
+                    @Ajax.ActionLink("edit", "EditForm", "Sheet", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "edit-form" }) |
+                    <a href="#" onclick="deleteFile(@item.Id)">delete</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <div id="edit-form"></div>
 }
 else {
     <div class="text-center">Please, add file</div>
@@ -51,17 +53,17 @@ else {
 
 <div class="form-horizontal">
     <div class="form-group">
-        <span class="control-label col-md-2">File name</span>
-        <div class="col-md-10">
+        <span class="control-label col-xs-2">File name</span>
+        <div class="col-xs-10">
             <input type="text" name="Name" id="fileLinkName" class="form-control" />
         </div>
     </div>
     <div class="form-group">
-        <span class="control-label col-md-2">File link</span>
-        <div class="col-md-8">
+        <span class="control-label col-xs-2">File link</span>
+        <div class="col-xs-8">
             <input type="text" name="Name" id="fileLink" class="form-control" />
         </div>
-        <div class="col-md-2">
+        <div class="col-xs-2">
             <input type="button" class="btn purple" value="Add" onclick="useUserFile()" />
         </div>
     </div>
