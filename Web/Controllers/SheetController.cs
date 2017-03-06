@@ -30,8 +30,12 @@ namespace Web.Controllers
         public async Task<ActionResult> EditForm(int id)
         {
             var file = await _dbContext.SurveyFiles.FindAsync(id);
-            file.Link = $"https://docs.google.com/spreadsheets/d/{file.Link}/edit#gid=0";
-            return PartialView(file);
+            if (file != null)
+            {
+                file.Link = $"https://docs.google.com/spreadsheets/d/{file.Link}/edit#gid=0";
+                return PartialView(file);
+            }
+            return HttpNotFound();
         }
 
         public ActionResult MailingList()

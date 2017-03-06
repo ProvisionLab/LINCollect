@@ -12,6 +12,7 @@ namespace Web.Repositories.Base.Implementations
         private ISurveyFileRepository _surveyFileRepository;
         private SurveyRepository _surveyRepository;
         private ITokenRepository _tokenRepository;
+        private IPublishSurveyRepository _publishSurveyRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -27,6 +28,9 @@ namespace Web.Repositories.Base.Implementations
         public ISurveyFileRepository SurveyFileRepository
             => _surveyFileRepository ?? (_surveyFileRepository = new SurveyFileRepository(_context));
 
+        public IPublishSurveyRepository PublishSurveyRepository
+            => _publishSurveyRepository ?? (_publishSurveyRepository = new PublishSurveyRepository(_context));
+
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();
@@ -40,5 +44,7 @@ namespace Web.Repositories.Base.Implementations
                 _context = null;
             }
         }
+
+        
     }
 }

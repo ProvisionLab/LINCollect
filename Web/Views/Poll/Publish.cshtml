@@ -1,0 +1,35 @@
+﻿@model Web.Models.ViewModels.PublishView
+@{
+    ViewBag.Title = "Publish - " + ViewBag.SurveyTitle;
+}
+<h3 class="font-green-haze">@ViewBag.Title</h3>
+@{
+    using (Html.BeginForm("Submit", "Poll", FormMethod.Post))
+    {
+        <div class="form-horizontal">
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model=>model.SurveyId)
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-10">
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", id = "newName" })
+                    @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-xs-2" })
+                <div class="col-xs-10">
+                    @Html.TextAreaFor(model => model.Message, new { @class = "form-control ckeditor", id = "newName" })
+                    @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10 text-right">
+                    <input class="btn btn-default" type="submit" value="Publish" />
+                </div>
+            </div>
+        </div>
+    }
+}
+

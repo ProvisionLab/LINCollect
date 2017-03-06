@@ -53,21 +53,24 @@ namespace Web
 
             builder.RegisterType<ApplicationDbContext>().AsSelf();
 
+            //Services
+            builder.RegisterType<Services.Implementations.EmailService>().As<IEmailService>().SingleInstance();
+
             builder.RegisterType<ObjectMapper>().As<IObjectMapper>().InstancePerLifetimeScope();
             builder.RegisterType<GoogleSheetsService>().As<IGoogleSheetsService>().InstancePerDependency();
-
-            //Managers
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerDependency();
-            builder.RegisterType<SurveyFileManager>().AsImplementedInterfaces().InstancePerDependency();
-            builder.RegisterType<TokenManager>().AsImplementedInterfaces().InstancePerDependency();
 
             //Repositories
             builder.RegisterType<SurveyRepository>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<SurveyFileRepository>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<TokenRepository>().AsImplementedInterfaces().InstancePerDependency();
+            //builder.RegisterType<PublishSurveyRepository>().AsImplementedInterfaces().InstancePerDependency();
 
-
-
+            //Managers
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerDependency();
+            builder.RegisterType<SurveyFileManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<TokenManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<SurveyManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<PublishSurveyManager>().AsImplementedInterfaces().InstancePerDependency();
             
             return builder.Build();
         }

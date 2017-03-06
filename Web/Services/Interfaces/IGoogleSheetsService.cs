@@ -9,5 +9,6 @@ namespace Web.Services.Interfaces
     public interface IGoogleSheetsService
     {
         List<string> GetCompanies(string fileId, ref string error);
+        Task<List<string[]>>  GetEnumerators(string fileId, ref string error);
     }
 }

@@ -37,7 +37,14 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                Publish
+                @if (item.SurveyStatusId == 1)
+                {
+                    @Html.ActionLink("Publish", "Publish", "Poll", new { id = item.Id }, null)
+                }
+                else
+                {
+                    @Html.Raw("Publish")
+                }
             </td>
             <td>
                 @item.Name (@item.Language)

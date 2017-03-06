@@ -50,6 +50,7 @@ namespace Web.Models
         public virtual DbSet<NQuestion> NQuestions { get; set; }
         public virtual DbSet<RelationshipItem> RelationshipItems { get; set; }
         public virtual DbSet<Token> Tokens { get; set; }
+        public virtual DbSet<PublishSurvey> PublishSurveys { get; set; }
     }
 
     public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>

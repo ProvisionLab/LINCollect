@@ -9,6 +9,7 @@ namespace Web.Repositories.Base.Interfaces
         ISurveyRepository SurveyRepository { get; }
         ITokenRepository TokenRepository { get; }
         ISurveyFileRepository SurveyFileRepository { get; }
+        IPublishSurveyRepository PublishSurveyRepository { get; }
         Task<int> SaveAsync();
     }
 }

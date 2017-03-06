@@ -17,7 +17,7 @@
     <AssemblyName>Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort>44314</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -276,11 +276,13 @@
     <Compile Include="Controllers\api\ApiSurveysController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Controllers\PreviewController.cs" />
     <Compile Include="Controllers\SheetController.cs" />
     <Compile Include="Controllers\SurveysController.cs" />
     <Compile Include="Data\Interfaces\IEntity.cs" />
     <Compile Include="Data\NAnswer.cs" />
+    <Compile Include="Data\PublishSurvey.cs" />
     <Compile Include="Data\RAnswer.cs" />
     <Compile Include="Data\Answer.cs" />
     <Compile Include="Data\NQuestion.cs" />
@@ -306,9 +308,13 @@
     <Compile Include="Managers\Base\Interfaces\ICrudManager.cs" />
     <Compile Include="Managers\Base\Interfaces\IModel.cs" />
     <Compile Include="Managers\Base\Interfaces\IObjectMapper.cs" />
+    <Compile Include="Managers\Implementations\PublishSurveyManager.cs" />
     <Compile Include="Managers\Implementations\SurveyFileManager.cs" />
+    <Compile Include="Managers\Implementations\SurveyManager.cs" />
     <Compile Include="Managers\Implementations\TokenManager.cs" />
+    <Compile Include="Managers\Interfaces\IPublishSurveyManager.cs" />
     <Compile Include="Managers\Interfaces\ISurveyFileManager.cs" />
+    <Compile Include="Managers\Interfaces\ISurveyManager.cs" />
     <Compile Include="Managers\Interfaces\ITokenManager.cs" />
     <Compile Include="Migrations\201610281759589_InitialCreate.cs" />
     <Compile Include="Migrations\201610281759589_InitialCreate.Designer.cs">
@@ -402,13 +408,19 @@
     <Compile Include="Migrations\201703021354033_Token.Designer.cs">
       <DependentUpon>201703021354033_Token.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703061335412_PublishSurveys.cs" />
+    <Compile Include="Migrations\201703061335412_PublishSurveys.Designer.cs">
+      <DependentUpon>201703061335412_PublishSurveys.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DTO\PublishSurveyModel.cs" />
     <Compile Include="Models\DTO\SurveyFileModel.cs" />
     <Compile Include="Models\DTO\SurveyModel.cs" />
     <Compile Include="Models\DTO\TokenModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MapperProfiles\PublishSurveyProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyFileProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyProfile.cs" />
     <Compile Include="Models\MapperProfiles\TokenProfile.cs" />
@@ -416,6 +428,7 @@
     <Compile Include="Models\ViewModels\LanguageView.cs" />
     <Compile Include="Models\ViewModels\EditMenu.cs" />
     <Compile Include="Models\ViewModels\PreviewView.cs" />
+    <Compile Include="Models\ViewModels\PublishView.cs" />
     <Compile Include="Models\ViewModels\SurveyStatusView.cs" />
     <Compile Include="Models\ViewModels\RelationshipView.cs" />
     <Compile Include="Models\ViewModels\SurveyView.cs" />
@@ -424,15 +437,19 @@
     <Compile Include="Repositories\Base\Implementations\UnitOfWork.cs" />
     <Compile Include="Repositories\Base\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Base\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Repositories\Implementations\PublishSurveyRepository.cs" />
     <Compile Include="Repositories\Implementations\SurveyFileRepository.cs" />
     <Compile Include="Repositories\Implementations\SurveyRepository.cs" />
     <Compile Include="Repositories\Implementations\TokenRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IPublishSurveyRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyFileRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />
     <Compile Include="Services\Implementations\CurrentUserService.cs" />
+    <Compile Include="Services\Implementations\EmailService.cs" />
     <Compile Include="Services\Implementations\GoogleSheetsService.cs" />
     <Compile Include="Services\Interfaces\ICurrentUserService.cs" />
+    <Compile Include="Services\Interfaces\IEmailService.cs" />
     <Compile Include="Services\Interfaces\IGoogleSheetsService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -874,10 +891,13 @@
     <Content Include="Views\Surveys\EditNQuestion.cshtml" />
     <Content Include="Views\Sheet\MailingList.cshtml" />
     <Content Include="Views\Preview\Index.cshtml" />
-    <Content Include="Views\Preview\Questions.cshtml" />
-    <Content Include="Views\Preview\RQuestions.cshtml" />
-    <Content Include="Views\Preview\NQuestions.cshtml" />
+    <Content Include="Views\Shared\Questions.cshtml" />
+    <Content Include="Views\Shared\RQuestions.cshtml" />
+    <Content Include="Views\Shared\NQuestions.cshtml" />
     <Content Include="Views\Sheet\EditForm.cshtml" />
+    <Content Include="Views\Shared\Poll.cshtml" />
+    <Content Include="Views\Poll\Pass.cshtml" />
+    <Content Include="Views\Poll\Publish.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -961,6 +981,9 @@
     <EmbeddedResource Include="Migrations\201703021354033_Token.resx">
       <DependentUpon>201703021354033_Token.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703061335412_PublishSurveys.resx">
+      <DependentUpon>201703061335412_PublishSurveys.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -980,9 +1003,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>59145</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:44314/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:44314/</IISAppRootUrl>
+          <IISUrl>http://localhost</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -8,7 +8,10 @@ namespace Web.Models.MapperProfiles
     {
         public SurveyProfile()
         {
-            CreateMap<Survey, SurveyFileModel>();
+            CreateMap<SurveyFile, SurveyFileModel>();
+            CreateMap<SurveyFileModel, SurveyFile>();
+            CreateMap<Survey, SurveyModel>();
+            CreateMap<SurveyModel, Survey>();
         }
     }
 }

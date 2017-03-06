@@ -1,0 +1,334 @@
+﻿@model Web.Models.ViewModels.PreviewView
+@{
+    var region = ViewData["region"] as string;
+}
+
+@if (region == "Html")
+{
+    <h3 class="font-green-haze">Survey - Preview</h3>
+    foreach (var item in Model.Companies.Where(x => !string.IsNullOrEmpty(x.Error)))
+    {
+        <div class="col-xs-12">
+            <p class="text-danger"><b>@item.RelationshipName:</b> @Html.Raw(item.Error)</p>
+        </div>
+    }
+
+    if (!string.IsNullOrEmpty(Model.Banner))
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <img class="embed-responsive-item col-xs-12" src="@Url.Content("~/Content/files/banners/" + Model.Banner)" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="col-xs-12">
+        <h2 class="font-green-haze">@Model.SurveyName</h2>
+    </div>
+    <form id="saveData" method="post">
+        <div id="rootwizard">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="container">
+                        <ul>
+                            <li><a href="#tabStart" data-toggle="tab">Start</a></li>
+                            @if (Model.AboutYouBefore != null && Model.AboutYouBefore.Questions.Any())
+                            {
+                                <li><a href="#tabAbout" data-toggle="tab">About you</a></li>
+                            }
+
+                            @foreach (var item in Model.Items)
+                            {
+                                <li>
+                                    <a href="#tabRelation@(item.Id)" data-toggle="tab">
+                                        @item.Name
+                                    </a>
+                                </li>
+                            }
+
+                            <li><a href="#tabFinish" data-toggle="tab">Finish</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane" id="tabStart">
+                    <div class="col-xs-12">
+                        @Html.Raw(Model.IntroductionText)
+                    </div>
+                </div>
+                @if (Model.AboutYouBefore != null && Model.AboutYouBefore.Questions.Any())
+                {
+                    <div class="tab-pane" id="tabAbout">
+                        <div class="col-xs-12 qdiv">
+                            <h5 class="text-primary">Please answer the following questions about yourself:</h5>
+                            <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
+                            <br />
+                            @Html.Partial("Questions", Model.AboutYouBefore.Questions)
+                        </div>
+                    </div>
+                }
+                @foreach (var item in Model.Items)
+                {
+                    <div class="tab-pane" id="tabRelation@(item.Id)">
+                        <input type="hidden" name="canNext" value="0" />
+                        <div class="row col-xs-12">
+                            @if (!string.IsNullOrEmpty(item.GeneratorName))
+                            {
+                                <div class="col-xs-12">
+                                    @Html.Raw(item.GeneratorName)
+                                </div>
+                            }
+                            <div class="col-xs-6">
+                                <div class="well">
+                                    <div>
+                                        @if (item.UseDDSearch)
+                                        {
+                                            <div class="pull-right">
+                                                <span>Search:</span>
+                                                <input type="text" class="form-control-sm search-companies" data-id="@item.Id" />
+                                                <button class="btn purple" onclick="resetSearch()">Reset</button>
+                                            </div>
+                                        }
+                                        <b>Companies</b>
+                                        <hr />
+                                    </div>
+                                    <div class="left-companies-@(item.Id)">
+                                        @if (!string.IsNullOrEmpty(Model.Companies.SingleOrDefault(x => x.RelationshipId == item.Id).Error))
+                                        {
+                                            <div class="text-danger">@Html.Raw(Model.Companies.SingleOrDefault(x => x.RelationshipId == item.Id).Error)</div>
+                                        }
+                                        @foreach (var c in Model.Companies.SingleOrDefault(x => x.RelationshipId == item.Id).Names)
+                                        {
+                                            <div class="company-prew" style="cursor:pointer" onclick="CompanyClick(this, @item.Id)"><i class="fa fa-plus-circle"></i><i class="fa fa-minus-circle hide"></i> @c</div>
+                                        }
+                                    </div>
+                                    @if (item.AllowSelectAllNodes)
+                                    {
+                                        <div>
+                                            <hr />
+                                            <div class="company-prew" style="cursor:pointer" onclick="AllCompanyClick(@item.Id, 1)"><i class="fa fa-minus-circle"></i> Add all</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="well">
+                                    <div>
+                                        @if (item.AddNodes)
+                                        {
+                                            <div class="pull-right">
+                                                <input type="text" class="form-control-sm" id="add-node-@item.Id" />
+                                                <button class="btn purple" onclick="AddNode(@(item.AddNodes ? 1 : 0), @(item.HideAddedNodes ? 1 : 0), @item.Id)">Add</button>
+                                            </div>
+                                        }
+                                        <b>Selection</b>
+                                        <hr />
+                                    </div>
+                                    <div class="right-companies-@(item.Id)"></div>
+                                    @if (item.AllowSelectAllNodes)
+                                    {
+                                        <div>
+                                            <hr />
+                                            <div class="company-prew" style="cursor:pointer" onclick="AllCompanyClick(@item.Id, 0)"><i class="fa fa-plus-circle"></i> Remove all</div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 qdiv">
+                                @Html.Partial("RQuestions", item.Questions)
+                            </div>
+                        </div>
+                        @if (item.AddNodes)
+                    {
+                            <div class="modal fade" id="addNodeModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="addNodeLabel-@item.Id">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="addNodeLabel-@item.Id">Please answer the following questions about: <span id="name-@item.Id"></span></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            @if (Model.AboutYouAfter != null)
+                                            {
+                                                @Html.Partial("NQuestions", item.NodeQuestions)
+                                            }
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="RemoveNode(@item.Id)">Cancel</button>
+                                            <button type="button" class="btn purple" data-dismiss="modal">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                <div class="tab-pane" id="tabFinish">
+                    @if (Model.AboutYouAfter != null && Model.AboutYouAfter.Questions.Any())
+                {
+                        <div class="col-xs-12 after-question qdiv">
+                            <h5 class="text-primary">Please answer the following questions about yourself:</h5>
+                            <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
+                            <br />
+                            @Html.Partial("Questions", Model.AboutYouAfter.Questions)
+                        </div>
+                    }
+                    <div class="col-xs-12 thanks-text" style="display:none;">
+                        @Html.Raw(Model.ThanksText)
+                    </div>
+                </div>
+                <br />
+                <ul class="pager wizard">
+                    <li class="previous"><a href="javascript:;" class="btn btn-primary blue ">Previous</a></li>
+                    <li class="next"><a href="javascript:;" class="btn btn-primary blue ">Next</a></li>
+                    <li class="finish"><a href="javascript:;" class="btn btn-primary blue ">Finish</a></li>
+                </ul>
+            </div>
+        </div>
+    </form>
+
+}
+
+@if (region == "Scripts")
+{
+    @Scripts.Render("~/bundles/slider")
+
+    <script>
+        function CompanyClick(el, id) {
+            if($(el).parent().hasClass('left-companies-' + id)) {
+                $(el).find('.fa-plus-circle').addClass('hide');
+                $(el).find('.fa-minus-circle').removeClass('hide');
+                $('.right-companies-' + id).append($(el));
+            } else {
+                $(el).find('.fa-plus-circle').removeClass('hide');
+                $(el).find('.fa-minus-circle').addClass('hide');
+                $('.left-companies-' + id).append($(el));
+            }
+        };
+        function AllCompanyClick(id, action) {
+            if(action == 1) {
+                $('.left-companies-' + id + ' .company-prew').each(function(i) {
+                    $(this).find('.fa-plus-circle').addClass('hide');
+                    $(this).find('.fa-minus-circle').removeClass('hide');
+                    $('.right-companies-' + id).append($(this));
+                });
+            } else {
+                $('.right-companies-' + id + ' .company-prew').each(function(i) {
+                    $(this).find('.fa-plus-circle').removeClass('hide');
+                    $(this).find('.fa-minus-circle').addClass('hide');
+                    $('.left-companies-' + id).append($(this));
+                });
+            }
+        };
+        function AddNode(isQ, isH, id) {
+            var node = $('#add-node-' + id).val();
+            if(node.trim().length > 0)
+            {
+                //if(!isH) {
+                $('.right-companies-' + id).append($('<div class="company-prew" data-name=' + node.trim().split(' ')[0] + ' style="cursor:pointer" onclick="CompanyClick(this, ' + id + ')"><i class="fa fa-plus-circle hide"></i><i class="fa fa-minus-circle"></i> ' + node + '</div>'));
+                //}
+
+                if(isQ == 1) {
+                    $('#addNodeModal-' + id).modal('show');
+                    $('#addNodeModal-' + id).on('shown.bs.modal', function () {
+                        setTimeout(() => ($('.modal-body div[id*="slider"]').slider()), 1000);
+                    });
+                    $('#name-' + id).attr('data-find', node.trim().split(' ')[0]);
+                    $('#name-' + id).html(node);
+                }
+            }
+            $('#add-node-' + id).val('');
+        };
+        function RemoveNode(id) {
+            $('.right-companies-' + id + ' .company-prew[data-name="' + $('#name-' + id).attr('data-find') + '"]').remove();
+        };
+        function resetSearch() {
+            $('.search-companies').val('').keyup();
+        }
+        $(document).ready(function () {
+            $('#rootwizard').bootstrapWizard({
+                onNext: function(tab, navigation, index) {
+                    var valid = true;
+                    $(tab.find('a').attr('href') + ' input[required], #question-options select[required], '
+                        + tab.find('a').attr('href')+' textarea.required').each(function (i) {
+                            if ($(this).val() == null || $(this).val().length == 0) {
+                                $(this).parent().addClass('has-error');
+                                $(this).focus();
+                                if($(this).prop("tagName").toLowerCase() == "textarea") {
+                                    $('#cke_' + $(this).attr('id')).attr('style', 'border-color: #b94a48');
+                                    $('#cke_' + $(this).attr('id')).focus();
+                                }
+                                valid = false;
+                            }
+                            else {
+                                $(this).parent().removeClass('has-error');
+                                if($(this).prop("tagName").toLowerCase() == "textarea") {
+                                    $('#cke_' + $(this).attr('id')).attr('style', '');
+                                }
+                            }
+                        });
+                    if(!valid) { return false;}
+                },
+                onTabShow: function (tab, navigation, index) {
+                    setTimeout(() => ($(tab.find('a').attr('href')).find('.qdiv div[id*="slider"]').slider()), 1000);
+                    if(tab.find('a').attr('href').indexOf('Relation') != -1)
+                    {
+                        //todo
+                    } else if (tab.find('a').attr('href') == '#tabFinish' && @((Model.AboutYouAfter != null && Model.AboutYouAfter.Questions.Any()).ToString().ToLower()) == true) {
+                        $('.after-question').show();
+                        $('.thanks-text').hide();
+                        $('#rootwizard .finish').show();
+                    } else {
+                        $('.thanks-text').show();
+                    }
+                },
+                onTabClick: function(tab, navigation, index) {
+                    var valid = true;
+                    $(tab.find('a').attr('href') + ' input[required], #question-options select[required], '
+                        + tab.find('a').attr('href')+' textarea.required').each(function (i) {
+                            if ($(this).val() == null || $(this).val().length == 0) {
+                                $(this).parent().addClass('has-error');
+                                $(this).focus();
+                                if($(this).prop("tagName").toLowerCase() == "textarea") {
+                                    $('#cke_' + $(this).attr('id')).attr('style', 'border-color: #b94a48');
+                                    $('#cke_' + $(this).attr('id')).focus();
+                                }
+                                valid = false;
+                            }
+                            else {
+                                $(this).parent().removeClass('has-error');
+                                if($(this).prop("tagName").toLowerCase() == "textarea") {
+                                    $('#cke_' + $(this).attr('id')).attr('style', '');
+                                }
+                            }
+                        });
+                    if(!valid) { return false;}
+                    $('.pager').show();
+                }
+            });
+
+            $('#rootwizard .finish').click(function () {
+                //$('#saveData').submit();
+                $('.after-question').hide();
+                $('.thanks-text').show();
+                $('#rootwizard .finish').hide();
+                $('.pager').hide();
+            });
+            $('.search-companies').on('keyup', function(ev) {
+                var _id = $(ev.target).attr('data-id');
+                $('.left-companies-' + _id).find('.company-prew').each(function(index, el) {
+                    if($(el).text().toLowerCase().indexOf($(ev.target).val().toLowerCase()) == -1) {
+                        $(el).hide();
+                    } else {
+                        $(el).show();
+                    }
+                });
+            });
+        });
+    </script>
+}

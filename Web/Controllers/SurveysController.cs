@@ -97,7 +97,7 @@ namespace Web.Controllers
         public async Task<ActionResult> Edit(int? id)
         {
             var userId = User.Identity.GetUserId();
-            if (id == null)
+            if (!id.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

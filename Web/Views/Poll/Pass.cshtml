@@ -1,0 +1,7 @@
+﻿@model Web.Models.ViewModels.PreviewView
+    
+@Html.Partial("Poll", Model, new ViewDataDictionary { { "region", "Html" } })
+
+@section scripts {
+    @Html.Partial("Poll", Model, new ViewDataDictionary { { "region", "Scripts" } })
+}

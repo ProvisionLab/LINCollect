@@ -19,7 +19,7 @@ namespace Web
                 url: "Surveys/Preview/{id}",
                 defaults: new { controller = "Preview", action = "Index", id = UrlParameter.Optional }
             );
-
+            
             routes.MapRoute(
                 name: "authorize",
                 url: "authorize",

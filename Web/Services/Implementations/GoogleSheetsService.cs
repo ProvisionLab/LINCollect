@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Web;
 using Web.Services.Interfaces;
 
@@ -48,6 +49,39 @@ namespace Web.Services.Implementations
             {
                 error = "Not have access to the file '{0}' or is not 'Node List' sheet. Open <a target='_blank' href='https://docs.google.com/spreadsheets/d/{1}'>THIS LINK</a> to fix problem.";
                 return new List<string>();
+            }
+        }
+
+        public Task<List<string[]>> GetEnumerators(string fileId, ref string error)
+        {
+            var service = new SheetsService(new Google.Apis.Services.BaseClientService.Initializer()
+            {
+                HttpClientInitializer = serviceAccountCredential,
+                ApplicationName = applicationName
+            });
+
+            var userList = new List<string[]>();
+
+            try
+            {
+                var sheet = service.Spreadsheets.Values.Get(fileId, "Mailing list!A2:B");
+
+                var rows = sheet.Execute();
+
+                foreach (var rowsValue in rows.Values)
+                {
+                    if (rowsValue.FirstOrDefault() != null)
+                    {
+                        userList.Add(new[] {rowsValue[0].ToString(), rowsValue[1].ToString()});
+                    }
+                }
+
+                return Task.FromResult(userList);
+            }
+            catch (Exception e)
+            {
+                error = "Not have access to the file '{0}' or is not 'Node List' sheet. Open <a target='_blank' href='https://docs.google.com/spreadsheets/d/{1}'>THIS LINK</a> to fix problem.";
+                return Task.FromResult(userList);
             }
         }
     }
