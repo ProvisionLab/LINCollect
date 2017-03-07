@@ -124,6 +124,8 @@ namespace Web.Controllers
 
             var enumerators = await _googleSheetsService.GetEnumerators(survey.SurveyFile.Link, ref error);
 
+            var submitView = new SubmitView();
+
             foreach (var enumerator in enumerators)
             {
                 var message = new MailMessage();
@@ -131,23 +133,36 @@ namespace Web.Controllers
                 message.Subject = publish.Subject;
                 message.Body = publish.Message;
                 message.IsBodyHtml = true;
-                message.From = new MailAddress("lincollect@gmail.com","LINCollect");
-                
+                message.From = new MailAddress("lincollect@gmail.com", "LINCollect");
+
                 var sent = await _emailService.SendAsync(message);
+
+                var model = new PublishSurveyModel
+                {
+                    UserName = enumerator[0],
+                    UserEmail = enumerator[1],
+                    Succeed = sent
+                };
 
                 if (sent)
                 {
-                    var model = new PublishSurveyModel();
-                    model.UserName = enumerator[0];
-                    model.UserEmail = enumerator[1];
                     model.SurveyId = publish.SurveyId;
                     model.Link = Guid.NewGuid().ToString();
                     await _publishSurveyManager.InsertAsync(model);
                 }
+
+                submitView.Succeed.Add(model);
+
             }
 
             await _surveyManager.Publish(survey.Id);
 
+            return View(submitView);
+        }
+
+        [HttpGet]
+        public ActionResult Submit()
+        {
             return RedirectToAction("Index", "Surveys");
         }
     }

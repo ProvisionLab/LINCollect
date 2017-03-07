@@ -14,5 +14,6 @@ namespace Web.Data
         public string Link { get; set; }
         public string UserName { get; set; }
         public string UserEmail { get; set; }
+        public bool IsPassed { get; set; }
     }
 }
