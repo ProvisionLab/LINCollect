@@ -24,22 +24,28 @@
 <div class="form-horizontal">
     <input type="hidden" value="false" name="isNext" id="isNext" />
     <div class="form-group">
-        <span class="text-right col-md-4">
+        <span class="text-right col-xs-4">
             Question position<br />
-            <small>Edit questions that appear at the start of the survey</small>
+
         </span>
-        <div class="col-md-8">
+        <div class="col-xs-2 text-right">
             <label>
                 <input type="radio" name="IsAfterSurvey" value="false" onchange="updatePosition(@Model.SurveyId, false)" @(!ViewBag.IsAfter ? "checked" : "") />
                 Start of Survey
             </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;
+
+        </div>
+        <div class="col-xs-6">
             <label>
                 <input type="radio" name="IsAfterSurvey" value="true" onchange="updatePosition(@Model.SurveyId, true)" @(ViewBag.IsAfter ? "checked" : "") />
                 End of Survey
             </label>
         </div>
+        <div class="col-xs-6 col-xs-offset-6">
+            <small>Edit questions that appear at the start of the survey</small>
+        </div>
     </div>
+
     <div class="form-group">
         <div class="col-md-4 text-left">
             <a class="btn btn-default" href="/Surveys/Edit/@Model.SurveyId">Previous</a>
@@ -90,7 +96,7 @@
             <div class="modal-body">
                 @using (Ajax.BeginForm("Respondent", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "successResp", OnBegin = "ShowLoader", OnComplete = "HideLoader", OnFailure = "HideLoader" }, new { @id = "question-options" }))
                 {
-                    @Html.Action("EditQuestion", "Surveys", new { id = 0, respId = Model.Id, isAfter = Model.IsAfterSurvey}) 
+                    @Html.Action("EditQuestion", "Surveys", new { id = 0, respId = Model.Id, isAfter = Model.IsAfterSurvey })
                 }
             </div>
             <div class="modal-footer">
