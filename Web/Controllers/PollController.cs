@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using Web.Managers.Interfaces;
 using Web.Models;
 using Web.Models.DTO;
@@ -17,13 +17,14 @@ namespace Web.Controllers
 {
     public class PollController : Controller
     {
-        private readonly IGoogleSheetsService _googleSheetsService;
         private readonly ApplicationDbContext _dbContext;
         private readonly IEmailService _emailService;
-        private readonly ISurveyManager _surveyManager;
+        private readonly IGoogleSheetsService _googleSheetsService;
         private readonly IPublishSurveyManager _publishSurveyManager;
+        private readonly ISurveyManager _surveyManager;
 
-        public PollController(IGoogleSheetsService googleSheetsService, ApplicationDbContext dbContext, IEmailService emailService, ISurveyManager surveyManager, IPublishSurveyManager publishSurveyManager)
+        public PollController(IGoogleSheetsService googleSheetsService, ApplicationDbContext dbContext,
+            IEmailService emailService, ISurveyManager surveyManager, IPublishSurveyManager publishSurveyManager)
         {
             _googleSheetsService = googleSheetsService;
             _dbContext = dbContext;
@@ -35,12 +36,13 @@ namespace Web.Controllers
         [HttpGet]
         public ActionResult Pass(Guid id)
         {
-            var publishSurvey = _dbContext.PublishSurveys.Include(s => s.Survey).FirstOrDefault(s => s.Link == id.ToString());
+            var publishSurvey =
+                _dbContext.PublishSurveys.Include(s => s.Survey).FirstOrDefault(s => s.Link == id.ToString());
 
             if (publishSurvey == null)
-            {
                 return HttpNotFound();
-            }
+
+            ViewBag.Title = publishSurvey.Survey.Name;
 
             var surveyId = publishSurvey.SurveyId;
 
@@ -58,8 +60,8 @@ namespace Web.Controllers
             model.ThanksText = survey.Thanks;
             model.Banner = survey.Banner;
 
-            model.AboutYouBefore = survey.Respondents.FirstOrDefault(x => !x.IsAfterSurvey);
-            model.AboutYouAfter = survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey);
+            model.AboutYouBefore = Mapper.Map<RespondentModel>(survey.Respondents.FirstOrDefault(x => !x.IsAfterSurvey));
+            model.AboutYouAfter = Mapper.Map<RespondentModel>(survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey));
 
             model.Items = survey.RelationshipItems?.OrderBy(x => x.OrderId).ToList();
             model.Companies = new List<Companies>();
@@ -70,16 +72,18 @@ namespace Web.Controllers
                 var file = _dbContext.SurveyFiles.Find(fileId);
 
                 if (file == null)
-                    model.Companies.Add(new Companies() { RelationshipId = item.Id, Names = new List<string>() });
+                {
+                    model.Companies.Add(new Companies {RelationshipId = item.Id, Names = new List<string>()});
+                }
                 else
                 {
                     var error = "";
-                    var _companies = new Companies()
+                    var _companies = new Companies
                     {
                         RelationshipId = item.Id,
                         RelationshipName = item.Name,
                         Names = _googleSheetsService.GetCompanies(file.Link, ref error),
-                        Error = !String.IsNullOrEmpty(error) ? String.Format(error, file.Name, file.Link) : String.Empty
+                        Error = !string.IsNullOrEmpty(error) ? string.Format(error, file.Name, file.Link) : string.Empty
                     };
                     if (item.SortNodeList)
                         _companies.Names = _companies.Names.OrderBy(x => x).ToList();
@@ -90,14 +94,19 @@ namespace Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult Pass(PreviewView previewView)
+        {
+            var lol = Request;
+            return RedirectToAction("Index", "Home");
+        }
+
         [HttpGet]
         public async Task<ActionResult> Publish(int id)
         {
             var survey = await _dbContext.Surveys.FindAsync(id);
             if (survey == null)
-            {
                 return HttpNotFound();
-            }
 
             ViewBag.SurveyTitle = survey.Name;
 
@@ -114,11 +123,10 @@ namespace Web.Controllers
         public async Task<ActionResult> Submit(PublishView publish)
         {
             if (publish.Subject == null || publish.Message == null || publish.SurveyId < 1)
-            {
                 return HttpNotFound();
-            }
 
-            var survey = _dbContext.Surveys.Where(s => s.Id == publish.SurveyId).Include(s => s.SurveyFile).FirstOrDefault();
+            var survey =
+                _dbContext.Surveys.Where(s => s.Id == publish.SurveyId).Include(s => s.SurveyFile).FirstOrDefault();
 
             var error = "";
 
@@ -152,7 +160,6 @@ namespace Web.Controllers
                 }
 
                 submitView.Succeed.Add(model);
-
             }
 
             await _surveyManager.Publish(survey.Id);

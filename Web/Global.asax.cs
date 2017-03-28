@@ -26,7 +26,7 @@ namespace Web
         protected void Application_Start()
         {
             var config = GlobalConfiguration.Configuration;
-            var container = InitializeIoC(config);
+            var container = InitializeIoC();
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
@@ -38,14 +38,7 @@ namespace Web
             InitializeMapper();
         }
 
-        protected IContainer InitializeApiIoC()
-        {
-            var builder = new ContainerBuilder();
-
-            return builder.Build();
-        }
-
-        protected IContainer InitializeIoC(HttpConfiguration httpConfiguration)
+        protected IContainer InitializeIoC()
         {
             var builder = new ContainerBuilder();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);

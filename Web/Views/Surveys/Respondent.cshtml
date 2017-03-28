@@ -116,7 +116,7 @@
             $(btn).parents('tr').remove();
         }
         function addAnswerRow(btn) {
-            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answer.Text" class="form-control" /></td><td><input type="text" name="Answer.Value" class="form-control" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answer.Default" /></td><td class="text-right"><a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
+            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answer.Text" class="form-control" /></td><td><input type="text" name="Answer.Value" class="form-control" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answer.IsDefault" /></td><td class="text-right"><a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
         }
         function addRowsRow(btn) {
             $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control" ></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));

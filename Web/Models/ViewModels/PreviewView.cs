@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Web.Data;
+using Web.Models.DTO;
 
 namespace Web.Models.ViewModels
 {
@@ -18,8 +19,8 @@ namespace Web.Models.ViewModels
         public string ThanksText { get; set; }
         
         //after start & before finish
-        public Respondent AboutYouBefore { get; set; }
-        public Respondent AboutYouAfter { get; set; }
+        public RespondentModel AboutYouBefore { get; set; }
+        public RespondentModel AboutYouAfter { get; set; }
 
         //relationships
         public List<RelationshipItem> Items { get; set; }

@@ -1,99 +1,95 @@
-﻿@model IEnumerable<Web.Data.Question>
+﻿@model List<Web.Models.DTO.QuestionModel>
 
 @if (Model.Any())
 {
-    foreach (var item in Model.OrderBy(x => x.OrderId))
+    for (int j = 0; j < Model.Count; j++)
     {
         <hr class="question" />
-        if (!string.IsNullOrEmpty(item.Introducing))
+        if (!string.IsNullOrEmpty(Model[j].Introducing))
         {
             <div class="form-group question">
-                <div class="col-md-12">@Html.Raw(item.Introducing)</div>
+                <div class="col-md-12">@Html.Raw(Model[j].Introducing)</div>
             </div>
         }
         <div class="form-group question">
             <div class="col-md-12">
                 <b>
-                    <span class="order-id">@item.OrderId.@(item.IsCompulsory ? " *" : "")</span> @Html.Raw(item.Text)
+                    <span class="order-id">@Model[j].OrderId.@(Model[j].IsCompulsory ? " *" : "")</span> @Html.Raw(Model[j].Text)
                 </b>
             </div>
             <div class="col-md-12">
-                @if (item.QuestionFormat.Code == "text")
+                @Html.Hidden($"{ViewData["base"]}.QuestionAnswers[{j}].QuestionId", Model[j].Id)
+                @if (Model[j].QuestionFormat.Code == "text")
+                {
+                    if (Model[j].TextRowsCount > 1)
                     {
-                        if (item.TextRowsCount > 1)
-                        {
-                        <textarea name="q-@item.Id" rows="@item.TextRowsCount" class="form-control @(item.IsCompulsory ? "required" : "")"  ></textarea>
+                        @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}", @rows = Model[j].TextRowsCount })
+                        @*<textarea name="q-@Model[j].Id" rows="@Model[j].TextRowsCount" class="form-control @(Model[j].IsCompulsory ? "required" : "")"></textarea>*@
                     }
                     else
                     {
-                        <input type="text" name="q-@item.Id" class="form-control" @(item.IsCompulsory ? "required" : "") />
+                        @Html.TextBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
+
+                        @*<input type="text" name="@(ViewData["base"]).QuestionAnswers[@j].Values[0]" value="this is text" class="form-control" @(Model[j].IsCompulsory ? "required" : "") />*@
                     }
                 }
-                else if (item.QuestionFormat.Code == "choice_across")
+                else if (Model[j].QuestionFormat.Code == "choice_across")
                 {
-                    if (item.IsMultiple.HasValue && item.IsMultiple.Value == true)
+
+                    for (int k = 0; k < Model[j].Answers.Count; k++)
                     {
-                        foreach (var answer in item.Answers)
-                        {
-                            <label>
-                                @answer.Text <br />
-                                <input type="checkbox" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />
-                            </label>
-                        }
+
+                        <label>
+                            @Model[j].Answers[k].Text <br />
+                            @if (Model[j].IsMultiple.HasValue && Model[j].IsMultiple.Value)
+                            {
+                                <input type="checkbox" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "") />
+                                @*@Html.CheckBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]", Model[j].Answers[k].IsDefault, new { value = Model[j].Answers[k].Value })*@
+                            }
+                            else
+                            {
+                                @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                @*<input type="radio" name="q-@Model[j].Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />*@
+                            }
+                        </label>
                     }
-                    else
+
+                    if (Model[j].IsAnnotation.HasValue && Model[j].IsAnnotation.Value)
                     {
-                        foreach (var answer in item.Answers)
-                        {
-                            <label>
-                                @answer.Text <br />
-                                <input type="radio" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
-                            </label>
-                        }
-                    }
-                    if (item.IsAnnotation.HasValue && item.IsAnnotation.Value)
-                    {
-                        <textarea name="qa-@item.Id" rows="2" class="form-control @(item.IsCompulsory ? "required" : "")"></textarea>
+                        @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Anotation", null, new { rows = 2, @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
+                        @*<textarea name="qa-@Model[j].Id" rows="2" class="form-control @(Model[j].IsCompulsory ? "required" : "")"></textarea>*@
                     }
                 }
-                else if (item.QuestionFormat.Code == "choice_down")
+                else if (Model[j].QuestionFormat.Code == "choice_down")
                 {
-                    if (item.IsMultiple.HasValue && item.IsMultiple.Value == true)
+                    for (int k = 0; k < Model[j].Answers.Count; k++)
                     {
-                        foreach (var answer in item.Answers)
-                        {
-                            <label>
-                                <input type="checkbox" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
-                                @answer.Text
-                            </label><br />
-                        }
-                    }
-                    else
-                    {
-                        foreach (var answer in item.Answers)
-                        {
-                            <label>
-                                <input type="radio" name="q-@item.Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "")/>
-                                @answer.Text
-                            </label><br />
-                        }
+                        <label>
+                            @if (Model[j].IsMultiple.HasValue && Model[j].IsMultiple.Value)
+                            {
+                                @*@Html.CheckBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]", Model[j].Answers[k].IsDefault, new { value = Model[j].Answers[k].Value })*@
+                                <input type="checkbox" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault? "checked" : "") />
+                            }
+                            else
+                            {
+                                @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                @*<input type="radio" name="q-@Model[j].Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />*@
+                            }
+                            @*@answer.Text*@
+                            @Model[j].Answers[k].Text
+                        </label><br />
                     }
                 }
-                else if (item.QuestionFormat.Code == "drop_down")
+                else if (Model[j].QuestionFormat.Code == "drop_down")
                 {
-                    <select name="q-@item.Id" class="form-control" @(item.IsCompulsory ? "required" : "")>
-                        @foreach (var answer in item.Answers)
-                        {
-                            <option value="@answer.Value" @(answer.IsDefault ? "selected='selected'" : "")>@answer.Text</option>
-                        }
-                    </select>
+                    @Html.DropDownList($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", new SelectList(Model[j].Answers, "Value", "Text", Model[j].Answers.Any(t => t.IsDefault) ? Model[j].Answers.FirstOrDefault(t => t.IsDefault).Value : null), new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
                 }
-                else if (item.QuestionFormat.Code == "matrix")
+                else if (Model[j].QuestionFormat.Code == "matrix")
                 {
                     <table>
                         <tr>
                             <th></th>
-                            @foreach (var answer in item.Answers)
+                            @foreach (var answer in Model[j].Answers)
                             {
                                 <th>
                                     @answer.Text
@@ -101,33 +97,37 @@
                             }
                         </tr>
                         @{
-                            var rows = item.Rows.Split(',');
+                            var rows = Model[j].Rows.Split(',');
                         }
                         @for (int i = 0; i < rows.Length; i++)
                         {
                             <tr>
                                 <td>@rows[i]</td>
-                                @foreach (var col in item.Answers)
+                                @for (int k = 0; k < Model[j].Answers.Count; k++)
                                 {
                                     <td>
-                                        <input type="radio" name="q-@(item.Id)=a-@i" value="@col.Value" @(col.IsDefault ? "checked" : "")/>
+                                        @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{i}]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                        @*<input type="radio" name="q-@(Model[j].Id)=a-@i" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "")/>*@
                                     </td>
                                 }
                             </tr>
                         }
                     </table>
-                }
-                else if (item.QuestionFormat.Code == "slider")
-                {
-                    <div class="col-xs-2">@item.TextMin</div>
-                    <div class="col-xs-3">
-                        <div id="slider-@item.Id" data-slider-min="@item.ValueMin" data-slider-max="@item.ValueMax" data-slider-step="@(item.Resolution == 0 ? 1 : item.Resolution)" data-slider-tooltip="show"
-                                @((item.IsShowValue.HasValue && item.IsShowValue.Value) ? "" : "data-slider-tooltip='hide'")></div>
-                    </div>
-                    <div class="col-xs-2">@item.TextMax</div>
-                    <div class="col-xs-5">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            }
+                            else if (Model[j].QuestionFormat.Code == "slider")
+                            {
+                                <div class="row">
+                                    @Html.Hidden($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].ValueMax)
+                                    <div class="col-xs-2">@Model[j].TextMin</div>
+                                    <div class="col-xs-3">
+                                        <div name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Slider")" data-slider-value="@Model[j].ValueMax" data-slider-min="@Model[j].ValueMin" data-slider-max="@Model[j].ValueMax" data-slider-step="@(Model[j].Resolution == 0 ? 1 : Model[j].Resolution)" data-slider-tooltip="show"
+                                             @((Model[j].IsShowValue.HasValue && Model[j].IsShowValue.Value) ? "" : "data-slider-tooltip='hide'")></div>
+                                    </div>
+                                    <div class="col-xs-2">@Model[j].TextMax</div>
+                                    <div class="col-xs-5">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                </div>
                             }
             </div>
         </div>
-        }
-    }
+                                }
+                            }

@@ -296,6 +296,9 @@
     <Compile Include="Data\Language.cs" />
     <Compile Include="Data\Survey.cs" />
     <Compile Include="Data\Token.cs" />
+    <Compile Include="Data\UserAnswer.cs" />
+    <Compile Include="Data\UserQuestionAnswer.cs" />
+    <Compile Include="Data\UserQuestionAnswerValue.cs" />
     <Compile Include="Filters\ApiAuthorizeAttribute.cs" />
     <Compile Include="Filters\InvalidModelStateFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -416,15 +419,28 @@
     <Compile Include="Migrations\201703071338110_Passed-Property.Designer.cs">
       <DependentUpon>201703071338110_Passed-Property.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201703141630084_UserAnswer.cs" />
+    <Compile Include="Migrations\201703141630084_UserAnswer.Designer.cs">
+      <DependentUpon>201703141630084_UserAnswer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DTO\AnswerModel.cs" />
     <Compile Include="Models\DTO\PublishSurveyModel.cs" />
+    <Compile Include="Models\DTO\QuestionAnswerModel.cs" />
+    <Compile Include="Models\DTO\QuestionFormatModel.cs" />
+    <Compile Include="Models\DTO\QuestionModel.cs" />
+    <Compile Include="Models\DTO\RespondentModel.cs" />
     <Compile Include="Models\DTO\SurveyFileModel.cs" />
     <Compile Include="Models\DTO\SurveyModel.cs" />
     <Compile Include="Models\DTO\TokenModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MapperProfiles\AnswerProfile.cs" />
     <Compile Include="Models\MapperProfiles\PublishSurveyProfile.cs" />
+    <Compile Include="Models\MapperProfiles\QuestionFormatProfile.cs" />
+    <Compile Include="Models\MapperProfiles\QuestionProfile.cs" />
+    <Compile Include="Models\MapperProfiles\RespondentProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyFileProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyProfile.cs" />
     <Compile Include="Models\MapperProfiles\TokenProfile.cs" />
@@ -992,6 +1008,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201703071338110_Passed-Property.resx">
       <DependentUpon>201703071338110_Passed-Property.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201703141630084_UserAnswer.resx">
+      <DependentUpon>201703141630084_UserAnswer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

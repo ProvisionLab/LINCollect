@@ -108,7 +108,7 @@
                             <tr>
                                 <td><input type="text" name="Answer.Text" value="@item.Text" class="form-control" /></td>
                                 <td><input type="text" name="Answer.Value" value="@item.Value" class="form-control" /></td>
-                                <td><input type="checkbox" @(item.IsDefault ? "checked" : "") onchange="changeCb(this);" value="@item.Value" name="Answer.Default" /></td>
+                                <td><input type="checkbox" @(item.IsDefault ? "checked" : "") onchange="changeCb(this);" value="@item.Value" name="Answer.IsDefault" /></td>
                                 <td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td>
                             </tr>
                         }

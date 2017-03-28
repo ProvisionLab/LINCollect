@@ -10,7 +10,9 @@ using System.Linq;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
+using AutoMapper;
 using Web.Models;
+using Web.Models.DTO;
 using Web.Models.ViewModels;
 using Web.Services.Implementations;
 using Web.Services.Interfaces;
@@ -44,8 +46,8 @@ namespace Web.Controllers
             model.ThanksText = survey.Thanks;
             model.Banner = survey.Banner;
 
-            model.AboutYouBefore = survey.Respondents.FirstOrDefault(x => !x.IsAfterSurvey);
-            model.AboutYouAfter = survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey);
+            model.AboutYouBefore = Mapper.Map<RespondentModel>(survey.Respondents.FirstOrDefault(x => !x.IsAfterSurvey));
+            model.AboutYouAfter = Mapper.Map<RespondentModel>(survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey));
 
             model.Items = survey.RelationshipItems?.OrderBy(x => x.OrderId).ToList();
             model.Companies = new List<Companies>();
