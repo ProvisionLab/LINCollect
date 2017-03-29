@@ -6,7 +6,7 @@
 @if (region == "Html")
 {
     <h3 class="font-green-haze">Survey - Preview</h3>
-    foreach (var item in Model.Companies.Where(x => !string.IsNullOrEmpty(x.Error)))
+    foreach (var item in Model.Items.Select(c => c.Companies).Where(x => !string.IsNullOrEmpty(x.Error)))
     {
         <div class="col-xs-12">
             <p class="text-danger"><b>@item.RelationshipName:</b> @Html.Raw(item.Error)</p>
@@ -71,46 +71,51 @@
                     </div>
                 </div>
             }
-            @foreach (var item in Model.Items)
+            @for (int i = 0; i < Model.Items.Count; i++)
                 {
-                <div class="tab-pane" id="tabRelation@(item.Id)">
+                <div class="tab-pane" id="tabRelation@(Model.Items[i].Id)">
                     <input type="hidden" name="canNext" value="0" />
                     <div class="row col-xs-12">
-                        @if (!string.IsNullOrEmpty(item.GeneratorName))
+                        @if (!string.IsNullOrEmpty(Model.Items[i].GeneratorName))
                         {
                             <div class="col-xs-12">
-                                @Html.Raw(item.GeneratorName)
+                                @Html.Raw(Model.Items[i].GeneratorName)
                             </div>
                         }
                         <div class="col-xs-6">
                             <div class="well">
                                 <div>
-                                    @if (item.UseDDSearch)
+                                    @if (Model.Items[i].UseDDSearch)
                                     {
                                         <div class="pull-right">
                                             <span>Search:</span>
-                                            <input type="text" class="form-control-sm search-companies" data-id="@item.Id" />
-                                            <button class="btn purple" onclick="resetSearch()">Reset</button>
+                                            <input type="text" class="form-control-sm search-companies" data-id="@Model.Items[i].Id" />
+                                            <button type="button" class="btn purple" onclick="resetSearch()">Reset</button>
                                         </div>
                                     }
                                     <b>Companies</b>
                                     <hr />
                                 </div>
-                                <div class="left-companies-@(item.Id)">
-                                    @if (!string.IsNullOrEmpty(Model.Companies.SingleOrDefault(x => x.RelationshipId == item.Id).Error))
+                                <div class="left-companies-@(Model.Items[i].Id)">
+                                    @if (!string.IsNullOrEmpty(Model.Items[i].Companies.Error))
                                     {
-                                        <div class="text-danger">@Html.Raw(Model.Companies.SingleOrDefault(x => x.RelationshipId == item.Id).Error)</div>
+                                        <div class="text-danger">@Html.Raw(Model.Items[i].Companies.Error)</div>
                                     }
-                                    @foreach (var c in Model.Companies.SingleOrDefault(x => x.RelationshipId == item.Id).Names)
+
+                                    @for (int k = 0; k < Model.Items[i].Companies.Names.Count; k++)
                                     {
-                                        <div class="company-prew" style="cursor:pointer" onclick="CompanyClick(this, @item.Id)"><i class="fa fa-plus-circle"></i><i class="fa fa-minus-circle hide"></i> @c</div>
+                                        <div class="company-prew" style="cursor: pointer" onclick="CompanyClick(this, @Model.Items[i].Id, '@($"Items[{i}].Companies.Names[{k}].Checked")')">
+                                            @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Checked)
+                                            <i class="fa fa-plus-circle"></i>
+                                            <i class="fa fa-minus-circle hide"></i> @Model.Items[i].Companies.Names[k].Name
+                                        </div>
                                     }
                                 </div>
-                                @if (item.AllowSelectAllNodes)
+                                @if (Model.Items[i].AllowSelectAllNodes)
                                 {
                                     <div>
                                         <hr />
-                                        <div class="company-prew" style="cursor:pointer" onclick="AllCompanyClick(@item.Id, 1)"><i class="fa fa-minus-circle"></i> Add all</div>
+                                        <div class="company-prew" style="cursor:pointer" onclick="AllCompanyClick(@Model.Items[i].Id, 1)"><i class="fa fa-minus-circle"></i> Add all</div>
                                     </div>
                                 }
                             </div>
@@ -118,22 +123,22 @@
                         <div class="col-xs-6">
                             <div class="well">
                                 <div>
-                                    @if (item.AddNodes)
+                                    @if (Model.Items[i].AddNodes)
                                     {
                                         <div class="pull-right">
-                                            <input type="text" class="form-control-sm" id="add-node-@item.Id" />
-                                            <button class="btn purple" onclick="AddNode(@(item.AddNodes ? 1 : 0), @(item.HideAddedNodes ? 1 : 0), @item.Id)">Add</button>
+                                            <input type="text" class="form-control-sm" id="add-node-@Model.Items[i].Id" />
+                                            <button type="button" class="btn purple" onclick="AddNode(@(Model.Items[i].AddNodes ? 1 : 0), @(Model.Items[i].HideAddedNodes ? 1 : 0), @Model.Items[i].Id)">Add</button>
                                         </div>
                                     }
                                     <b>Selection</b>
                                     <hr />
                                 </div>
-                                <div class="right-companies-@(item.Id)"></div>
-                                @if (item.AllowSelectAllNodes)
+                                <div class="right-companies-@(Model.Items[i].Id)"></div>
+                                @if (Model.Items[i].AllowSelectAllNodes)
                                 {
                                     <div>
                                         <hr />
-                                        <div class="company-prew" style="cursor:pointer" onclick="AllCompanyClick(@item.Id, 0)"><i class="fa fa-plus-circle"></i> Remove all</div>
+                                        <div class="company-prew" style="cursor:pointer" onclick="AllCompanyClick(@Model.Items[i].Id, 0)"><i class="fa fa-plus-circle"></i> Remove all</div>
                                     </div>
                                 }
                             </div>
@@ -141,27 +146,29 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 qdiv">
-                            @Html.Partial("RQuestions", item.Questions)
+                            @Html.Hidden($"Items[{i}].Id", Model.Items[i].Id)
+                            @Html.Partial("RQuestions", Model.Items[i].Questions, new ViewDataDictionary { { "base", $"Items[{i}]" } })
                         </div>
                     </div>
-                    @if (item.AddNodes)
+                    @if (Model.Items[i].AddNodes)
                     {
-                        <div class="modal fade" id="addNodeModal-@item.Id" tabindex="-1" role="dialog" aria-labelledby="addNodeLabel-@item.Id">
+                        <div class="modal fade" id="addNodeModal-@Model.Items[i].Id" tabindex="-1" role="dialog" aria-labelledby="addNodeLabel-@Model.Items[i].Id">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="addNodeLabel-@item.Id">Please answer the following questions about: <span id="name-@item.Id"></span></h4>
+                                        <h4 class="modal-title" id="addNodeLabel-@Model.Items[i].Id">Please answer the following questions about: <span id="name-@Model.Items[i].Id"></span></h4>
                                     </div>
                                     <div class="modal-body">
-                                        @if (Model.AboutYouAfter != null)
+                                        @if (Model.Items[i].NodeQuestions.Any())
                                         {
-                                            @Html.Partial("NQuestions", item.NodeQuestions)
+                                            <div id="NQResult" style="display: none"></div>
+                                            @Html.Partial("NQuestions", Model.Items[i].NodeQuestions, new ViewDataDictionary{{"base", $"Items[{i}]"}, {"id", Model.Items[i].Id} })
                                         }
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="RemoveNode(@item.Id)">Cancel</button>
-                                        <button type="button" class="btn purple" data-dismiss="modal">Save</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="RemoveNode(@Model.Items[i].Id)">Cancel</button>
+                                        <button type="button" class="btn purple" data-dismiss="modal" onclick="SaveNode(@Model.Items[i].Id, @i)">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -192,7 +199,7 @@
             </ul>
         </div>
     </div>
-        @*</form>*@
+    @*</form>*@
 
 }
 
@@ -201,15 +208,17 @@
     @Scripts.Render("~/bundles/slider")
 
     <script>
-        function CompanyClick(el, id) {
+        function CompanyClick(el, id, name) {
             if($(el).parent().hasClass('left-companies-' + id)) {
                 $(el).find('.fa-plus-circle').addClass('hide');
                 $(el).find('.fa-minus-circle').removeClass('hide');
                 $('.right-companies-' + id).append($(el));
+                $(el).find('input[name="' + name + '"]').first().val(true);
             } else {
                 $(el).find('.fa-plus-circle').removeClass('hide');
                 $(el).find('.fa-minus-circle').addClass('hide');
                 $('.left-companies-' + id).append($(el));
+                $(el).find('input[name="' + name + '"]').first().val(false);
             }
         };
         function AllCompanyClick(id, action) {
@@ -229,10 +238,10 @@
         };
         function AddNode(isQ, isH, id) {
             var node = $('#add-node-' + id).val();
-            if(node.trim().length > 0)
-            {
+            if(node.trim().length > 0) {
+                var companyName = node.trim().split(' ')[0];
                 //if(!isH) {
-                $('.right-companies-' + id).append($('<div class="company-prew" data-name=' + node.trim().split(' ')[0] + ' style="cursor:pointer" onclick="CompanyClick(this, ' + id + ')"><i class="fa fa-plus-circle hide"></i><i class="fa fa-minus-circle"></i> ' + node + '</div>'));
+                $('.right-companies-' + id).append($('<div class="company-prew" data-name=' + companyName + ' style="cursor:pointer" onclick="CompanyClick(this, ' + id + ')"><i class="fa fa-plus-circle hide"></i><i class="fa fa-minus-circle"></i> ' + node + '</div>'));
                 //}
 
                 if(isQ == 1) {
@@ -240,12 +249,48 @@
                     $('#addNodeModal-' + id).on('shown.bs.modal', function () {
                         setTimeout(() => ($('.modal-body div[id*="slider"]').slider()), 1000);
                     });
-                    $('#name-' + id).attr('data-find', node.trim().split(' ')[0]);
+                    $('input[name*="NQuestionAnswers[*"]').filter('[name*=".CompanyName"]').val(companyName);
+                    $('#name-' + id).attr('data-find', companyName);
                     $('#name-' + id).html(node);
                 }
             }
             $('#add-node-' + id).val('');
         };
+
+        function SaveNode(id, index) {
+            var answerIndex = parseInt($('#userCompanyNumber-' + id).val());
+
+            var fields = $('[name*="Items[' + index + '].NQuestionAnswers"]');
+
+            var result = [];
+            fields.each(function(i, e) {
+                var input = $(e).attr('name');
+
+                var charIndex = input.indexOf('*');
+
+                var number = parseInt(input.charAt(charIndex + 1)) + answerIndex;
+                var resName = input.replaceAt(charIndex, number.toString());
+
+                var item = $('<input>').attr({
+                    type: 'hidden',
+                    name: resName,
+                    value: $(e).val()
+                });
+                result.push(item);
+                console.log(item);
+            });
+            $.each(result,
+                function(i,e) {
+                    $("#NQResult").append(e);
+                });
+            console.log(result);
+            $('#userCompanyNumber-' + id).val(answerIndex + fields.not('[name*=".QuestionId"]').not('[name*=".CompanyName"]').length);
+
+        }
+        String.prototype.replaceAt=function(index, character) {
+            return this.substr(0, index) + character + this.substr(index+character.length+1);
+        }
+
         function RemoveNode(id) {
             $('.right-companies-' + id + ' .company-prew[data-name="' + $('#name-' + id).attr('data-find') + '"]').remove();
         };

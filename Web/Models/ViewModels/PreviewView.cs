@@ -23,16 +23,21 @@ namespace Web.Models.ViewModels
         public RespondentModel AboutYouAfter { get; set; }
 
         //relationships
-        public List<RelationshipItem> Items { get; set; }
+        public List<RelationshipItemModel> Items { get; set; }
 
-        public List<Companies> Companies { get; set; }
     }
 
     public class Companies
     {
         public int RelationshipId { get; set; }
         public string RelationshipName { get; set; }
-        public List<string> Names {get;set;}
+        public List<CompanyItem> Names {get;set;}
         public string Error { get; set; }
+    }
+
+    public class CompanyItem
+    {
+        public string Name;
+        public bool Checked;
     }
 }

@@ -9,7 +9,7 @@ namespace Web.Models.DTO
     {
         public int QuestionId { get; set; }
         public List<string> Values { get; set; }
-
         public string Anotation { get; set; }
+        public string CompanyName { get; set; }
     }
 }

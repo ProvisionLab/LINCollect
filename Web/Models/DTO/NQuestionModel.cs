@@ -1,47 +1,20 @@
-﻿
+﻿using System.Collections.Generic;
 
-namespace Web.Data
+namespace Web.Models.DTO
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using Interfaces;
-
-    public partial class NQuestion: IEntity
+    public class NQuestionModel
     {
-        public NQuestion() {
-            Answers = new HashSet<NAnswer>();
-        }
-
         public int Id { get; set; }
-
-        [Required]
         public int RelationshipItemId { get; set; }
-
-        public DateTime CreateDateUtc { get; set; }
-        public DateTime UpdateDateUtc { get; set; }
-
         public int OrderId { get; set; }
-
         public bool IsCompulsory { get; set; }
-
         public bool IsAfterSurvey { get; set; }
-
         public string Introducing { get; set; }
-
-        [Required]
-        [StringLength(256)]
         public string ShortName { get; set; }
-
-        [Required]
         public string Text { get; set; }
-
-        [Required]
         public int QuestionFormatId { get; set; }
-
-        public virtual QuestionFormat QuestionFormat { get; set; }
-
-        public virtual ICollection<NAnswer> Answers { get; set; }
+        public virtual QuestionFormatModel QuestionFormat { get; set; }
+        public virtual List<NAnswerModel> Answers { get; set; }
 
         #region Format options
 

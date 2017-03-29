@@ -49,8 +49,7 @@ namespace Web.Controllers
             model.AboutYouBefore = Mapper.Map<RespondentModel>(survey.Respondents.FirstOrDefault(x => !x.IsAfterSurvey));
             model.AboutYouAfter = Mapper.Map<RespondentModel>(survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey));
 
-            model.Items = survey.RelationshipItems?.OrderBy(x => x.OrderId).ToList();
-            model.Companies = new List<Companies>();
+            model.Items = Mapper.Map<List<RelationshipItemModel>>(survey.RelationshipItems?.OrderBy(x => x.OrderId).ToList());
 
             foreach (var item in model.Items)
             {
@@ -58,21 +57,30 @@ namespace Web.Controllers
                 var file = _dbContext.SurveyFiles.Find(fileId);
 
                 if (file == null)
-                    model.Companies.Add(new Companies() { RelationshipId = item.Id, Names = new List<string>() });
+                {
+                    item.Companies = new Companies { RelationshipId = item.Id, Names = new List<CompanyItem>() };
+                }
                 else
                 {
+                    var companies = new List<CompanyItem>();
                     var error = "";
+
+                    foreach (var companyName in _googleSheetsService.GetCompanies(file.Link, ref error))
+                    {
+                        companies.Add(new CompanyItem { Name = companyName, Checked = false });
+                    }
+
                     var _companies = new Companies()
                     {
                         RelationshipId = item.Id,
                         RelationshipName = item.Name,
-                        Names = _googleSheetsService.GetCompanies(file.Link, ref error),
+                        Names = companies,
                         Error = !String.IsNullOrEmpty(error) ? String.Format(error, file.Name, file.Link) : String.Empty
                     };
                     if (item.SortNodeList)
-                        _companies.Names = _companies.Names.OrderBy(x => x).ToList();
+                        _companies.Names = _companies.Names.OrderBy(x => x.Name).ToList();
 
-                    model.Companies.Add(_companies);
+                    item.Companies = _companies;
                 }
             }
 
