@@ -30,4 +30,11 @@ namespace Web.Models.DTO
         public virtual List<QuestionAnswerModel> QuestionAnswers { get; set; }
         public virtual List<QuestionAnswerModel> NQuestionAnswers { get; set; }
     }
+    public class ResultRelationShipModel
+    {
+        public int Id { get; set; }
+        public Companies Companies { get; set; }
+        public virtual List<QuestionAnswerModel> QuestionAnswers { get; set; }
+        public virtual List<QuestionAnswerModel> NQuestionAnswers { get; set; }
+    }
 }

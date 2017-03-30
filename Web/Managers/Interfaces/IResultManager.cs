@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using Web.Data;
 using Web.Managers.Base.Interfaces;
 using Web.Models.DTO;
-using Web.Repositories.Base.Interfaces;
 
 namespace Web.Managers.Interfaces
 {
-    public interface IPublishSurveyManager: ICrudManager<PublishSurveyModel>
+    public interface IResultManager: ICrudManager<ResultModel>
     {
-        Task<PublishSurveyModel> GetByGuidAsync(Guid guid);
+        Task<int> InsertSection(ResultSectionModel item);
     }
 }

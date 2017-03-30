@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using Web.Managers.Base.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using Web.Data.Interfaces;
 
-namespace Web.Models.DTO
+namespace Web.Data
 {
-    public class QuestionAnswerModel : IModel
+    public class QuestionAnswer : IEntity
     {
+        [Key]
         public int Id { get; set; }
         public int QuestionId { get; set; }
         public int ResultSectionId { get; set; }
-        public ResultSectionModel ResultSection { get; set; }
-        public List<string> Values { get; set; }
+        public ResultSection ResultSection { get; set; }
         public string Anotation { get; set; }
         public string CompanyName { get; set; }
+        public List<QuestionAnswerValue> Values { get; set; }
     }
 }

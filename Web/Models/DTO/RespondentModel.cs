@@ -14,4 +14,10 @@ namespace Web.Models.DTO
         public virtual List<QuestionModel> Questions { get; set; }
         public virtual List<QuestionAnswerModel> QuestionAnswers { get; set; }
     }
+
+    public class ResultRespondentModel
+    {
+        public int Id { get; set; }
+        public List<QuestionAnswerModel> QuestionAnswers { get; set; }
+    }
 }

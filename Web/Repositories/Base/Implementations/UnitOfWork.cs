@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Web.Models;
 using Web.Repositories.Base.Interfaces;
 using Web.Repositories.Implementations;
@@ -13,6 +14,11 @@ namespace Web.Repositories.Base.Implementations
         private SurveyRepository _surveyRepository;
         private ITokenRepository _tokenRepository;
         private IPublishSurveyRepository _publishSurveyRepository;
+        private ResultRepository _resultRepository;
+        private IQuestionAnswerRepository _questionAnswerRepository;
+        private IResultSectionRepository _resultSectionRepository;
+        private ISectionRepository _sectionRepository;
+        private IQuestionAnswerValueRepository _questionAnswerValueRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -31,6 +37,21 @@ namespace Web.Repositories.Base.Implementations
         public IPublishSurveyRepository PublishSurveyRepository
             => _publishSurveyRepository ?? (_publishSurveyRepository = new PublishSurveyRepository(_context));
 
+        public IResultRepository ResultRepository
+            => _resultRepository ?? (_resultRepository = new ResultRepository(_context));
+
+        public IResultSectionRepository ResultSectionRepository
+            => _resultSectionRepository ?? (_resultSectionRepository = new ResultSectionRepository(_context));
+
+        public IQuestionAnswerRepository QuestionAnswerRepository
+            => _questionAnswerRepository ?? (_questionAnswerRepository = new QuestionAnswerRepository(_context));
+
+        public ISectionRepository SectionRepository
+            => _sectionRepository ?? (_sectionRepository = new SectionRepository(_context));
+
+        public IQuestionAnswerValueRepository QuestionAnswerValueRepository
+            => _questionAnswerValueRepository ?? (_questionAnswerValueRepository = new QuestionAnswerValueRepository(_context));
+
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();
@@ -44,7 +65,5 @@ namespace Web.Repositories.Base.Implementations
                 _context = null;
             }
         }
-
-        
     }
 }

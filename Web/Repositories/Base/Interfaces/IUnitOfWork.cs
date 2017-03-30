@@ -10,6 +10,11 @@ namespace Web.Repositories.Base.Interfaces
         ITokenRepository TokenRepository { get; }
         ISurveyFileRepository SurveyFileRepository { get; }
         IPublishSurveyRepository PublishSurveyRepository { get; }
+        IResultRepository ResultRepository { get; }
+        IQuestionAnswerRepository QuestionAnswerRepository { get; }
+        IResultSectionRepository ResultSectionRepository { get; }
+        ISectionRepository SectionRepository { get; }
+        IQuestionAnswerValueRepository QuestionAnswerValueRepository { get; }
         Task<int> SaveAsync();
     }
 }

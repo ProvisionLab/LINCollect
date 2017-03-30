@@ -51,10 +51,11 @@ namespace Web.Models
         public virtual DbSet<RelationshipItem> RelationshipItems { get; set; }
         public virtual DbSet<Token> Tokens { get; set; }
         public virtual DbSet<PublishSurvey> PublishSurveys { get; set; }
-        public virtual DbSet<UserAnswer> UserAnswers { get; set; }
-        public virtual DbSet<UserQuestionAnswer> UserQuestionAnswers{ get; set; }
-        public virtual DbSet<UserQuestionAnswerValue> UserQuestionAnswerValues { get; set; }
-
+        public virtual DbSet<Result> Results { get; set; }
+        public virtual DbSet<ResultSection> ResultSections { get; set; }
+        public virtual DbSet<Section> Sections { get; set; }
+        public virtual DbSet<QuestionAnswer> QuestionAnswers{ get; set; }
+        public virtual DbSet<QuestionAnswerValue> QuestionAnswerValues { get; set; }
     }
 
     public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
@@ -88,6 +89,21 @@ namespace Web.Models
                 new NodeSelection { Name = "Filtered", Code = "f" },
                 new NodeSelection { Name = "Automatic", Code = "a" }});
 
+            context.Sections.AddRange(new Section[]
+            {
+                new Section {Name = "Respondent"},
+                new Section {Name = "Relationship"},
+                new Section {Name = "Node"}
+            });
+
+            context.Users.Add(new ApplicationUser
+            {
+                Email = "sa@test.com",
+                PasswordHash = "AKyNK8+hqhxSup7h5AWLXn7dYpJoiAbmcBBUrh2Vk8Jhhje5iQvGE49uCu2AYgWgIw==",
+                SecurityStamp = "f399883a-17ef-46f8-8aec-9890ee3c05ab",
+                UserName = "sa@test.com",
+                LockoutEnabled = true
+            });
             context.SaveChanges();
 
             base.Seed(context);

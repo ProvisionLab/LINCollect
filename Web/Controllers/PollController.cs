@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
+using Web.Common;
 using Web.Managers.Interfaces;
 using Web.Models;
 using Web.Models.DTO;
@@ -21,16 +22,28 @@ namespace Web.Controllers
         private readonly IEmailService _emailService;
         private readonly IGoogleSheetsService _googleSheetsService;
         private readonly IPublishSurveyManager _publishSurveyManager;
+        private readonly IQuestionAnswerManager _questionAnswerManager;
+        private readonly IResultManager _resultManager;
+        private readonly ISectionManager _sectionManager;
         private readonly ISurveyManager _surveyManager;
 
-        public PollController(IGoogleSheetsService googleSheetsService, ApplicationDbContext dbContext,
-            IEmailService emailService, ISurveyManager surveyManager, IPublishSurveyManager publishSurveyManager)
+        public PollController(IGoogleSheetsService googleSheetsService,
+            ApplicationDbContext dbContext,
+            IEmailService emailService,
+            ISurveyManager surveyManager,
+            IPublishSurveyManager publishSurveyManager,
+            IQuestionAnswerManager questionAnswerManager,
+            IResultManager resultManager,
+            ISectionManager sectionManager)
         {
             _googleSheetsService = googleSheetsService;
             _dbContext = dbContext;
             _emailService = emailService;
             _surveyManager = surveyManager;
             _publishSurveyManager = publishSurveyManager;
+            _questionAnswerManager = questionAnswerManager;
+            _resultManager = resultManager;
+            _sectionManager = sectionManager;
         }
 
         [HttpGet]
@@ -39,7 +52,7 @@ namespace Web.Controllers
             var publishSurvey =
                 _dbContext.PublishSurveys.Include(s => s.Survey).FirstOrDefault(s => s.Link == id.ToString());
 
-            if (publishSurvey == null)
+            if (publishSurvey == null || publishSurvey.IsPassed)
                 return HttpNotFound();
 
             ViewBag.Title = publishSurvey.Survey.Name;
@@ -54,6 +67,7 @@ namespace Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             var model = new PreviewView();
+            model.UserLinkId = id;
             model.SurveyId = survey.Id;
             model.SurveyName = survey.Name;
             model.IntroductionText = survey.Introduction;
@@ -100,9 +114,83 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Pass(PreviewView previewView)
+        public async Task<ActionResult> Pass(PollResultView pollResult)
         {
-            var lol = Request;
+            var publishSurvey = await _publishSurveyManager.GetByGuidAsync(pollResult.UserLinkId);
+
+            if (publishSurvey == null)
+            {
+                return HttpNotFound();
+            }
+
+            var result = new ResultModel
+            {
+                PassDate = DateTime.Now,
+                PublishSurveyId = publishSurvey.SurveyId
+            };
+
+            var resultId = await _resultManager.InsertAsync(result);
+            var sectionType = await _sectionManager.GetAsync();
+
+            //Before
+            if (pollResult.AboutYouBefore != null && pollResult.AboutYouBefore.QuestionAnswers != null)
+            {
+                var sectionId = await _resultManager.InsertSection(
+                    new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Respondent).Id, SectionId = pollResult.AboutYouBefore.Id });
+
+                foreach (var questionAnswerModel in pollResult.AboutYouBefore.QuestionAnswers)
+                {
+                    questionAnswerModel.ResultSectionId = sectionId;
+                    await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                }
+            }
+            //After
+            if (pollResult.AboutYouAfter != null && pollResult.AboutYouAfter.QuestionAnswers != null)
+            {
+                var sectionId = await _resultManager.InsertSection(
+                   new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Respondent).Id, SectionId = pollResult.AboutYouBefore.Id });
+
+                foreach (var questionAnswerModel in pollResult.AboutYouAfter.QuestionAnswers)
+                {
+                    questionAnswerModel.ResultSectionId = sectionId;
+                    await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                }
+            }
+
+            //Relationships
+            foreach (var relationShip in pollResult.Items)
+            {
+                if (relationShip.QuestionAnswers != null)
+                {
+                    var sectionId = await _resultManager.InsertSection(
+                        new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Relationship).Id, SectionId = relationShip.Id });
+
+
+                    foreach (var questionAnswerModel in relationShip.QuestionAnswers)
+                    {
+                        questionAnswerModel.ResultSectionId = sectionId;
+                        await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                    }
+                }
+                if (relationShip.NQuestionAnswers != null)
+                {
+                    var sectionId = await _resultManager.InsertSection(
+                        new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Node).Id, SectionId = relationShip.Id });
+
+
+                    foreach (var questionAnswerModel in relationShip.NQuestionAnswers)
+                    {
+                        questionAnswerModel.ResultSectionId = sectionId;
+                        await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                    }
+                }
+            }
+
+            publishSurvey.IsPassed = true;
+            await _publishSurveyManager.UpdateAsync(publishSurvey);
+
+            //Save logic
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -148,6 +236,30 @@ namespace Web.Controllers
                 message.IsBodyHtml = true;
                 message.From = new MailAddress("lincollect@gmail.com", "LINCollect");
 
+                var publishGuid = Guid.NewGuid().ToString();
+
+                var pollUrl = $"{Request.Url.Scheme}{Uri.SchemeDelimiter}{Request.Url.Authority}/poll/pass/{publishGuid}";
+
+                if (message.Body.Contains("[link]"))
+                {
+                    message.Body = message.Body.Replace("[link]", $"{pollUrl}");
+                }
+                else if (message.Body.Contains("[link:"))
+                {
+                    var index = message.Body.IndexOf("[link:");
+                    var colIndex = message.Body.IndexOf(":", index);
+                    var bracketIndex = message.Body.IndexOf("]", colIndex);
+                    var linkTitle = message.Body.Substring(colIndex + 1, bracketIndex - colIndex - 1);
+
+                    message.Body = message.Body.Substring(0, index)
+                                   + $"<a href=\"{pollUrl}\">{linkTitle}</a>" +
+                                   message.Body.Substring(bracketIndex + 1);
+                }
+                else
+                {
+                    message.Body += pollUrl;
+                }
+
                 var sent = await _emailService.SendAsync(message);
 
                 var model = new PublishSurveyModel
@@ -160,7 +272,7 @@ namespace Web.Controllers
                 if (sent)
                 {
                     model.SurveyId = publish.SurveyId;
-                    model.Link = Guid.NewGuid().ToString();
+                    model.Link = publishGuid;
                     await _publishSurveyManager.InsertAsync(model);
                 }
 

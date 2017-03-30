@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Web.Data;
 using Web.Models;
@@ -13,6 +14,11 @@ namespace Web.Repositories.Implementations
     {
         public PublishSurveyRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public Task<PublishSurvey> GetByGuid(Guid guid)
+        {
+            return Task.FromResult(DbSet.FirstOrDefault(i => i.Link == guid.ToString()));
         }
     }
 }

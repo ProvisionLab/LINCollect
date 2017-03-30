@@ -53,10 +53,18 @@
                 Download
             </td>
             <td class="text-right">
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @if (item.SurveyStatusId == 1)
+                {
+                    @Html.ActionLink("Edit", "Edit", new {id = item.Id})
+                }
+                else
+                {
+                    @Html.Raw("Edit")
+                }
+                |
                 <a href="#" onclick="ClearSurveyData(@item.Id, '@item.Name')">Clear</a> |
                 <a href="#" onclick="deleteSurvay(@item.Id, '@item.Name')">Delete</a> |
-                @Html.ActionLink("Clone", "Clone", new { id = item.Id })
+                @Html.ActionLink("Clone", "Clone", new {id = item.Id})
             </td>
         </tr>
     }

@@ -8,8 +8,8 @@ using Web.Repositories.Base.Interfaces;
 
 namespace Web.Repositories.Interfaces
 {
-    public interface IPublishSurveyRepository: IRepository<PublishSurvey>
+    public interface ISectionRepository: IRepository<Section>
     {
-        Task<PublishSurvey> GetByGuid(Guid guid);
+        Task<Section> GetByNameAsync(string name);
     }
 }

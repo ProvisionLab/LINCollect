@@ -8,8 +8,10 @@
     <h3 class="font-green-haze">Survey - Preview</h3>
     foreach (var item in Model.Items.Select(c => c.Companies).Where(x => !string.IsNullOrEmpty(x.Error)))
     {
-        <div class="col-xs-12">
-            <p class="text-danger"><b>@item.RelationshipName:</b> @Html.Raw(item.Error)</p>
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="text-danger"><b>@item.RelationshipName:</b> @Html.Raw(item.Error)</p>
+            </div>
         </div>
     }
 
@@ -24,50 +26,58 @@
         </div>
     }
 
-    <div class="col-xs-12">
-        <h2 class="font-green-haze">@Model.SurveyName</h2>
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="font-green-haze">@Model.SurveyName</h2>
+        </div>
     </div>
-    @*<form id="saveData" method="post">*@
     <div id="rootwizard">
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="container">
-                    <ul>
-                        <li><a href="#tabStart" data-toggle="tab">Start</a></li>
-                        @if (Model.AboutYouBefore != null && Model.AboutYouBefore.Questions.Any())
-                        {
-                            <li><a href="#tabAbout" data-toggle="tab">About you</a></li>
-                        }
+                    <div class="row">
+                        <ul>
+                            <li><a href="#tabStart" data-toggle="tab">Start</a></li>
+                            @if (Model.AboutYouBefore != null && Model.AboutYouBefore.Questions.Any())
+                            {
+                                <li><a href="#tabAbout" data-toggle="tab">About you</a></li>
+                            }
 
-                        @foreach (var item in Model.Items)
-                        {
-                            <li>
-                                <a href="#tabRelation@(item.Id)" data-toggle="tab">
-                                    @item.Name
-                                </a>
-                            </li>
-                        }
+                            @foreach (var item in Model.Items)
+                            {
+                                <li>
+                                    <a href="#tabRelation@(item.Id)" data-toggle="tab">
+                                        @item.Name
+                                    </a>
+                                </li>
+                            }
 
-                        <li><a href="#tabFinish" data-toggle="tab">Finish</a></li>
-                    </ul>
+                            <li><a href="#tabFinish" data-toggle="tab">Finish</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="tab-content">
             <div class="tab-pane" id="tabStart">
-                <div class="col-xs-12">
-                    @Html.Raw(Model.IntroductionText)
+                <div class="row">
+                    <div class="col-xs-12">
+                        @Html.HiddenFor(m => m.UserLinkId)
+                        @Html.Raw(Model.IntroductionText)
+                    </div>
                 </div>
             </div>
             @if (Model.AboutYouBefore != null && Model.AboutYouBefore.Questions.Any())
                 {
                 <div class="tab-pane" id="tabAbout">
-                    <div class="col-xs-12 qdiv">
-                        <h5 class="text-primary">Please answer the following questions about yourself:</h5>
-                        <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
-                        <br />
-                        @Html.HiddenFor(p => p.AboutYouBefore.Id)
-                        @Html.Partial("Questions", Model.AboutYouBefore.Questions, new ViewDataDictionary { { "base", "AboutYouBefore" } })
+                    <div class="row">
+                        <div class="col-xs-12 qdiv">
+                            <h5 class="text-primary">Please answer the following questions about yourself:</h5>
+                            <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
+                            <br />
+                            @Html.HiddenFor(p => p.AboutYouBefore.Id)
+                            @Html.Partial("Questions", Model.AboutYouBefore.Questions, new ViewDataDictionary { { "base", "AboutYouBefore" } })
+                        </div>
                     </div>
                 </div>
             }
@@ -75,7 +85,7 @@
                 {
                 <div class="tab-pane" id="tabRelation@(Model.Items[i].Id)">
                     <input type="hidden" name="canNext" value="0" />
-                    <div class="row col-xs-12">
+                    <div class="row">
                         @if (!string.IsNullOrEmpty(Model.Items[i].GeneratorName))
                         {
                             <div class="col-xs-12">
@@ -105,6 +115,7 @@
                                     @for (int k = 0; k < Model.Items[i].Companies.Names.Count; k++)
                                     {
                                         <div class="company-prew" style="cursor: pointer" onclick="CompanyClick(this, @Model.Items[i].Id, '@($"Items[{i}].Companies.Names[{k}].Checked")')">
+                                            @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Name)
                                             @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Checked)
                                             <i class="fa fa-plus-circle"></i>
                                             <i class="fa fa-minus-circle hide"></i> @Model.Items[i].Companies.Names[k].Name
@@ -163,7 +174,7 @@
                                         @if (Model.Items[i].NodeQuestions.Any())
                                         {
                                             <div id="NQResult" style="display: none"></div>
-                                            @Html.Partial("NQuestions", Model.Items[i].NodeQuestions, new ViewDataDictionary{{"base", $"Items[{i}]"}, {"id", Model.Items[i].Id} })
+                                            @Html.Partial("NQuestions", Model.Items[i].NodeQuestions, new ViewDataDictionary { { "base", $"Items[{i}]" }, { "id", Model.Items[i].Id } })
                                         }
                                     </div>
                                     <div class="modal-footer">
@@ -183,7 +194,7 @@
                         <h5 class="text-primary">Please answer the following questions about yourself:</h5>
                         <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
                         <br />
-                        @Html.Partial("Questions", Model.AboutYouAfter.Questions)
+                        @Html.Partial("Questions", Model.AboutYouAfter.Questions, new ViewDataDictionary { { "base", "AboutYouAfter" } })
                     </div>
                 }
                 <div class="col-xs-12 thanks-text" style="display:none;">
@@ -194,13 +205,10 @@
             <ul class="pager wizard">
                 <li class="previous"><a href="javascript:;" class="btn btn-primary blue ">Previous</a></li>
                 <li class="next"><a href="javascript:;" class="btn btn-primary blue ">Next</a></li>
-                <button type="submit">Submit</button>
-                <li class="finish"><a href="javascript:;" class="btn btn-primary blue ">Finish</a></li>
+                <li class="finish"><button type="button" onclick="form.submit()" class="btn btn-primary blue">Finish</button></li>
             </ul>
         </div>
     </div>
-    @*</form>*@
-
 }
 
 @if (region == "Scripts")

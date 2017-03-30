@@ -10,6 +10,7 @@ namespace Web.Models.ViewModels
     public class PreviewView
     {
         public int SurveyId { get; set; }
+        public Guid UserLinkId { get; set; }
         public string SurveyName { get; set; }
         public string Banner { get; set; }
 

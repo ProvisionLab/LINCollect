@@ -90,6 +90,15 @@ namespace Web.Repositories.Base.Implementations
             return Task.FromResult(DbSet.ToList().AsEnumerable());
         }
 
+        public virtual Task DetachAsync(TEntity entity)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                DbEntityEntry entry = DbContext.Entry(entity);
+
+                entry.State = EntityState.Detached;
+            });
+        }
         public void Dispose()
         {
             DbContext?.Dispose();

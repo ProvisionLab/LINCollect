@@ -56,7 +56,6 @@ namespace Web
             builder.RegisterType<SurveyRepository>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<SurveyFileRepository>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<TokenRepository>().AsImplementedInterfaces().InstancePerDependency();
-            //builder.RegisterType<PublishSurveyRepository>().AsImplementedInterfaces().InstancePerDependency();
 
             //Managers
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().InstancePerDependency();
@@ -64,6 +63,9 @@ namespace Web
             builder.RegisterType<TokenManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<SurveyManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<PublishSurveyManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<ResultManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<QuestionAnswerManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<SectionManager>().AsImplementedInterfaces().InstancePerDependency();
             
             return builder.Build();
         }

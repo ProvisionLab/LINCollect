@@ -12,6 +12,7 @@ namespace Web.Repositories.Base.Interfaces
         Task Update(TEntity entity);
         Task Delete(TEntity entity);
         Task Delete(int id);
+        Task DetachAsync(TEntity entity);
         Task<TEntity> Get(int id);
         Task<IEnumerable<TEntity>> GetAll();
 

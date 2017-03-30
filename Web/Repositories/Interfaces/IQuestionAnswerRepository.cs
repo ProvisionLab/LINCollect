@@ -8,8 +8,7 @@ using Web.Repositories.Base.Interfaces;
 
 namespace Web.Repositories.Interfaces
 {
-    public interface IPublishSurveyRepository: IRepository<PublishSurvey>
+    public interface IQuestionAnswerRepository: IRepository<QuestionAnswer>
     {
-        Task<PublishSurvey> GetByGuid(Guid guid);
     }
 }

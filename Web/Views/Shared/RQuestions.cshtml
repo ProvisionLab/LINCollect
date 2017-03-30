@@ -7,11 +7,11 @@
         <hr class="question" />
         if (!string.IsNullOrEmpty(Model[j].Introducing))
         {
-            <div class="form-group question">
+            <div class="form-group question row">
                 <div class="col-md-12">@Html.Raw(Model[j].Introducing)</div>
             </div>
         }
-        <div class="form-group question">
+        <div class="form-group question row">
             <div class="col-md-12">
                 <b>
                     <span class="order-id">@Model[j].OrderId.@(Model[j].IsCompulsory ? " *" : "")</span> @Html.Raw(Model[j].Text)
@@ -129,5 +129,5 @@
                             }
             </div>
         </div>
-                                }
-                            }
+    }
+}

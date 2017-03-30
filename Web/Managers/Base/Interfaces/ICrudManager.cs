@@ -10,7 +10,7 @@ namespace Web.Managers.Base.Interfaces
     {
         Task<TModel> GetAsync(int id);
         Task<List<TModel>> GetAsync();
-        Task<int> InsertAsync(TModel model);
+        Task<int> InsertAsync(TModel item);
         Task UpdateAsync(TModel model);
         Task DeleteAsync(TModel model);
         Task DeleteAsync(int id);

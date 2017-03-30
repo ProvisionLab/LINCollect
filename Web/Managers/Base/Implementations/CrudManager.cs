@@ -41,9 +41,9 @@ namespace Web.Managers.Base.Implementations
             return ObjectMapper.Map<TEntity, TModel>(await Repository.Get(id));
         }
 
-        public virtual async Task<int> InsertAsync(TModel model)
+        public virtual async Task<int> InsertAsync(TModel item)
         {
-            var dbModel = ObjectMapper.Map<TModel, TEntity>(model);
+            var dbModel = ObjectMapper.Map<TModel, TEntity>(item);
 
             await Repository.Insert(dbModel);
 
@@ -54,7 +54,12 @@ namespace Web.Managers.Base.Implementations
 
         public virtual async Task UpdateAsync(TModel model)
         {
-            await Repository.Update(ObjectMapper.Map<TModel, TEntity>(model));
+            //Detach
+            await Repository.DetachAsync(
+                await Repository.Get(model.Id));
+            //Update
+            await Repository.Update(
+                ObjectMapper.Map<TModel, TEntity>(model));
 
             await UnitOfWork.SaveAsync();
         }

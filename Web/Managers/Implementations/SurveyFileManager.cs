@@ -18,14 +18,14 @@ namespace Web.Managers.Implementations
         {
         }
 
-        public override Task<int> InsertAsync(SurveyFileModel model)
+        public override Task<int> InsertAsync(SurveyFileModel item)
         {
-            if (string.IsNullOrEmpty(model.Link) || string.IsNullOrEmpty(model.Name))
+            if (string.IsNullOrEmpty(item.Link) || string.IsNullOrEmpty(item.Name))
             {
                 return Task.FromResult(0);
             }
 
-            return base.InsertAsync(model);
+            return base.InsertAsync(item);
         }
     }
 }

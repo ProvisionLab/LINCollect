@@ -264,6 +264,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\api\ApiPreviewController.cs" />
     <Compile Include="Controllers\api\ApiSurveyFileController.cs" />
@@ -286,19 +287,21 @@
     <Compile Include="Data\RAnswer.cs" />
     <Compile Include="Data\Answer.cs" />
     <Compile Include="Data\NQuestion.cs" />
+    <Compile Include="Data\ResultSection.cs" />
     <Compile Include="Data\RQuestion.cs" />
     <Compile Include="Data\QuestionFormat.cs" />
     <Compile Include="Data\Question.cs" />
     <Compile Include="Data\Relationship.cs" />
     <Compile Include="Data\Respondent.cs" />
+    <Compile Include="Data\Section.cs" />
     <Compile Include="Data\SurveyFile.cs" />
     <Compile Include="Data\SurveyStatus.cs" />
     <Compile Include="Data\Language.cs" />
     <Compile Include="Data\Survey.cs" />
     <Compile Include="Data\Token.cs" />
-    <Compile Include="Data\UserAnswer.cs" />
-    <Compile Include="Data\UserQuestionAnswer.cs" />
-    <Compile Include="Data\UserQuestionAnswerValue.cs" />
+    <Compile Include="Data\Result.cs" />
+    <Compile Include="Data\QuestionAnswer.cs" />
+    <Compile Include="Data\QuestionAnswerValue.cs" />
     <Compile Include="Filters\ApiAuthorizeAttribute.cs" />
     <Compile Include="Filters\InvalidModelStateFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -312,10 +315,16 @@
     <Compile Include="Managers\Base\Interfaces\IModel.cs" />
     <Compile Include="Managers\Base\Interfaces\IObjectMapper.cs" />
     <Compile Include="Managers\Implementations\PublishSurveyManager.cs" />
+    <Compile Include="Managers\Implementations\QuestionAnswerManager.cs" />
+    <Compile Include="Managers\Implementations\ResultManager.cs" />
+    <Compile Include="Managers\Implementations\SectionManager.cs" />
     <Compile Include="Managers\Implementations\SurveyFileManager.cs" />
     <Compile Include="Managers\Implementations\SurveyManager.cs" />
     <Compile Include="Managers\Implementations\TokenManager.cs" />
     <Compile Include="Managers\Interfaces\IPublishSurveyManager.cs" />
+    <Compile Include="Managers\Interfaces\IQuestionAnswerManager.cs" />
+    <Compile Include="Managers\Interfaces\IResultManager.cs" />
+    <Compile Include="Managers\Interfaces\ISectionManager.cs" />
     <Compile Include="Managers\Interfaces\ISurveyFileManager.cs" />
     <Compile Include="Managers\Interfaces\ISurveyManager.cs" />
     <Compile Include="Managers\Interfaces\ITokenManager.cs" />
@@ -419,9 +428,9 @@
     <Compile Include="Migrations\201703071338110_Passed-Property.Designer.cs">
       <DependentUpon>201703071338110_Passed-Property.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201703141630084_UserAnswer.cs" />
-    <Compile Include="Migrations\201703141630084_UserAnswer.Designer.cs">
-      <DependentUpon>201703141630084_UserAnswer.cs</DependentUpon>
+    <Compile Include="Migrations\201703302116170_User Result.cs" />
+    <Compile Include="Migrations\201703302116170_User Result.Designer.cs">
+      <DependentUpon>201703302116170_User Result.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -435,7 +444,10 @@
     <Compile Include="Models\DTO\RAnswerModel.cs" />
     <Compile Include="Models\DTO\RelationshipModel.cs" />
     <Compile Include="Models\DTO\RespondentModel.cs" />
+    <Compile Include="Models\DTO\ResultModel.cs" />
+    <Compile Include="Models\DTO\ResultSectionModel.cs" />
     <Compile Include="Models\DTO\RQuestionModel.cs" />
+    <Compile Include="Models\DTO\SectionModel.cs" />
     <Compile Include="Models\DTO\SurveyFileModel.cs" />
     <Compile Include="Models\DTO\SurveyModel.cs" />
     <Compile Include="Models\DTO\TokenModel.cs" />
@@ -445,18 +457,23 @@
     <Compile Include="Models\MapperProfiles\NAnswerProfile.cs" />
     <Compile Include="Models\MapperProfiles\NAnswerQuestionProfile.cs" />
     <Compile Include="Models\MapperProfiles\PublishSurveyProfile.cs" />
+    <Compile Include="Models\MapperProfiles\QuestionAnswerProfile.cs" />
     <Compile Include="Models\MapperProfiles\QuestionFormatProfile.cs" />
     <Compile Include="Models\MapperProfiles\QuestionProfile.cs" />
     <Compile Include="Models\MapperProfiles\RAnswerProfile.cs" />
     <Compile Include="Models\MapperProfiles\RelationshipItemProfile.cs" />
     <Compile Include="Models\MapperProfiles\RespondentProfile.cs" />
+    <Compile Include="Models\MapperProfiles\ResultProfile.cs" />
+    <Compile Include="Models\MapperProfiles\ResultSectionProfile.cs" />
     <Compile Include="Models\MapperProfiles\RQuestionProfile.cs" />
+    <Compile Include="Models\MapperProfiles\SectionProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyFileProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyProfile.cs" />
     <Compile Include="Models\MapperProfiles\TokenProfile.cs" />
     <Compile Include="Models\ViewModels\Entity.cs" />
     <Compile Include="Models\ViewModels\LanguageView.cs" />
     <Compile Include="Models\ViewModels\EditMenu.cs" />
+    <Compile Include="Models\ViewModels\PollResultView.cs" />
     <Compile Include="Models\ViewModels\PreviewView.cs" />
     <Compile Include="Models\ViewModels\PublishView.cs" />
     <Compile Include="Models\ViewModels\SubmitView.cs" />
@@ -468,11 +485,21 @@
     <Compile Include="Repositories\Base\Implementations\UnitOfWork.cs" />
     <Compile Include="Repositories\Base\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Base\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Repositories\Implementations\QuestionAnswerRepository.cs" />
+    <Compile Include="Repositories\Implementations\QuestionAnswerValueRepository.cs" />
+    <Compile Include="Repositories\Implementations\ResultRepository.cs" />
     <Compile Include="Repositories\Implementations\PublishSurveyRepository.cs" />
+    <Compile Include="Repositories\Implementations\ResultSectionRepository.cs" />
+    <Compile Include="Repositories\Implementations\SectionRepository.cs" />
     <Compile Include="Repositories\Implementations\SurveyFileRepository.cs" />
     <Compile Include="Repositories\Implementations\SurveyRepository.cs" />
     <Compile Include="Repositories\Implementations\TokenRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPublishSurveyRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IQuestionAnswerRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IQuestionAnswerValueRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IResultRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IResultSectionRepository.cs" />
+    <Compile Include="Repositories\Interfaces\ISectionRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyFileRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISurveyRepository.cs" />
     <Compile Include="Repositories\Interfaces\ITokenRepository.cs" />
@@ -1019,8 +1046,8 @@
     <EmbeddedResource Include="Migrations\201703071338110_Passed-Property.resx">
       <DependentUpon>201703071338110_Passed-Property.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201703141630084_UserAnswer.resx">
-      <DependentUpon>201703141630084_UserAnswer.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703302116170_User Result.resx">
+      <DependentUpon>201703302116170_User Result.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
