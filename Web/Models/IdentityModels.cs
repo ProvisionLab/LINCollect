@@ -91,7 +91,8 @@ namespace Web.Models
 
             context.Sections.AddRange(new Section[]
             {
-                new Section {Name = "Respondent"},
+                new Section {Name = "RespondentBefore"},
+                new Section {Name = "RespondentAfter"},
                 new Section {Name = "Relationship"},
                 new Section {Name = "Node"}
             });

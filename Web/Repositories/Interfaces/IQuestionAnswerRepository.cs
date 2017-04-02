@@ -10,5 +10,6 @@ namespace Web.Repositories.Interfaces
 {
     public interface IQuestionAnswerRepository: IRepository<QuestionAnswer>
     {
+        Task<IQueryable<QuestionAnswer>> GetByResultSection(int resultSectionId);
     }
 }

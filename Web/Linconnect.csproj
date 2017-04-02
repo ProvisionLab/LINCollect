@@ -64,6 +64,10 @@
       <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.Apis, Version=1.19.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.19.0\lib\net45\Google.Apis.dll</HintPath>
       <Private>True</Private>
@@ -150,6 +154,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -481,12 +486,15 @@
     <Compile Include="Models\ViewModels\RelationshipView.cs" />
     <Compile Include="Models\ViewModels\SurveyView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\ServiceProvider.cs" />
+    <Compile Include="Providers\SpreadsheetProvider.cs" />
     <Compile Include="Repositories\Base\Implementations\BaseRepository.cs" />
     <Compile Include="Repositories\Base\Implementations\UnitOfWork.cs" />
     <Compile Include="Repositories\Base\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Base\Interfaces\IUnitOfWork.cs" />
     <Compile Include="Repositories\Implementations\QuestionAnswerRepository.cs" />
     <Compile Include="Repositories\Implementations\QuestionAnswerValueRepository.cs" />
+    <Compile Include="Repositories\Implementations\QuestionRepository.cs" />
     <Compile Include="Repositories\Implementations\ResultRepository.cs" />
     <Compile Include="Repositories\Implementations\PublishSurveyRepository.cs" />
     <Compile Include="Repositories\Implementations\ResultSectionRepository.cs" />
@@ -497,6 +505,7 @@
     <Compile Include="Repositories\Interfaces\IPublishSurveyRepository.cs" />
     <Compile Include="Repositories\Interfaces\IQuestionAnswerRepository.cs" />
     <Compile Include="Repositories\Interfaces\IQuestionAnswerValueRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IQuestionRepository.cs" />
     <Compile Include="Repositories\Interfaces\IResultRepository.cs" />
     <Compile Include="Repositories\Interfaces\IResultSectionRepository.cs" />
     <Compile Include="Repositories\Interfaces\ISectionRepository.cs" />
@@ -574,11 +583,11 @@
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Content\client_secret.json" />
-    <Content Include="Content\files\templates\Lincollect_default_template.xlsx" />
     <Content Include="Content\client_id.json" />
     <Content Include="Content\LinCollect-b595904b4096.json" />
     <Content Include="Content\Google.Apis.Auth.OAuth2.Responses.TokenResponse-Александр" />
     <Content Include="Content\LinCollect-7a500f9e0d6a.p12" />
+    <Content Include="Content\files\templates\Template.xltx" />
     <None Include="Properties\PublishProfiles\1gb.pubxml" />
     <None Include="Properties\PublishProfiles\2gb.pubxml" />
     <None Include="Properties\PublishProfiles\file.pubxml" />

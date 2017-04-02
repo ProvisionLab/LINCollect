@@ -16,9 +16,6 @@
         <th class="col-xs-1">
             Status
         </th>
-        <th class="col-xs-1">
-            Action
-        </th>
         <th class="col-xs-6">
             Name
         </th>
@@ -37,6 +34,19 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
+                @item.Name (@item.Language)
+            </td>
+            <td>
+                @if (item.SurveyStatusId == 2)
+                {
+                    @Html.ActionLink("Download", "Download", new { id = item.Id })
+                }
+                else
+                {
+                    @Html.Raw("Download")
+                }
+            </td>
+            <td>
                 @if (item.SurveyStatusId == 1)
                 {
                     @Html.ActionLink("Publish", "Publish", "Poll", new { id = item.Id }, null)
@@ -45,17 +55,10 @@
                 {
                     @Html.Raw("Publish")
                 }
-            </td>
-            <td>
-                @item.Name (@item.Language)
-            </td>
-            <td>
-                Download
-            </td>
-            <td class="text-right">
+                |
                 @if (item.SurveyStatusId == 1)
                 {
-                    @Html.ActionLink("Edit", "Edit", new {id = item.Id})
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                 }
                 else
                 {
@@ -64,7 +67,7 @@
                 |
                 <a href="#" onclick="ClearSurveyData(@item.Id, '@item.Name')">Clear</a> |
                 <a href="#" onclick="deleteSurvay(@item.Id, '@item.Name')">Delete</a> |
-                @Html.ActionLink("Clone", "Clone", new {id = item.Id})
+                @Html.ActionLink("Clone", "Clone", new { id = item.Id })
             </td>
         </tr>
     }

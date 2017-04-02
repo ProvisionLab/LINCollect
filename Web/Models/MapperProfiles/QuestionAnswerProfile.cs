@@ -13,9 +13,12 @@ namespace Web.Models.MapperProfiles
         public QuestionAnswerProfile()
         {
             CreateMap<QuestionAnswer, QuestionAnswerModel>()
-                .ForMember(dest=>dest.Values, i=>i.MapFrom(src=>src.Values.Select(t=>t.Value)));
+                .ForMember(dest => dest.ResultSection, i => i.Ignore());
+                //.ForMember(dest => dest.Values, i => i.Ignore());
             CreateMap<QuestionAnswerModel, QuestionAnswer>()
                 .ForMember(dest=>dest.Values, i=>i.Ignore());
+            CreateMap<QuestionAnswerValue, String>()
+                .ConstructUsing(t => t.Value);
         }
     }
 }

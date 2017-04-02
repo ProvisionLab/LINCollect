@@ -19,6 +19,7 @@ namespace Web.Repositories.Base.Implementations
         private IResultSectionRepository _resultSectionRepository;
         private ISectionRepository _sectionRepository;
         private IQuestionAnswerValueRepository _questionAnswerValueRepository;
+        private IQuestionRepository _questionRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -51,6 +52,9 @@ namespace Web.Repositories.Base.Implementations
 
         public IQuestionAnswerValueRepository QuestionAnswerValueRepository
             => _questionAnswerValueRepository ?? (_questionAnswerValueRepository = new QuestionAnswerValueRepository(_context));
+
+        public IQuestionRepository QuestionRepository
+            => _questionRepository ?? (_questionRepository = new QuestionRepository(_context));
 
         public async Task<int> SaveAsync()
         {

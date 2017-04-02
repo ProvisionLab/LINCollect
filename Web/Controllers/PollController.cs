@@ -136,7 +136,7 @@ namespace Web.Controllers
             if (pollResult.AboutYouBefore != null && pollResult.AboutYouBefore.QuestionAnswers != null)
             {
                 var sectionId = await _resultManager.InsertSection(
-                    new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Respondent).Id, SectionId = pollResult.AboutYouBefore.Id });
+                    new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.RespondentBefore).Id, SectionId = pollResult.AboutYouBefore.Id });
 
                 foreach (var questionAnswerModel in pollResult.AboutYouBefore.QuestionAnswers)
                 {
@@ -145,10 +145,10 @@ namespace Web.Controllers
                 }
             }
             //After
-            if (pollResult.AboutYouAfter != null && pollResult.AboutYouAfter.QuestionAnswers != null)
+            if (pollResult.AboutYouAfter?.QuestionAnswers != null)
             {
                 var sectionId = await _resultManager.InsertSection(
-                   new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Respondent).Id, SectionId = pollResult.AboutYouBefore.Id });
+                   new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.RespondentAfter).Id, SectionId = pollResult.AboutYouBefore.Id });
 
                 foreach (var questionAnswerModel in pollResult.AboutYouAfter.QuestionAnswers)
                 {
@@ -156,32 +156,36 @@ namespace Web.Controllers
                     await _questionAnswerManager.InsertAsync(questionAnswerModel);
                 }
             }
-
-            //Relationships
-            foreach (var relationShip in pollResult.Items)
+            if (pollResult.Items != null && pollResult.Items.Count > 0)
             {
-                if (relationShip.QuestionAnswers != null)
+
+
+                //Relationships
+                foreach (var relationShip in pollResult.Items)
                 {
-                    var sectionId = await _resultManager.InsertSection(
-                        new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Relationship).Id, SectionId = relationShip.Id });
-
-
-                    foreach (var questionAnswerModel in relationShip.QuestionAnswers)
+                    if (relationShip.QuestionAnswers != null)
                     {
-                        questionAnswerModel.ResultSectionId = sectionId;
-                        await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                        var sectionId = await _resultManager.InsertSection(
+                            new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Relationship).Id, SectionId = relationShip.Id });
+
+
+                        foreach (var questionAnswerModel in relationShip.QuestionAnswers)
+                        {
+                            questionAnswerModel.ResultSectionId = sectionId;
+                            await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                        }
                     }
-                }
-                if (relationShip.NQuestionAnswers != null)
-                {
-                    var sectionId = await _resultManager.InsertSection(
-                        new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Node).Id, SectionId = relationShip.Id });
-
-
-                    foreach (var questionAnswerModel in relationShip.NQuestionAnswers)
+                    if (relationShip.NQuestionAnswers != null)
                     {
-                        questionAnswerModel.ResultSectionId = sectionId;
-                        await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                        var sectionId = await _resultManager.InsertSection(
+                            new ResultSectionModel { ResultId = resultId, SectionTypeId = sectionType.FirstOrDefault(t => t.Name == Constants.Node).Id, SectionId = relationShip.Id });
+
+
+                        foreach (var questionAnswerModel in relationShip.NQuestionAnswers)
+                        {
+                            questionAnswerModel.ResultSectionId = sectionId;
+                            await _questionAnswerManager.InsertAsync(questionAnswerModel);
+                        }
                     }
                 }
             }

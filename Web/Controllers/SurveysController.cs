@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Web.Data;
+using Web.Managers.Interfaces;
 using Web.Models;
 using Web.Models.ViewModels;
+using Web.Providers;
 
 namespace Web.Controllers
 {
@@ -25,10 +27,12 @@ namespace Web.Controllers
         //static string ApplicationName = "LinCollect";
 
         private readonly ApplicationDbContext _dbContext;
+        private readonly IResultManager _resultManager;
 
-        public SurveysController(ApplicationDbContext dbContextContext)
+        public SurveysController(ApplicationDbContext dbContextContext, IResultManager resultManager)
         {
             _dbContext = dbContextContext;
+            _resultManager = resultManager;
         }
 
         public async Task<ActionResult> Index()
@@ -822,7 +826,7 @@ namespace Web.Controllers
 
             var model = new RelationshipView();
             model.RelationshipItems = survey.RelationshipItems.ToList();
-            if (model.RelationshipItems.Count() == 0)
+            if (model.RelationshipItems.Count == 0)
             {
                 var rel = new RelationshipItem()
                 {
@@ -1142,6 +1146,12 @@ namespace Web.Controllers
                 return RedirectToAction("Index", "Preview", new { id = buff.SurveyId });
 
             return RedirectToAction("Relationship", new { id = buff.SurveyId, questions = false, relId = buff.Id });
+        }
+
+        public async Task<FileResult> Download(int id)
+        {
+            var spreadsheetData = await _resultManager.GetResults(id);
+            return File(await SpreadSheetProvider.Instance.Generate(spreadsheetData), "application/ms-excel", "results.xlsx");
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Web.Repositories.Base.Interfaces
         IResultSectionRepository ResultSectionRepository { get; }
         ISectionRepository SectionRepository { get; }
         IQuestionAnswerValueRepository QuestionAnswerValueRepository { get; }
+        IQuestionRepository QuestionRepository { get; }
         Task<int> SaveAsync();
     }
 }

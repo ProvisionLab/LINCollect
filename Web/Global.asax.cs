@@ -12,6 +12,7 @@ using Web.Managers.Base.Implementations;
 using Web.Managers.Implementations;
 using Web.Managers.Interfaces;
 using Web.Models;
+using Web.Providers;
 using Web.Repositories.Base.Implementations;
 using Web.Repositories.Base.Interfaces;
 using Web.Repositories.Implementations;
@@ -36,6 +37,7 @@ namespace Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             InitializeMapper();
+            ServiceProvider.SetContainer(container);
         }
 
         protected IContainer InitializeIoC()
