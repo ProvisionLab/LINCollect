@@ -16,6 +16,8 @@ namespace Web.Repositories.Base.Interfaces
         ISectionRepository SectionRepository { get; }
         IQuestionAnswerValueRepository QuestionAnswerValueRepository { get; }
         IQuestionRepository QuestionRepository { get; }
+        IUserRepository UserRepository { get; }
+        ISurveyStatusRepository SurveyStatusRepository { get; }
         Task<int> SaveAsync();
     }
 }

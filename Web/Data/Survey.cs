@@ -14,6 +14,7 @@ namespace Web.Data
         {
             Respondents = new HashSet<Respondent>();
             RelationshipItems = new HashSet<RelationshipItem>();
+            ApplicationUsers = new HashSet<ApplicationUser>();
         }
         public int Id { get; set; }
 
@@ -28,10 +29,8 @@ namespace Web.Data
         [Required]
         public int LanguageId { get; set; }
         public virtual Language Language { get; set; }
-
         public int SurveyStatusId { get; set; }
         public virtual SurveyStatus Status { get; set; }
-
         public int? SurveyFileId { get; set; }
         public virtual SurveyFile SurveyFile { get; set; }
 
@@ -43,6 +42,7 @@ namespace Web.Data
         public string Thanks { get; set; }
         public string Landing { get; set; }
 
+        public virtual ICollection<ApplicationUser> ApplicationUsers { get; set; }
         public virtual ICollection<Respondent> Respondents { get; set; }
         public virtual ICollection<RelationshipItem> RelationshipItems { get; set; }
     }

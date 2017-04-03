@@ -1,0 +1,51 @@
+﻿@using Web.Models
+@model IEnumerable<Web.Models.ApplicationUser>
+@{
+    ViewBag.Title = "Interviewers";
+}
+
+<h3 class="font-green-haze">Interviewers</h3>
+<p>
+    Here you can create a new interviewer or edit an existing one.
+</p>
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn purple" })
+
+</p>
+<table class="table">
+    <tr>
+        <th class="col-xs-3">
+            Full name
+        </th>
+        <th class="col-xs-3">
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th class="col-xs-4">
+            Surveys
+        </th>
+        <th class="col-xs-2">Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @($"{item.FirstName} {item.LastName}")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @foreach (var i in item.Surveys)
+                {
+                    @Html.Raw($"{i.Name} <br />")
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Surveys", "Surveys", new {id=item.Id}) |
+                @Html.ActionLink("Edit", "Edit", new {id = item.Id}) |
+                @Html.ActionLink("Delete", "Delete", new {id = item.Id})
+            </td>
+        </tr>
+    }
+</table>

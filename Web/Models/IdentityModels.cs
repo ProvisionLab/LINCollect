@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -10,6 +11,14 @@ namespace Web.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+        public ApplicationUser()
+        {
+            this.Surveys = new HashSet<Survey>();
+        }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public virtual ICollection<Survey> Surveys { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -54,15 +63,29 @@ namespace Web.Models
         public virtual DbSet<Result> Results { get; set; }
         public virtual DbSet<ResultSection> ResultSections { get; set; }
         public virtual DbSet<Section> Sections { get; set; }
-        public virtual DbSet<QuestionAnswer> QuestionAnswers{ get; set; }
+        public virtual DbSet<QuestionAnswer> QuestionAnswers { get; set; }
         public virtual DbSet<QuestionAnswerValue> QuestionAnswerValues { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany<Survey>(t => t.Surveys)
+                .WithMany(t => t.ApplicationUsers)
+                .Map(cs =>
+                {
+                    cs.MapLeftKey("UserId");
+                    cs.MapRightKey("SurveyId");
+                    cs.ToTable("UserSurvey");
+                });
+            base.OnModelCreating(modelBuilder);
+        }
     }
 
     public class ApplicationDbInitializer : CreateDatabaseIfNotExists<ApplicationDbContext>
     {
         protected override void Seed(ApplicationDbContext context)
         {
-            context.Languages.AddRange( new Language[]{
+            context.Languages.AddRange(new Language[]{
                 new Language { Name = "English", Code = "en-US", ShortCode = "en" },
                 new Language { Name = "Deutsch", Code = "de-DE", ShortCode = "de" },
                 new Language { Name = "Russian", Code = "ru-RU", ShortCode = "ru" },
@@ -72,7 +95,7 @@ namespace Web.Models
                 new SurveyStatus { Name = "Offline" },
                 new SurveyStatus { Name = "Published" }});
 
-            context.QuestionFormats.AddRange( new QuestionFormat[] {
+            context.QuestionFormats.AddRange(new QuestionFormat[] {
                 new QuestionFormat { Name = "Text", Code = "text" },
                 new QuestionFormat { Name = "Choice Across", Code = "choice_across" },
                 new QuestionFormat { Name = "Choice Down", Code = "choice_down" },
@@ -84,7 +107,7 @@ namespace Web.Models
                 new QuestionLayout { Name = "QuestionCentric", Code = "qc" },
                 new QuestionLayout { Name = "PersonCentric", Code = "pc" }});
 
-            context.NodeSelections.AddRange( new NodeSelection[] {
+            context.NodeSelections.AddRange(new NodeSelection[] {
                 new NodeSelection { Name = "Normal", Code = "n" },
                 new NodeSelection { Name = "Filtered", Code = "f" },
                 new NodeSelection { Name = "Automatic", Code = "a" }});
@@ -97,7 +120,17 @@ namespace Web.Models
                 new Section {Name = "Node"}
             });
 
-            context.Users.Add(new ApplicationUser
+            var administrator = context.Roles.Add(new IdentityRole
+            {
+                Name = "Administrator"
+            });
+
+            var interviewer = context.Roles.Add(new IdentityRole
+            {
+                Name = "Interviewer"
+            });
+
+            var user = context.Users.Add(new ApplicationUser
             {
                 Email = "sa@test.com",
                 PasswordHash = "AKyNK8+hqhxSup7h5AWLXn7dYpJoiAbmcBBUrh2Vk8Jhhje5iQvGE49uCu2AYgWgIw==",
@@ -105,6 +138,10 @@ namespace Web.Models
                 UserName = "sa@test.com",
                 LockoutEnabled = true
             });
+
+            user.Roles.Add(new IdentityUserRole { RoleId = administrator.Id, UserId = user.Id });
+            user.Roles.Add(new IdentityUserRole { RoleId = interviewer.Id, UserId = user.Id });
+
             context.SaveChanges();
 
             base.Seed(context);
@@ -112,4 +149,4 @@ namespace Web.Models
     }
 
 
-}    
+}

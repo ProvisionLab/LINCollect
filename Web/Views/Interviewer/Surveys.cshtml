@@ -1,0 +1,57 @@
+﻿@using Web.Models
+@model List<Web.Models.DTO.SurveyModel>
+
+@{
+    ViewBag.Title = "Interviewer surveys";
+    ApplicationUser user = (ApplicationUser)ViewData["User"];
+}
+
+<h3 class="font-green-haze">@ViewBag.Title</h3>
+<p>
+    @Html.ActionLink("Back", "Index", null, new {@class="btn purple"})
+</p>
+
+<table class="table">
+    <tr>
+        <th class="col-xs-6">Name</th>
+        <th class="col-xs-4">Status</th>
+        <th class="col-xs-2">Actions</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+
+            <td>
+                @if (user.Surveys.Select(t => t.Id).Contains(item.Id))
+                {
+                    @Html.Raw("<span style=\"color:green;\">Assigned")
+                }
+                else
+                {
+                    @Html.Raw("Not assigned")
+                }
+            </td>
+            <td>
+            @if (!user.Surveys.Select(t => t.Id).Contains(item.Id))
+            {
+                using (Html.BeginForm("Assign","Interviewer", FormMethod.Post))
+                {
+                    @Html.Hidden("id", user.Id);
+                    @Html.Hidden("surveyId", item.Id)
+                    <input type="submit" value="Assign" class="btn btn-success"/>
+                }
+            }
+            else
+            {
+                using (Html.BeginForm("Dissociate", "Interviewer", FormMethod.Post))
+                {
+                    @Html.Hidden("id", user.Id);
+                    @Html.Hidden("surveyId", item.Id)
+                    <input type="submit" value="Dissociate" class="btn btn-danger" />
+                }
+            }
+            </td>
+        </tr>
+    }
+</table>

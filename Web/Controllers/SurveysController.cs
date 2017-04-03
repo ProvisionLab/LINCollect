@@ -188,9 +188,8 @@ namespace Web.Controllers
                 newSurvey.CreateDateUtc = DateTime.UtcNow;
                 newSurvey.UpdateDateUtc = DateTime.UtcNow;
                 newSurvey.LanguageId = survey.LanguageId;
-                newSurvey.Status = survey.Status;
+                newSurvey.Status = _dbContext.SurveyStatuses.Single(t => t.Name == "Offline");
                 newSurvey.SurveyFileId = survey.SurveyFileId;
-                newSurvey.SurveyStatusId = survey.SurveyStatusId;
                 newSurvey.Introduction = survey.Introduction;
                 newSurvey.Landing = survey.Landing;
                 newSurvey.Thanks = survey.Thanks;
@@ -201,7 +200,7 @@ namespace Web.Controllers
                 #region // Respondents
                 foreach (var item in survey.Respondents)
                 {
-                    var _resp = new Data.Respondent()
+                    var _resp = new Respondent
                     {
                         CreateDateUtc = DateTime.Now,
                         UpdateDateUtc = DateTime.UtcNow,
@@ -214,7 +213,7 @@ namespace Web.Controllers
 
                     foreach (var item2 in item.Questions)
                     {
-                        var _q = new Question()
+                        var _q = new Question
                         {
                             CreateDateUtc = DateTime.UtcNow,
                             UpdateDateUtc = DateTime.UtcNow,
@@ -241,7 +240,7 @@ namespace Web.Controllers
 
                         foreach (var item3 in item2.Answers)
                         {
-                            _dbContext.Answers.Add(new Answer()
+                            _dbContext.Answers.Add(new Answer
                             {
                                 CreateDateUtc = DateTime.UtcNow,
                                 UpdateDateUtc = DateTime.UtcNow,
@@ -260,7 +259,7 @@ namespace Web.Controllers
                 #region // RelationshipItems
                 foreach (var item in survey.RelationshipItems)
                 {
-                    var _rel = new RelationshipItem()
+                    var _rel = new RelationshipItem
                     {
                         CreateDateUtc = DateTime.Now,
                         UpdateDateUtc = DateTime.UtcNow,
@@ -285,7 +284,7 @@ namespace Web.Controllers
 
                     foreach (var item2 in item.Questions)
                     {
-                        var _rq = new RQuestion()
+                        var _rq = new RQuestion
                         {
                             CreateDateUtc = DateTime.UtcNow,
                             UpdateDateUtc = DateTime.UtcNow,
@@ -312,7 +311,7 @@ namespace Web.Controllers
 
                         foreach (var item3 in item2.Answers)
                         {
-                            _dbContext.RAnswers.Add(new RAnswer()
+                            _dbContext.RAnswers.Add(new RAnswer
                             {
                                 CreateDateUtc = DateTime.UtcNow,
                                 UpdateDateUtc = DateTime.UtcNow,
@@ -328,7 +327,7 @@ namespace Web.Controllers
                     //node
                     foreach (var item22 in item.NodeQuestions)
                     {
-                        var _nq = new NQuestion()
+                        var _nq = new NQuestion
                         {
                             CreateDateUtc = DateTime.UtcNow,
                             UpdateDateUtc = DateTime.UtcNow,

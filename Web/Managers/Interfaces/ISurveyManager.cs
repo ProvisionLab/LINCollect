@@ -11,5 +11,8 @@ namespace Web.Managers.Interfaces
     public interface ISurveyManager: ICrudManager<SurveyModel>
     {
         Task Publish(int id);
+        Task Assign(string userId, int surveyId);
+        Task Dissociate(string userId, int surveyId);
+        Task<List<SurveyModel>> GetPublished();
     }
 }
