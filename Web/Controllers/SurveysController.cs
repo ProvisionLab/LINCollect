@@ -28,11 +28,13 @@ namespace Web.Controllers
 
         private readonly ApplicationDbContext _dbContext;
         private readonly IResultManager _resultManager;
+        private readonly ISurveyManager _surveyManager;
 
-        public SurveysController(ApplicationDbContext dbContextContext, IResultManager resultManager)
+        public SurveysController(ApplicationDbContext dbContextContext, IResultManager resultManager, ISurveyManager surveyManager)
         {
             _dbContext = dbContextContext;
             _resultManager = resultManager;
+            _surveyManager = surveyManager;
         }
 
         public async Task<ActionResult> Index()
@@ -1151,7 +1153,8 @@ namespace Web.Controllers
         public async Task<FileResult> Download(int id)
         {
             var spreadsheetData = await _resultManager.GetResults(id);
-            return File(await SpreadSheetProvider.Instance.Generate(spreadsheetData), "application/ms-excel", "results.xlsx");
+            var survey = await _surveyManager.GetAsync(id);
+            return File(await SpreadSheetProvider.Instance.Generate(survey, spreadsheetData), "application/ms-excel", $"{survey.Name}-{DateTime.Now:yyyy_MM_dd HH-mm}.xlsx");
         }
     }
 }

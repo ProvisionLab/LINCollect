@@ -69,13 +69,12 @@ namespace Web.Controllers
                     {
                         companies.Add(new CompanyItem { Name = companyName, Checked = false });
                     }
-
-                    var _companies = new Companies()
+                    var _companies = new Companies
                     {
                         RelationshipId = item.Id,
                         RelationshipName = item.Name,
                         Names = companies,
-                        Error = !String.IsNullOrEmpty(error) ? String.Format(error, file.Name, file.Link) : String.Empty
+                        Error = !string.IsNullOrEmpty(error) ? string.Format(error, file.Name, file.Link) : string.Empty
                     };
                     if (item.SortNodeList)
                         _companies.Names = _companies.Names.OrderBy(x => x.Name).ToList();
@@ -83,7 +82,6 @@ namespace Web.Controllers
                     item.Companies = _companies;
                 }
             }
-
             return View(model);
         }
 

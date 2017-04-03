@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using OfficeOpenXml;
@@ -26,10 +27,39 @@ namespace Web.Providers
 
         public static SpreadSheetProvider Instance => _instance ?? (_instance = new SpreadSheetProvider());
 
-        public async Task<byte[]> Generate(IEnumerable<ResultModel> results)
+        public async Task<byte[]> Generate(SurveyModel survey, IEnumerable<ResultModel> results)
         {
             using (var excelPackage = new ExcelPackage(new FileInfo(TemplatePath)))
             {
+                //Rules for filling title
+                if (survey.Respondents?.Count > 0)
+                {
+                    foreach (var respondent in survey.Respondents)
+                    {
+                        if (!respondent.IsAfterSurvey)
+                        {
+                            var before = survey.Respondents.Single(t => !t.IsAfterSurvey);
+
+                            var excelSection = excelPackage.Workbook.Worksheets.FirstOrDefault(t => t.Name == "Vertices");
+                            if (excelSection != null && before.Questions?.Count > 0)
+                            {
+                                var userAddress = excelSection.Cells["AD2"].Start;
+
+                                FillTitle(excelSection, new StartPoint {StartX = userAddress.Column, StartY = userAddress.Row}, "Respondent Name" );
+                                FillTitle(excelSection, new StartPoint {StartX = userAddress.Column + 1, StartY = userAddress.Row}, "Respondent Email");
+
+                                var address = excelSection.Cells["AF2"].Start;
+                                for (int i = 0; i < before.Questions.Count; i++)
+                                {
+                                    FillTitle(excelSection, new StartPoint { StartX = address.Column + i, StartY = address.Row }, Regex.Replace(before.Questions[i].Text, "<.*?>", String.Empty));
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Rules for filling data
+
                 foreach (var result in results)
                 {
                     foreach (var section in await _resultManager.GetSections(result.Id))
@@ -37,11 +67,20 @@ namespace Web.Providers
                         if (section.SectionType.Name == Constants.RespondentBefore)
                         {
 
+
                             var excelSection = excelPackage.Workbook.Worksheets.FirstOrDefault(t => t.Name == "Vertices");
                             if (excelSection != null)
                             {
-                                var address = excelSection.Cells["AC3"].Start;
-                                FillSection(excelSection, address, (await _resultManager.GetAnswers(section.Id)).ToList());
+                                var userAddress = excelSection.Cells["AD3"].Start;
+                                var row = GetLastUsedRow(excelSection) + 1;
+
+                                //Fill vertex name
+
+                                FillCell(excelSection, new StartPoint {StartX = userAddress.Column, StartY = row}, result.PublishSurvey.UserName );
+                                FillCell(excelSection, new StartPoint {StartX = userAddress.Column+1, StartY = row}, result.PublishSurvey.UserEmail);
+
+                                var address = excelSection.Cells["AF3"].Start;
+                                FillSection(excelSection, new StartPoint {StartX = address.Column, StartY = row}, (await _resultManager.GetAnswers(section.Id)).ToList());
                             }
                         }
                     }
@@ -50,21 +89,25 @@ namespace Web.Providers
             }
         }
 
-        private void FillSection(ExcelWorksheet excelWorksheet, ExcelCellAddress startAddress, List<QuestionAnswerModel> data)
+        private void FillSection(ExcelWorksheet excelWorksheet, StartPoint startAddress, List<QuestionAnswerModel> data)
         {
-            var row = GetLastUsedRow(excelWorksheet) + 1;
             for (int i = 0; i < data.Count; i++)
             {
-                excelWorksheet.Cells[row, startAddress.Column + i].Value = string.Join(";", data[i].Values);
+                excelWorksheet.Cells[startAddress.StartY, startAddress.StartX + i].Value = string.Join(";", data[i].Values);
             }
         }
 
-        private void FillTitle(ExcelWorksheet excelWorksheet, StartPoint startTitlePoint, StartPoint fillPoint, string data)
+        private void FillTitle(ExcelWorksheet excelWorksheet, StartPoint fillPoint, string data)
         {
-            excelWorksheet.Cells[startTitlePoint.StartY, startTitlePoint.StartX + fillPoint.StartX].Value = data;
-            excelWorksheet.Cells[startTitlePoint.StartY, startTitlePoint.StartX + fillPoint.StartX].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            excelWorksheet.Cells[startTitlePoint.StartY, startTitlePoint.StartX + fillPoint.StartX].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(79, 129, 189));
-            excelWorksheet.Cells[startTitlePoint.StartY, startTitlePoint.StartX + fillPoint.StartX].Style.Font.Color.SetColor(Color.White);
+            excelWorksheet.Cells[fillPoint.StartY, fillPoint.StartX].Value = data;
+            excelWorksheet.Cells[fillPoint.StartY, fillPoint.StartX].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            excelWorksheet.Cells[fillPoint.StartY, fillPoint.StartX].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(79, 129, 189));
+            excelWorksheet.Cells[fillPoint.StartY, fillPoint.StartX].Style.Font.Color.SetColor(Color.White);
+        }
+
+        private void FillCell(ExcelWorksheet excelWorksheet, StartPoint fillPoint, string data)
+        {
+            excelWorksheet.Cells[fillPoint.StartY, fillPoint.StartX].Value = data;
         }
 
         int GetLastUsedRow(ExcelWorksheet sheet)

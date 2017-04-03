@@ -12,7 +12,7 @@ using Web.Repositories.Base.Interfaces;
 
 namespace Web.Managers.Implementations
 {
-    public class SurveyManager: CrudManager<Survey, SurveyModel>,ISurveyManager
+    public class SurveyManager: CrudManager<Survey, SurveyModel>, ISurveyManager
     {
         public SurveyManager(IUnitOfWork unitOfWork, IObjectMapper objectMapper) : base(unitOfWork, unitOfWork.SurveyRepository, objectMapper)
         {

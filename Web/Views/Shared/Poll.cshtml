@@ -5,7 +5,10 @@
 
 @if (region == "Html")
 {
-    <h3 class="font-green-haze">Survey - Preview</h3>
+    if (!ViewData.Keys.Contains("Passing"))
+    {
+        <h3 class="font-green-haze">Survey - Preview</h3>
+    }
     foreach (var item in Model.Items.Select(c => c.Companies).Where(x => !string.IsNullOrEmpty(x.Error)))
     {
         <div class="row">
@@ -188,17 +191,19 @@
                 </div>
             }
             <div class="tab-pane" id="tabFinish">
-                @if (Model.AboutYouAfter != null && Model.AboutYouAfter.Questions.Any())
-                {
-                    <div class="col-xs-12 after-question qdiv">
-                        <h5 class="text-primary">Please answer the following questions about yourself:</h5>
-                        <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
-                        <br />
-                        @Html.Partial("Questions", Model.AboutYouAfter.Questions, new ViewDataDictionary { { "base", "AboutYouAfter" } })
+                <div class="row">
+                    @if (Model.AboutYouAfter != null && Model.AboutYouAfter.Questions.Any())
+                    {
+                        <div class="col-xs-12 after-question qdiv">
+                            <h5 class="text-primary">Please answer the following questions about yourself:</h5>
+                            <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
+                            <br />
+                            @Html.Partial("Questions", Model.AboutYouAfter.Questions, new ViewDataDictionary { { "base", "AboutYouAfter" } })
+                        </div>
+                    }
+                    <div class="col-xs-12 thanks-text" style="display: none;">
+                        @Html.Raw(Model.ThanksText)
                     </div>
-                }
-                <div class="col-xs-12 thanks-text" style="display:none;">
-                    @Html.Raw(Model.ThanksText)
                 </div>
             </div>
             <br />

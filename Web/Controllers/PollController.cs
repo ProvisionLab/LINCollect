@@ -110,6 +110,8 @@ namespace Web.Controllers
                     item.Companies = _companies;
                 }
             }
+            ViewData["Passing"] = true;
+            ViewBag.Passing = true;
             return View(model);
         }
 
@@ -126,7 +128,7 @@ namespace Web.Controllers
             var result = new ResultModel
             {
                 PassDate = DateTime.Now,
-                PublishSurveyId = publishSurvey.SurveyId
+                PublishSurveyId = publishSurvey.Id
             };
 
             var resultId = await _resultManager.InsertAsync(result);
