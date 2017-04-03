@@ -16,6 +16,7 @@ using Web.Models.ViewModels;
 
 namespace Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class InterviewerController : Controller
     {
         private readonly ISurveyManager _surveyManager;

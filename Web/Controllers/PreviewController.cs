@@ -19,7 +19,7 @@ using Web.Services.Interfaces;
 
 namespace Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public class PreviewController : Controller
     {
         private readonly IGoogleSheetsService _googleSheetsService;

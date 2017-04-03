@@ -16,7 +16,7 @@ using Web.Models;
 
 namespace Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public class SheetController : Controller
     {
         private readonly ApplicationDbContext _dbContext;

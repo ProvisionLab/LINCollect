@@ -16,6 +16,7 @@ using Web.Services.Interfaces;
 
 namespace Web.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class PollController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
@@ -47,6 +48,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Pass(Guid id)
         {
             var publishSurvey =
@@ -116,6 +118,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> Pass(PollResultView pollResult)
         {
             var publishSurvey = await _publishSurveyManager.GetByGuidAsync(pollResult.UserLinkId);
@@ -160,8 +163,6 @@ namespace Web.Controllers
             }
             if (pollResult.Items != null && pollResult.Items.Count > 0)
             {
-
-
                 //Relationships
                 foreach (var relationShip in pollResult.Items)
                 {

@@ -20,7 +20,7 @@ namespace Web.Controllers
     //555419438916-8lg52oq5ufkfotqlqd18qekiasfnijks.apps.googleusercontent.com
 
 
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public class SurveysController : Controller
     {
         //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
