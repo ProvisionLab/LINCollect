@@ -23,13 +23,15 @@ namespace Web.Controllers
         private readonly ISurveyManager _surveyManager;
         private readonly ITokenManager _tokenManager;
 
-        public InterviewerController(ISurveyManager surveyManager, ITokenManager tokenManager)
+        public InterviewerController(ISurveyManager surveyManager, ITokenManager tokenManager, IUserManager userManager)
         {
             _surveyManager = surveyManager;
             _tokenManager = tokenManager;
+            _newUserManager = userManager;
         }
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
+        private IUserManager _newUserManager;
 
         public ApplicationUserManager UserManager
         {
@@ -94,7 +96,7 @@ namespace Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(RegisterViewModel model)
+        public async Task<ActionResult> Create(EditInterviewerViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -104,7 +106,7 @@ namespace Web.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    PasswordHash = UserManager.PasswordHasher.HashPassword(model.Password)
+                    PasswordHash = UserManager.PasswordHasher.HashPassword(model.NewPassword)
                 };
                 var result = await UserManager.CreateAsync(user);
 
@@ -172,13 +174,13 @@ namespace Web.Controllers
                     }
                 }
                 var token = await _tokenManager.GetByUser(id);
+
                 if (token != null)
                 {
                     await _tokenManager.DeleteAsync(token.Id);
                 }
-                //Fix with usermanager with same context
-                await Task.Delay(300);
-                await UserManager.DeleteAsync(await UserManager.FindByIdAsync(id));
+
+                await _newUserManager.DeleteAsync(id);
             }
             return RedirectToAction("Index");
         }

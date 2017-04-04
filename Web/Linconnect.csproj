@@ -328,6 +328,7 @@
     <Compile Include="Managers\Implementations\SurveyFileManager.cs" />
     <Compile Include="Managers\Implementations\SurveyManager.cs" />
     <Compile Include="Managers\Implementations\TokenManager.cs" />
+    <Compile Include="Managers\Implementations\UserManager.cs" />
     <Compile Include="Managers\Interfaces\IPublishSurveyManager.cs" />
     <Compile Include="Managers\Interfaces\IQuestionAnswerManager.cs" />
     <Compile Include="Managers\Interfaces\IResultManager.cs" />
@@ -447,6 +448,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\DTO\AnswerModel.cs" />
+    <Compile Include="Models\DTO\ApplicationUserModel.cs" />
     <Compile Include="Models\DTO\NAnswerModel.cs" />
     <Compile Include="Models\DTO\NQuestionModel.cs" />
     <Compile Include="Models\DTO\PublishSurveyModel.cs" />
@@ -483,6 +485,7 @@
     <Compile Include="Models\MapperProfiles\SurveyFileProfile.cs" />
     <Compile Include="Models\MapperProfiles\SurveyProfile.cs" />
     <Compile Include="Models\MapperProfiles\TokenProfile.cs" />
+    <Compile Include="Models\MapperProfiles\UserProfile.cs" />
     <Compile Include="Models\ViewModels\EditInterviewerViewModel.cs" />
     <Compile Include="Models\ViewModels\Entity.cs" />
     <Compile Include="Models\ViewModels\LanguageView.cs" />

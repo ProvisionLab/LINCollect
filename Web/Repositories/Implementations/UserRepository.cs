@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -38,12 +39,24 @@ namespace Web.Repositories.Implementations
 
         public Task Delete(ApplicationUser entity)
         {
-            throw new NotImplementedException();
+            return Task.Factory.StartNew(() =>
+            {
+                DbEntityEntry entityEntry = _context.Entry(entity);
+
+                if (entityEntry.State != EntityState.Deleted)
+                {
+                    _dbSet.Remove(entity);
+                }
+            });
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            ApplicationUser entity = await Get(id);
+            if (entity != null)
+            {
+                await Delete(entity);
+            }
         }
 
         public Task DetachAsync(ApplicationUser entity)
@@ -58,7 +71,7 @@ namespace Web.Repositories.Implementations
 
         public Task<IEnumerable<ApplicationUser>> GetAll()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_dbSet.AsEnumerable());
         }
 
         public Task<ApplicationUser> Get(string id)

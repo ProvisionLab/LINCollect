@@ -11,13 +11,13 @@ namespace Web.Models.ViewModels
         [Required]
         public string Id { get; set; }
 
-        [Display(Name = "First name")]
         [Required]
+        [Display(Name = "First name")]
         [StringLength(254)]
         public string FirstName { get; set; }
 
-        [Display(Name = "Last name")]
         [Required]
+        [Display(Name = "Last name")]
         [StringLength(254)]
         public string LastName { get; set; }
 
@@ -25,11 +25,15 @@ namespace Web.Models.ViewModels
         [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
         [Display(Name = "New password")]
-        [StringLength(10, MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [StringLength(10, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         public string NewPassword { get; set; }
 
+        [Required]
         [Display(Name = "Password confirmation")]
+        [DataType(DataType.Password)]
         [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string NewPasswordConfirm { get; set; }
     }
