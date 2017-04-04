@@ -8,7 +8,7 @@ namespace Linconnect.Controllers.api.Result
 {
     public class DataOperationResult<TData> : OperationResultBase
     {
-        public TData[] Data { get; set; }
+        public TData Data { get; set; }
 
         public DataOperationResult()
             : base(HttpStatusCode.OK)
@@ -16,16 +16,9 @@ namespace Linconnect.Controllers.api.Result
 
         }
 
-        public DataOperationResult(TData singleEntity)
-            : base(HttpStatusCode.OK)
+        public DataOperationResult(TData singleEntity): base(HttpStatusCode.OK)
         {
-            Data = new TData[] { singleEntity };
-        }
-
-        public DataOperationResult(TData[] values)
-            : base(HttpStatusCode.OK)
-        {
-            Data = values;
+            Data = singleEntity;
         }
     }
 }

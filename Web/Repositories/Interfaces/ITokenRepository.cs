@@ -7,5 +7,6 @@ namespace Web.Repositories.Interfaces
     public interface ITokenRepository : IRepository<Token>
     {
         Task<Token> GetByKeyAsync(string key);
+        Task<Token> GetByUser(string userId);
     }
 }

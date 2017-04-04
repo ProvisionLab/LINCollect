@@ -26,6 +26,7 @@ namespace Web.Models.ViewModels
         public string Email { get; set; }
 
         [Display(Name = "New password")]
+        [StringLength(10, MinimumLength = 6)]
         public string NewPassword { get; set; }
 
         [Display(Name = "Password confirmation")]

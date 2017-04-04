@@ -9,5 +9,6 @@ namespace Web.Controllers.api
 {
     public class ApiPreviewController : ApiController
     {
+
     }
 }

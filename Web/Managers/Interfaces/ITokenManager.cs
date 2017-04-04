@@ -9,5 +9,6 @@ namespace Web.Managers.Interfaces
         Task<string> GenerateToken();
         Task<TokenModel> GetCurrentTokenObjectAsync();
         Task<bool> ValidateToken();
+        Task<TokenModel> GetByUser(string userId);
     }
 }

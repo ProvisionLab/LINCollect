@@ -13,9 +13,28 @@ namespace Web.Repositories.Implementations
         {
         }
 
+        public override async Task Insert(Token entity)
+        {
+            var token = await GetByUser(entity.UserId);
+            if (token != null)
+            {
+                token.Key = entity.Key;
+                await Update(token);
+            }
+            else
+            {
+                await base.Insert(entity);
+            }
+        }
+
         public Task<Token> GetByKeyAsync(string key)
         {
             return Task.FromResult(DbSet.FirstOrDefault(t => t.Key == key));
+        }
+
+        public Task<Token> GetByUser(string userId)
+        {
+            return Task.FromResult(DbSet.FirstOrDefault(t => t.UserId == userId));
         }
     }
 }

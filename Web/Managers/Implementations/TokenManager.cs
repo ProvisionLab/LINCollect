@@ -5,12 +5,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using AutoMapper;
 using Web.Data;
 using Web.Managers.Base.Implementations;
-using Web.Managers.Base.Interfaces;
 using Web.Managers.Interfaces;
 using Web.Models.DTO;
 using Web.Repositories.Base.Interfaces;
+using IObjectMapper = Web.Managers.Base.Interfaces.IObjectMapper;
 
 namespace Web.Managers.Implementations
 {
@@ -68,6 +69,11 @@ namespace Web.Managers.Implementations
                 result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
 
             return result.ToString();
+        }
+
+        public async Task<TokenModel> GetByUser(string userId)
+        {
+            return Mapper.Map<Token, TokenModel>(await UnitOfWork.TokenRepository.GetByUser(userId));
         }
     }
 }

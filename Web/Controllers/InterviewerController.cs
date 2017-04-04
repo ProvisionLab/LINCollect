@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Web.Managers.Interfaces;
 using Web.Models;
 using Web.Models.ViewModels;
+using Web.Repositories.Base.Implementations;
 
 namespace Web.Controllers
 {
@@ -20,10 +21,12 @@ namespace Web.Controllers
     public class InterviewerController : Controller
     {
         private readonly ISurveyManager _surveyManager;
+        private readonly ITokenManager _tokenManager;
 
-        public InterviewerController(ISurveyManager surveyManager)
+        public InterviewerController(ISurveyManager surveyManager, ITokenManager tokenManager)
         {
             _surveyManager = surveyManager;
+            _tokenManager = tokenManager;
         }
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
@@ -77,13 +80,13 @@ namespace Web.Controllers
         public async Task<ActionResult> Assign(string id, int surveyId)
         {
             await _surveyManager.Assign(id, surveyId);
-            return RedirectToAction("Surveys", new {id});
+            return RedirectToAction("Surveys", new { id });
         }
         [HttpPost]
         public async Task<ActionResult> Dissociate(string id, int surveyId)
         {
             await _surveyManager.Dissociate(id, surveyId);
-            return RedirectToAction("Surveys", new {id });
+            return RedirectToAction("Surveys", new { id });
         }
 
         // POST: Interviewer/Create
@@ -100,7 +103,8 @@ namespace Web.Controllers
                     UserName = model.Email,
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    Email = model.Email
+                    Email = model.Email,
+                    PasswordHash = UserManager.PasswordHasher.HashPassword(model.Password)
                 };
                 var result = await UserManager.CreateAsync(user);
 
@@ -158,7 +162,24 @@ namespace Web.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             ApplicationUser applicationUser = await UserManager.FindByIdAsync(id);
-            await UserManager.DeleteAsync(applicationUser);
+            if (applicationUser != null)
+            {
+                if (applicationUser.Surveys?.Count > 0)
+                {
+                    foreach (var survey in applicationUser.Surveys)
+                    {
+                        await _surveyManager.Dissociate(id, survey.Id);
+                    }
+                }
+                var token = await _tokenManager.GetByUser(id);
+                if (token != null)
+                {
+                    await _tokenManager.DeleteAsync(token.Id);
+                }
+                //Fix with usermanager with same context
+                await Task.Delay(300);
+                await UserManager.DeleteAsync(await UserManager.FindByIdAsync(id));
+            }
             return RedirectToAction("Index");
         }
 

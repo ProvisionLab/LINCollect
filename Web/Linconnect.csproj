@@ -335,6 +335,7 @@
     <Compile Include="Managers\Interfaces\ISurveyFileManager.cs" />
     <Compile Include="Managers\Interfaces\ISurveyManager.cs" />
     <Compile Include="Managers\Interfaces\ITokenManager.cs" />
+    <Compile Include="Managers\Interfaces\IUserManager.cs" />
     <Compile Include="Migrations\201610281759589_InitialCreate.cs" />
     <Compile Include="Migrations\201610281759589_InitialCreate.Designer.cs">
       <DependentUpon>201610281759589_InitialCreate.cs</DependentUpon>
