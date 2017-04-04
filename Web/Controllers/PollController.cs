@@ -209,6 +209,7 @@ namespace Web.Controllers
                 return HttpNotFound();
 
             ViewBag.SurveyTitle = survey.Name;
+            ViewBag.Title = "Overview";
 
             var model = new PublishView();
             model.SurveyId = survey.Id;

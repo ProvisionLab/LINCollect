@@ -41,7 +41,7 @@ namespace Web.Controllers
         public ActionResult MailingList()
         {
             var userId = User.Identity.GetUserId();
-            var files = _dbContext.SurveyFiles.Where(x => x.UserId == userId).ToList();
+            var files = _dbContext.SurveyFiles.ToList();
             return PartialView(files);
         }
 

@@ -113,7 +113,7 @@ namespace Web.Controllers
                 return HttpNotFound();
             }
             ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name", surveyView.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", surveyView.SurveyFileId);
+            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles, "Id", "Name", surveyView.SurveyFileId);
             return View(surveyView);
         }
 
