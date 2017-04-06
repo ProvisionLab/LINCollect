@@ -370,9 +370,9 @@ namespace Web.Controllers
                 }
                 #endregion
             }
-            catch (Exception ex)
+            catch
             {
-                var i = 1;
+                // ignored
             }
             return RedirectToAction("Index");
         }

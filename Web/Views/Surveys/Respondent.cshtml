@@ -150,15 +150,27 @@
                 }
             });
             
-            if(!$('input[name="FormatCode"]').prop('checked')) {
+            if(!$('input[name="QuestionFormatId"]').prop('checked')) {
                 $('.format-group-section').css('color', '#b94a48');
             } else {
                 $('.format-group-section').css('color', 'initial');
             }
             if(valid) {
                 $('#question-options').submit();
+                clearInput('#question-options');
             }
         }
+
+        function clearInput(id) {
+            $(id + 'input').val('');
+            $(id + 'input[type="checkbox"][type="radio"]').prop('checked', false);;
+            CKEDITOR.instances['Text'].updateElement();
+            CKEDITOR.instances['Text'].setData('');
+
+            CKEDITOR.instances['Introducing'].updateElement();
+            CKEDITOR.instances['Introducing'].setData('');
+        }
+
         function successResp(data) {
             if (data.success) {
                 window.location.reload();

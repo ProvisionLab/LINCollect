@@ -31,5 +31,10 @@ namespace Web.Repositories.Implementations
 
             await this.Update(item);
         }
+
+        public Task<IQueryable<Survey>> GetByUser(string id)
+        {
+            return Task.FromResult(DbSet.Include(t => t.ApplicationUsers).Where(t => t.ApplicationUsers.Select(u=>u.Id).Contains(id)));
+        }
     }
 }

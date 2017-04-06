@@ -169,12 +169,12 @@
             CKEDITOR.instances['Text'].setData();
             CKEDITOR.instances['Introducing'].setData();
 
-            $('input[name="FormatCode"]:checked').val();
+            $('input[name="QuestionFormatId"]:checked').val();
             $('.formats *[data-format]').each(function () {
                 if (!$(this).hasClass('hidden')) {
                     $(this).addClass('hidden');
                 }
-                if ($(this).attr('data-format').indexOf($('input[name="FormatCode"]:checked').val()) != -1) {
+                if ($(this).attr('data-format').indexOf($('input[name="QuestionFormatId"]:checked').val()) != -1) {
                     $(this).removeClass('hidden');
                 }
             });

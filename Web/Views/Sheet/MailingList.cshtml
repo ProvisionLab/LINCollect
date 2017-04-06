@@ -11,11 +11,11 @@
 
         @foreach (var item in Model)
         {
-            <tr class="file-@item.Id">
-                <td>
+            <tr class="file-@item.Id ">
+                <td class="col-md-9">
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
-                <td class="text-right">
+                <td class="col-md-3 text-right">
                     <a href="https://docs.google.com/spreadsheets/d/@item.Link/edit#gid=0" target="_blank">show</a> |
                     @Ajax.ActionLink("edit", "EditForm", "Sheet", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "edit-form" }) |
                     <a href="#" onclick="deleteFile(@item.Id)">delete</a>
@@ -61,7 +61,7 @@ else {
     <div class="form-group">
         <span class="control-label col-xs-2">File link</span>
         <div class="col-xs-8">
-            <input type="text" name="Name" id="fileLink" class="form-control" />
+            <input type="text" name="Link" id="fileLink" class="form-control" />
         </div>
         <div class="col-xs-2">
             <input type="button" class="btn purple" value="Add" onclick="useUserFile()" />

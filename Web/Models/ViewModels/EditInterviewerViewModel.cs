@@ -8,7 +8,7 @@ namespace Web.Models.ViewModels
 {
     public class EditInterviewerViewModel
     {
-        [Required]
+        
         public string Id { get; set; }
 
         [Required]

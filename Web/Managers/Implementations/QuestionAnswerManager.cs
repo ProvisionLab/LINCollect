@@ -26,12 +26,14 @@ namespace Web.Managers.Implementations
 
             await UnitOfWork.QuestionAnswerRepository.Insert(model);
             await UnitOfWork.SaveAsync();
-
-            foreach (var itemValue in item.Values)
+            if (item.Values != null)
             {
-                var value = new QuestionAnswerValue { QuestionAnswerId = model.Id, Value = itemValue };
-                await UnitOfWork.QuestionAnswerValueRepository.Insert(value);
-                await UnitOfWork.SaveAsync();
+                foreach (var itemValue in item.Values)
+                {
+                    var value = new QuestionAnswerValue { QuestionAnswerId = model.Id, Value = itemValue };
+                    await UnitOfWork.QuestionAnswerValueRepository.Insert(value);
+                    await UnitOfWork.SaveAsync();
+                }
             }
             return model.Id;
         }

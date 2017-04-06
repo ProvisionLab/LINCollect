@@ -174,7 +174,7 @@
                 if (!data.success) {
                     alert('Error: ' + data.Error);
                 } else {
-                    $('#file-table').append($('<tr class="file-' + data.Data.Id + '"><td>' + data.Data.Name + '</td><td class="text-right"><a href="https://docs.google.com/spreadsheets/d/' + data.Data.Link + '/edit#gid=0" target="_blank">show</a> | <a href="#" onclick="deleteFile(' + data.Data.Id + ')">delete</a></td></tr>'));
+                    $('#file-table').append($('<tr class="file-' + data.Data.Id + '"><td>' + data.Data.Name + '</td><td class="text-right"><a href="https://docs.google.com/spreadsheets/d/' + data.Data.Link + '/edit#gid=0" target="_blank">show</a> | <a data-ajax="true" data-ajax-mode="replace" data-ajax-update="#edit-form" href="/sheet/editform/' + data.Data.Id + '">edit</a> |<a href="#" onclick="deleteFile(' + data.Data.Id + ')">delete</a></td></tr>'));
                     $('#fileLink').val(''); $('#fileLinkName').val('');
                 }
             }).always(function () {

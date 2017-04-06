@@ -29,6 +29,7 @@ namespace Linconnect.Controllers.api.Result
 		}
 
 		public static FailedOperationResult Unauthorized = new FailedOperationResult(HttpStatusCode.Unauthorized, "Unautorized");
+		public static FailedOperationResult BadRequest = new FailedOperationResult(HttpStatusCode.BadRequest, "Bad request");
 
 	}
 }

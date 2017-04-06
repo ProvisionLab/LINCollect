@@ -110,7 +110,7 @@ namespace Web.Controllers
                 _dbContext.SurveyFiles.Remove(file);
                 await _dbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch
             {
                 return Json(new { success = false, Error = "You can't delete this file. Some of survey use it!" });
             }
@@ -120,16 +120,15 @@ namespace Web.Controllers
 
         private string CopyFile(string name)
         {
-            UserCredential credential;
             //var folder = System.Web.HttpContext.Current.Server.MapPath("/Content/files");
-            credential = GoogleWebAuthorizationBroker.AuthorizeAsync(new ClientSecrets()
-            {
-                ClientId = "555419438916-u5dlvt62e547tkpfjjb5icc3fcq2gd6c.apps.googleusercontent.com",
-                ClientSecret = "VQdxwTPZVde30WgAbFWRAn8y"
-            },
-            Scopes,
-            Environment.UserName,
-            CancellationToken.None).Result;
+            var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(new ClientSecrets()
+                {
+                    ClientId = "555419438916-u5dlvt62e547tkpfjjb5icc3fcq2gd6c.apps.googleusercontent.com",
+                    ClientSecret = "VQdxwTPZVde30WgAbFWRAn8y"
+                },
+                Scopes,
+                Environment.UserName,
+                CancellationToken.None).Result;
 
             // Create Google Sheets API service.
             var service = new SheetsService(new BaseClientService.Initializer()

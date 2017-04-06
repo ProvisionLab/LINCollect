@@ -40,7 +40,7 @@ namespace Web.Services.Implementations
                 await SmtpClient.SendMailAsync(message);
                 return true;
             }
-            catch (Exception e)
+            catch
             {
                 return false;
             }

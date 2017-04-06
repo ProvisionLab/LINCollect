@@ -16,6 +16,7 @@ namespace Web.Models.ViewModels
 
         //start
         public string IntroductionText { get; set; }
+        public string LandingText { get; set; }
         //finish
         public string ThanksText { get; set; }
         

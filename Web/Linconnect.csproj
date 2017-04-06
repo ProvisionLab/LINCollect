@@ -986,6 +986,7 @@
     <Content Include="Views\Interviewer\Edit.cshtml" />
     <Content Include="Views\Interviewer\Index.cshtml" />
     <Content Include="Views\Interviewer\Surveys.cshtml" />
+    <Content Include="Views\Poll\Thanks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

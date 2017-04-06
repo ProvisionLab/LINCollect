@@ -1,37 +1,35 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using AutoMapper;
 using Linconnect.Controllers.api.Result;
 using Microsoft.AspNet.Identity.Owin;
-using Web.Controllers.api.Base;
 using Web.Data;
 using Web.Filters;
-using Web.Managers.Base.Interfaces;
 using Web.Managers.Interfaces;
 using Web.Models.DTO;
-using Web.Repositories.Interfaces;
+using Web.Models.ViewModels;
 
 namespace Web.Controllers.api
 {
-    [RoutePrefix("api/survey")]
+    [RoutePrefix("api/survey"), ApiAuthorize]
     public class ApiSurveysController : ApiController
     {
         private readonly ISurveyManager _surveyManager;
         private readonly ITokenManager _tokenManager;
+        private readonly IPublishSurveyManager _publishSurveyManager;
         private ApplicationUserManager _userManager;
 
-        public ApiSurveysController(ISurveyManager surveyManager, ITokenManager tokenManager)
+        public ApiSurveysController(ISurveyManager surveyManager, ITokenManager tokenManager, IPublishSurveyManager publishSurveyManager)
         {
             _surveyManager = surveyManager;
             _tokenManager = tokenManager;
+            _publishSurveyManager = publishSurveyManager;
         }
 
         public ApplicationUserManager UserManager
@@ -44,19 +42,56 @@ namespace Web.Controllers.api
         }
 
 
-        [HttpGet,Route("")]
-        [ApiAuthorize]
+        [HttpGet, Route("")]
         public async Task<OperationResultBase> GetSurveys()
         {
             var token = await _tokenManager.GetCurrentTokenObjectAsync();
-            var user = UserManager.Users.Include(t => t.Surveys).FirstOrDefault(t => t.Id == token.UserId);
 
-            if (user != null)
-                return new DataOperationResult<IEnumerable<SurveyModel>>(
-                    Mapper.Map<IEnumerable<Survey>, IEnumerable<SurveyModel>>(user.Surveys));
+            var surveys = await _surveyManager.GetByUser(token.UserId);
 
-            return new DataOperationResult<IEnumerable<SurveyModel>>();
+            return new DataOperationResult<List<SurveyView>>(surveys);
         }
 
+        [HttpPost, Route("start")]
+        public async Task<OperationResultBase> Start(PublishSurveyModel model)
+        {
+            if (model.SurveyId < 0 || await _surveyManager.GetAsync(model.SurveyId) == null)
+            {
+                return new FailedOperationResult(HttpStatusCode.BadRequest, "Survey id can't be empty");
+            }
+            //check if user assigned to project, and if survey is published
+
+            model.Link = Guid.NewGuid().ToString();
+            model.Succeed = true;
+            var id = await _publishSurveyManager.InsertAsync(model);
+
+            return new DataOperationResult<PublishSurveyModel>(await _publishSurveyManager.GetAsync(id));
+        }
+
+        [HttpGet, Route("pass/{id:int:min(1)}")]
+        public async Task<OperationResultBase> Pass(int id)
+        {
+            return new DataOperationResult<PreviewView>(await _surveyManager.GetPreview(id));
+        }
+
+        [HttpPost]
+        public async Task<OperationResultBase> Submit(PollResultView resultModel)
+        {
+            var publishSurvey = await _publishSurveyManager.GetByGuidAsync(resultModel.UserLinkId);
+
+            if (publishSurvey == null)
+            {
+                return FailedOperationResult.BadRequest;
+            }
+
+            var result = await _surveyManager.Submit(publishSurvey.Id, resultModel);
+
+            if (result)
+            {
+                return OperationResultBase.Ok;
+            }
+
+            return FailedOperationResult.BadRequest;
+        }
     }
 }

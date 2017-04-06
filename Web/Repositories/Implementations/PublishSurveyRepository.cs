@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -14,6 +15,11 @@ namespace Web.Repositories.Implementations
     {
         public PublishSurveyRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public override Task<PublishSurvey> Get(int id)
+        {
+            return Task.FromResult(DbSet.Include(t => t.Survey).FirstOrDefault(t => t.Id == id));
         }
 
         public Task<PublishSurvey> GetByGuid(Guid guid)

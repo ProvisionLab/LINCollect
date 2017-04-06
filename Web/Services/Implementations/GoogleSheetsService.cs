@@ -45,7 +45,7 @@ namespace Web.Services.Implementations
                 return copy.Sheets.Skip(1).FirstOrDefault().Data.FirstOrDefault()
                     .RowData.Select(x => x.Values.FirstOrDefault().FormattedValue).Skip(1).ToList();
             }
-            catch (Exception ex)
+            catch
             {
                 error = "Not have access to the file '{0}' or is not 'Node List' sheet. Open <a target='_blank' href='https://docs.google.com/spreadsheets/d/{1}'>THIS LINK</a> to fix problem.";
                 return new List<string>();
@@ -78,7 +78,7 @@ namespace Web.Services.Implementations
 
                 return Task.FromResult(userList);
             }
-            catch (Exception e)
+            catch
             {
                 error = "Not have access to the file '{0}' or is not 'Node List' sheet. Open <a target='_blank' href='https://docs.google.com/spreadsheets/d/{1}'>THIS LINK</a> to fix problem.";
                 return Task.FromResult(userList);
