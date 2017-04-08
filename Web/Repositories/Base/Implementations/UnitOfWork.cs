@@ -22,6 +22,7 @@ namespace Web.Repositories.Base.Implementations
         private IQuestionRepository _questionRepository;
         private IUserRepository _userRepository;
         private ISurveyStatusRepository _surveyStatusRepository;
+        private IAnswerRepository _answerRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -61,8 +62,11 @@ namespace Web.Repositories.Base.Implementations
         public IUserRepository UserRepository
             => _userRepository ?? (_userRepository = new UserRepository(_context));
 
-        public ISurveyStatusRepository SurveyStatusRepository 
+        public ISurveyStatusRepository SurveyStatusRepository
             => _surveyStatusRepository ?? (_surveyStatusRepository = new SurveyStatusRepository(_context));
+
+        public IAnswerRepository AnswerRepository
+            => _answerRepository ?? (_answerRepository = new AnswerRepository(_context));
 
         public async Task<int> SaveAsync()
         {

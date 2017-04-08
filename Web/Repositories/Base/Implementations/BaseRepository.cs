@@ -4,14 +4,13 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Web.Data.Interfaces;
 using Web.Models;
 using Web.Repositories.Base.Interfaces;
 
 namespace Web.Repositories.Base.Implementations
 {
-    public abstract class BaseRepository<TEntity>: IRepository<TEntity> where TEntity: class, IEntity
+    public abstract class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
         protected readonly ApplicationDbContext DbContext;
         protected readonly DbSet<TEntity> DbSet;
@@ -19,27 +18,23 @@ namespace Web.Repositories.Base.Implementations
         protected BaseRepository(ApplicationDbContext dbContext)
         {
             if (dbContext == null)
-            {
-                throw new ArgumentException("An instance of DbContext is required to use in this repository", "dbContext");
-            }
+                throw new ArgumentException("An instance of DbContext is required to use in this repository",
+                    nameof(dbContext));
 
             DbContext = dbContext;
 
             DbSet = dbContext.Set<TEntity>();
         }
+
         public virtual Task Insert(TEntity entity)
         {
             return Task.Factory.StartNew(() =>
-                {
-                    DbEntityEntry entityEntry = DbContext.Entry(entity);
-                    if (entityEntry.State != EntityState.Detached)
-                    {
-                        entityEntry.State = EntityState.Added;
-                    }
-                    else
-                    {
-                        DbSet.Add(entity);
-                    }
+            {
+                DbEntityEntry entityEntry = DbContext.Entry(entity);
+                if (entityEntry.State != EntityState.Detached)
+                    entityEntry.State = EntityState.Added;
+                else
+                    DbSet.Add(entity);
             });
         }
 
@@ -49,12 +44,9 @@ namespace Web.Repositories.Base.Implementations
             {
                 DbEntityEntry entityEntry = DbContext.Entry(entity);
                 if (entityEntry.State == EntityState.Detached)
-                {
                     DbSet.Attach(entity);
-                }
 
                 entityEntry.State = EntityState.Modified;
-
             });
         }
 
@@ -65,19 +57,15 @@ namespace Web.Repositories.Base.Implementations
                 DbEntityEntry entityEntry = DbContext.Entry(entity);
 
                 if (entityEntry.State != EntityState.Deleted)
-                {
                     DbSet.Remove(entity);
-                }
             });
         }
 
         public virtual async Task Delete(int id)
         {
-            TEntity entity = await Get(id);
+            var entity = await Get(id);
             if (entity != null)
-            {
                 await Delete(entity);
-            }
         }
 
         public virtual Task<TEntity> Get(int id)
@@ -99,6 +87,7 @@ namespace Web.Repositories.Base.Implementations
                 entry.State = EntityState.Detached;
             });
         }
+
         public void Dispose()
         {
             DbContext?.Dispose();

@@ -69,7 +69,8 @@ namespace Web
             builder.RegisterType<QuestionAnswerManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<SectionManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<UserManager>().AsImplementedInterfaces().InstancePerDependency();
-            
+            builder.RegisterType<QuestionManager>().AsImplementedInterfaces().InstancePerDependency();
+
             return builder.Build();
         }
 

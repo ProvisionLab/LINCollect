@@ -165,16 +165,26 @@
             data: null
         }).success(function (data) {
             $('#editQuestionModal #question-options-edit').empty().html(data);
-            debugger
-            CKEDITOR.instances['Text'].setData();
-            CKEDITOR.instances['Introducing'].setData();
 
-            $('input[name="QuestionFormatId"]:checked').val();
+            var instance = CKEDITOR.instances["Text"];
+            if(instance)
+            {
+                CKEDITOR.remove(instance);
+            }
+            CKEDITOR.replace("Text");
+
+            instance = CKEDITOR.instances["Introducing"];
+            if(instance)
+            {
+                CKEDITOR.remove(instance);
+            }
+            CKEDITOR.replace("Introducing");
+
             $('.formats *[data-format]').each(function () {
                 if (!$(this).hasClass('hidden')) {
                     $(this).addClass('hidden');
                 }
-                if ($(this).attr('data-format').indexOf($('input[name="QuestionFormatId"]:checked').val()) != -1) {
+                if ($(this).attr('data-format').indexOf($('input[name="QuestionFormat.Code"]:checked').val()) != -1) {
                     $(this).removeClass('hidden');
                 }
             });

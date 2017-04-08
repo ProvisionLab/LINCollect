@@ -1,34 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Web.Data.Interfaces;
 using Web.Managers.Base.Interfaces;
-using Web.Repositories.Base.Implementations;
 using Web.Repositories.Base.Interfaces;
 
 namespace Web.Managers.Base.Implementations
 {
     public class CrudManager<TEntity, TModel> : BaseCrudManager<TEntity>, ICrudManager<TModel>
-         where TModel : class, IModel
+        where TModel : class, IModel
         where TEntity : class, IEntity
     {
-
-        protected CrudManager(IUnitOfWork unitOfWork, IRepository<TEntity> repository, IObjectMapper objectMapper) : base(unitOfWork, repository, objectMapper)
+        protected CrudManager(IUnitOfWork unitOfWork, IRepository<TEntity> repository, IObjectMapper objectMapper)
+            : base(unitOfWork, repository, objectMapper)
         {
         }
 
         public virtual async Task DeleteAsync(int id)
         {
-            await this.Repository.Delete(id);
+            await Repository.Delete(id);
 
-            await this.UnitOfWork.SaveAsync();
+            await UnitOfWork.SaveAsync();
         }
 
         public virtual async Task DeleteAsync(TModel model)
         {
-            await this.Repository.Delete(this.ObjectMapper.Map<TModel, TEntity>(model));
+            await Repository.Delete(ObjectMapper.Map<TModel, TEntity>(model));
 
-            await this.UnitOfWork.SaveAsync();
+            await UnitOfWork.SaveAsync();
         }
 
         public virtual async Task<List<TModel>> GetAsync()

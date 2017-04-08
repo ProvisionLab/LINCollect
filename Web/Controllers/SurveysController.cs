@@ -8,9 +8,11 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using AutoMapper;
 using Web.Data;
 using Web.Managers.Interfaces;
 using Web.Models;
+using Web.Models.DTO;
 using Web.Models.ViewModels;
 using Web.Providers;
 
@@ -29,12 +31,17 @@ namespace Web.Controllers
         private readonly ApplicationDbContext _dbContext;
         private readonly IResultManager _resultManager;
         private readonly ISurveyManager _surveyManager;
+        private readonly IQuestionManager _questionManager;
 
-        public SurveysController(ApplicationDbContext dbContextContext, IResultManager resultManager, ISurveyManager surveyManager)
+        public SurveysController(ApplicationDbContext dbContextContext,
+                                IResultManager resultManager,
+                                ISurveyManager surveyManager,
+                                IQuestionManager questionManager)
         {
             _dbContext = dbContextContext;
             _resultManager = resultManager;
             _surveyManager = surveyManager;
+            _questionManager = questionManager;
         }
 
         public async Task<ActionResult> Index()
@@ -409,67 +416,67 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<JsonResult> Respondent(Question question)
+        public async Task<JsonResult> Respondent(QuestionModel question)
         {
-            var Answers = new List<Answer>();
-            var code = Request.Form["FormatCode"];
-            if (code == null)
-                return Json(new { success = false });
-            question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
-            question.QuestionFormatId = _dbContext.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
-            //[8]: "Answer.Rows"
-            //[9]: "Answer.Text"
-            //[10]: "Answer.Value"
-            if ("choice_across,choice_down,drop_down,matrix".Contains(code) && Request.Form["Answer.Text"] != null)
+            var formatCode = _dbContext.QuestionFormats.FirstOrDefault(t => t.Code == question.QuestionFormat.Code);
+
+            if (formatCode != null)
             {
-                var _text = Request.Form["Answer.Text"].Split(',');
-                var _val = Request.Form["Answer.Value"].Split(',');
-
-                if (code == "matrix" && Request.Form["Answer.Rows"] != null)
-                    question.Rows = string.Join(",", Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
-
-                for (int i = 0; i < _text.Length; i++)
-                {
-                    if (_text[i].Length > 0)
-
-                        Answers.Add(new Answer()
-                        {
-                            QuestionId = question.Id,
-                            CreateDateUtc = DateTime.UtcNow,
-                            UpdateDateUtc = DateTime.UtcNow,
-                            Text = _text[i],
-                            Value = _val[i],
-                            IsDefault = _val[i] == Request.Form["Answer.Default"],
-                            OrderId = i
-                        });
-                }
+                question.QuestionFormatId = formatCode.Id;
+                question.QuestionFormat = Mapper.Map<QuestionFormat, QuestionFormatModel>(formatCode);
             }
-            try
-            {
-                var orderId = _dbContext.Question.Where(x => x.RespondentId == question.RespondentId).Count() + 1;
-                if (question.OrderId == 0)
-                    question.OrderId = orderId;
-
-                if (question.Id == 0)
-                {
-                    question.Answers = Answers;
-                    _dbContext.Question.Add(question);
-                }
-                else
-                {
-                    var answers = _dbContext.Answers.Where(x => x.QuestionId == question.Id);
-                    _dbContext.Answers.RemoveRange(answers);
-                    _dbContext.SaveChanges();
-                    _dbContext.Entry(question).State = EntityState.Modified;
-                    _dbContext.SaveChanges();
-                    _dbContext.Answers.AddRange(Answers);
-                }
-
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
+            else
             {
                 return Json(new { success = false });
+            }
+
+            if ("choice_across,choice_down,drop_down,matrix".Contains(formatCode.Code))
+            {
+                if (formatCode.Code == "matrix" && Request.Form["Answer.Rows"] != null)
+                    question.Rows = string.Join(",",
+                        Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
+
+                for (int i = 0; i < question.Answers.Count; i++)
+                {
+                    question.Answers[i].CreateDateUtc = DateTime.UtcNow;
+                    question.Answers[i].UpdateDateUtc = DateTime.UtcNow;
+                    question.Answers[i].OrderId = i;
+                }
+            }
+            if ("text,slider".Contains(formatCode.Code))
+            {
+                question.Answers = null;
+            }
+
+            if (question.OrderId == 0)
+            {
+                question.OrderId = _dbContext.Question.Count(x => x.RespondentId == question.RespondentId) + 1;
+            }
+
+            if (question.Id == 0)
+            {
+                question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
+
+                try
+                {
+                    await _questionManager.InsertAsync(question);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false });
+                }
+            }
+            else
+            {
+                question.UpdateDateUtc = DateTime.UtcNow;
+                try
+                {
+                    await _questionManager.UpdateAsync(question);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false });
+                }
             }
 
             return Json(new { success = true });
@@ -519,7 +526,8 @@ namespace Web.Controllers
                     Rows = ",,,,",
                     Answers = _answers,
                     RespondentId = respId,
-                    IsAfterSurvey = isAfter
+                    IsAfterSurvey = isAfter,
+                    Resolution = 1
                 };
             }
             if (string.IsNullOrEmpty(model.Rows))
@@ -529,7 +537,7 @@ namespace Web.Controllers
                 model.Answers = _answers;
 
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
-            return PartialView(model);
+            return PartialView(Mapper.Map<Question, QuestionModel>(model));
         }
 
         public ActionResult EditRQuestion(int id, int relId, bool isAfter = true)

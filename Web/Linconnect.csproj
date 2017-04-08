@@ -323,6 +323,7 @@
     <Compile Include="Managers\Base\Interfaces\IObjectMapper.cs" />
     <Compile Include="Managers\Implementations\PublishSurveyManager.cs" />
     <Compile Include="Managers\Implementations\QuestionAnswerManager.cs" />
+    <Compile Include="Managers\Implementations\QuestionManager.cs" />
     <Compile Include="Managers\Implementations\ResultManager.cs" />
     <Compile Include="Managers\Implementations\SectionManager.cs" />
     <Compile Include="Managers\Implementations\SurveyFileManager.cs" />
@@ -331,6 +332,7 @@
     <Compile Include="Managers\Implementations\UserManager.cs" />
     <Compile Include="Managers\Interfaces\IPublishSurveyManager.cs" />
     <Compile Include="Managers\Interfaces\IQuestionAnswerManager.cs" />
+    <Compile Include="Managers\Interfaces\IQuestionManager.cs" />
     <Compile Include="Managers\Interfaces\IResultManager.cs" />
     <Compile Include="Managers\Interfaces\ISectionManager.cs" />
     <Compile Include="Managers\Interfaces\ISurveyFileManager.cs" />
@@ -504,6 +506,7 @@
     <Compile Include="Repositories\Base\Implementations\UnitOfWork.cs" />
     <Compile Include="Repositories\Base\Interfaces\IRepository.cs" />
     <Compile Include="Repositories\Base\Interfaces\IUnitOfWork.cs" />
+    <Compile Include="Repositories\Implementations\AnswerRepository.cs" />
     <Compile Include="Repositories\Implementations\QuestionAnswerRepository.cs" />
     <Compile Include="Repositories\Implementations\QuestionAnswerValueRepository.cs" />
     <Compile Include="Repositories\Implementations\QuestionRepository.cs" />
@@ -516,6 +519,7 @@
     <Compile Include="Repositories\Implementations\SurveyStatusRepository.cs" />
     <Compile Include="Repositories\Implementations\TokenRepository.cs" />
     <Compile Include="Repositories\Implementations\UserRepository.cs" />
+    <Compile Include="Repositories\Interfaces\IAnswerRepository.cs" />
     <Compile Include="Repositories\Interfaces\IPublishSurveyRepository.cs" />
     <Compile Include="Repositories\Interfaces\IQuestionAnswerRepository.cs" />
     <Compile Include="Repositories\Interfaces\IQuestionAnswerValueRepository.cs" />
