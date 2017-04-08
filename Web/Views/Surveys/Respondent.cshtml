@@ -103,7 +103,7 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearInput('addQuestionModal')">Cancel</button>
                 <button type="button" class="btn purple" onclick="addQuestion()">Add</button>
             </div>
         </div>
@@ -114,9 +114,13 @@
     @Scripts.Render("~/bundles/unobtrusive")
     @Scripts.Render("~/bundles/slider")
 
-    <script>
+    <script type="text/javascript">
         function removeRow(btn) {
-            $(btn).parents('tr').remove();
+            var row = $(btn).parents('tr');
+            if(row.next().length>0){
+                qtrup(row.next());
+            }
+            row.remove();
         }
         function addAnswerRow(btn) {
             var index = $(btn).parents('table.answers-table').find('tbody > tr').length;
@@ -126,8 +130,10 @@
             $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control" ></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));
         }
         function changeCb(cb, format) {
-            $('.answers-table input[type="checkbox"]').prop('checked', false);
-            $(cb).prop('checked', true);
+            if($(cb).prop('checked')){            
+                $('.answers-table input[type="checkbox"]').prop('checked', false);
+                $(cb).prop('checked', true);
+            }
         }
         function addQuestion() {
             $('#question-options #Text').val(CKEDITOR.instances['Text'].getData());
@@ -150,7 +156,7 @@
                     }
                 }
             });
-            
+
             if(!$('input[name="QuestionFormat.Code"]').prop('checked')) {
                 $('.format-group-section').css('color', '#b94a48');
             } else {
@@ -163,8 +169,8 @@
         }
 
         function clearInput(id) {
-            $(id + 'input').val('');
-            $(id + 'input[type="checkbox"][type="radio"]').prop('checked', false);;
+            $('#'+id + ' input').val('');
+            $('#'+id+' input[type="checkbox"], #'+id+'  input[type="radio"]').prop('checked', false);;
             CKEDITOR.instances['Text'].updateElement();
             CKEDITOR.instances['Text'].setData('');
 

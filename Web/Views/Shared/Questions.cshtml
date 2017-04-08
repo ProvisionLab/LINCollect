@@ -24,13 +24,10 @@
                     if (Model[j].TextRowsCount > 1)
                     {
                         @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}", @rows = Model[j].TextRowsCount })
-                        @*<textarea name="q-@Model[j].Id" rows="@Model[j].TextRowsCount" class="form-control @(Model[j].IsCompulsory ? "required" : "")"></textarea>*@
                     }
                     else
                     {
                         @Html.TextBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
-
-                        @*<input type="text" name="@(ViewData["base"]).QuestionAnswers[@j].Values[0]" value="this is text" class="form-control" @(Model[j].IsCompulsory ? "required" : "") />*@
                     }
                 }
                 else if (Model[j].QuestionFormat.Code == "choice_across")
@@ -41,23 +38,20 @@
 
                         <label>
                             @Model[j].Answers[k].Text <br />
-                            @if (Model[j].IsMultiple.HasValue && Model[j].IsMultiple.Value)
+                            @if (Model[j].IsMultiple)
                             {
                                 <input type="checkbox" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "") />
-                                @*@Html.CheckBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]", Model[j].Answers[k].IsDefault, new { value = Model[j].Answers[k].Value })*@
                             }
                             else
                             {
                                 @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
-                                @*<input type="radio" name="q-@Model[j].Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />*@
                             }
                         </label>
                     }
 
-                    if (Model[j].IsAnnotation.HasValue && Model[j].IsAnnotation.Value)
+                    if (Model[j].IsAnnotation)
                     {
                         @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Anotation", null, new { rows = 2, @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
-                        @*<textarea name="qa-@Model[j].Id" rows="2" class="form-control @(Model[j].IsCompulsory ? "required" : "")"></textarea>*@
                     }
                 }
                 else if (Model[j].QuestionFormat.Code == "choice_down")
@@ -65,17 +59,14 @@
                     for (int k = 0; k < Model[j].Answers.Count; k++)
                     {
                         <label>
-                            @if (Model[j].IsMultiple.HasValue && Model[j].IsMultiple.Value)
+                            @if (Model[j].IsMultiple)
                             {
-                                @*@Html.CheckBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]", Model[j].Answers[k].IsDefault, new { value = Model[j].Answers[k].Value })*@
                                 <input type="checkbox" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault? "checked" : "") />
                             }
                             else
                             {
                                 @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
-                                @*<input type="radio" name="q-@Model[j].Id" value="@answer.Value" @(answer.IsDefault ? "checked" : "") />*@
                             }
-                            @*@answer.Text*@
                             @Model[j].Answers[k].Text
                         </label><br />
                     }
@@ -107,7 +98,6 @@
                                 {
                                     <td>
                                         @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{i}]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
-                                        @*<input type="radio" name="q-@(Model[j].Id)=a-@i" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "")/>*@
                                     </td>
                                 }
                             </tr>
@@ -121,7 +111,7 @@
                                     <div class="col-xs-2">@Model[j].TextMin</div>
                                     <div class="col-xs-3">
                                         <div name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Slider")" data-slider-value="@Model[j].ValueMax" data-slider-min="@Model[j].ValueMin" data-slider-max="@Model[j].ValueMax" data-slider-step="@(Model[j].Resolution == 0 ? 1 : Model[j].Resolution)" data-slider-tooltip="show"
-                                             @((Model[j].IsShowValue.HasValue && Model[j].IsShowValue.Value) ? "" : "data-slider-tooltip='hide'")></div>
+                                             @((Model[j].IsShowValue) ? "" : "data-slider-tooltip='hide'")></div>
                                     </div>
                                     <div class="col-xs-2">@Model[j].TextMax</div>
                                     <div class="col-xs-5">&nbsp;&nbsp;&nbsp;&nbsp;</div>
@@ -129,5 +119,5 @@
                             }
             </div>
         </div>
-                                }
-                            }
+    }
+}

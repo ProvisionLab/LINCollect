@@ -37,7 +37,7 @@ namespace Web.Models
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
         {
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
-            Database.SetInitializer(new ApplicationDbInitializer());
+            //Database.SetInitializer(new ApplicationDbInitializer());
         }
 
         public static ApplicationDbContext Create()
@@ -145,7 +145,6 @@ namespace Web.Models
             });
 
             user.Roles.Add(new IdentityUserRole { RoleId = administrator.Id, UserId = user.Id });
-            user.Roles.Add(new IdentityUserRole { RoleId = interviewer.Id, UserId = user.Id });
 
             context.SaveChanges();
 

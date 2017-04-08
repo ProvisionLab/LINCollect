@@ -440,7 +440,6 @@ namespace Web.Controllers
                 {
                     question.Answers[i].CreateDateUtc = DateTime.UtcNow;
                     question.Answers[i].UpdateDateUtc = DateTime.UtcNow;
-                    question.Answers[i].OrderId = i;
                 }
             }
             if ("text,slider".Contains(formatCode.Code))
@@ -498,11 +497,12 @@ namespace Web.Controllers
 
         public ActionResult EditQuestion(int id, int respId, bool isAfter = true)
         {
-            var model = _dbContext.Question.Find(id);
-            var _answers = new List<Answer>();
+            var model = Task.Run(() => _questionManager.GetAsync(id)).Result;
+
+            var _answers = new List<AnswerModel>();
             for (int i = 0; i < 5; i++)
             {
-                _answers.Add(new Answer()
+                _answers.Add(new AnswerModel
                 {
                     OrderId = i + 1,
                     Text = "",
@@ -511,7 +511,7 @@ namespace Web.Controllers
             }
             if (model == null)
             {
-                model = new Question()
+                model = new QuestionModel
                 {
                     TextRowsCount = 1,
                     IsMultiple = false,
@@ -537,7 +537,7 @@ namespace Web.Controllers
                 model.Answers = _answers;
 
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
-            return PartialView(Mapper.Map<Question, QuestionModel>(model));
+            return PartialView(model);
         }
 
         public ActionResult EditRQuestion(int id, int relId, bool isAfter = true)

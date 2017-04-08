@@ -111,18 +111,15 @@
                         @for (int i = 0; i < Model.Answers.Count; i++)
                         {
                             <tr>
-                                @Html.Hidden($"Answers[{i}].OrderId")
+                                @Html.Hidden($"Answers[{i}].OrderId", Model.Answers[i].OrderId)
                                 <td>
                                     @Html.TextBox($"Answers[{i}].Text", Model.Answers[i].Text, new {@class = "form-control"})
-                                    @*<input type="text" name="Answer.Text" value="@item.Text" class="form-control"/>*@
                                 </td>
                                 <td>
                                     @Html.TextBox($"Answers[{i}].Value", Model.Answers[i].Value, new {@class = "form-control"})
-                                    @*<input type="text" name="Answer.Value" value="@item.Value" class="form-control"/>*@
                                 </td>
                                 <td>
                                     @Html.CheckBox($"Answers[{i}].IsDefault", Model.Answers[i].IsDefault, new {onchange = "changeCb(this);"})
-                                    @*<input type="checkbox" @(item.IsDefault ? "checked" : "") onchange="changeCb(this);" value="@item.Value" name="Answer.IsDefault"/>*@
                                 </td>
                                 <td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td>
                             </tr>
@@ -157,7 +154,7 @@
                         }
                         else
                         {
-                            @Html.RadioButtonFor(m => m.IsMultiple, "true")
+                            @Html.RadioButtonFor(m => m.IsMultiple, "false")
                         }
                         No
                     </label>

@@ -13,7 +13,9 @@ namespace Web.Models.MapperProfiles
         public QuestionProfile()
         {
             CreateMap<Question, QuestionModel>();
-            CreateMap<QuestionModel, Question>();
+            CreateMap<QuestionModel, Question>()
+                .ForMember(d => d.Answers, i => i.Ignore())
+                .ForMember(d=>d.QuestionFormat, i=>i.Ignore());
         }
     }
 }
