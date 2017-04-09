@@ -13,5 +13,7 @@ namespace Web.Models.DTO
         public bool IsDefault { get; set; }
         public string Text { get; set; }
         public string Value { get; set; }
+        public DateTime CreateDateUtc { get; set; }
+        public DateTime UpdateDateUtc { get; set; }
     }
 }

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Web.Data;
+using Web.Managers.Base.Interfaces;
 using Web.Models.ViewModels;
 
 namespace Web.Models.DTO
 {
-    public class RelationshipItemModel
+    public class RelationshipItemModel : IModel
     {
         public int Id { get; set; }
         public int SurveyId { get; set; }
@@ -29,6 +31,8 @@ namespace Web.Models.DTO
         public virtual List<NQuestionModel> NodeQuestions { get; set; }
         public virtual List<QuestionAnswerModel> QuestionAnswers { get; set; }
         public virtual List<QuestionAnswerModel> NQuestionAnswers { get; set; }
+        public DateTime CreateDateUtc { get; set; }
+        public DateTime UpdateDateUtc { get; set; }
     }
     public class ResultRelationShipModel
     {

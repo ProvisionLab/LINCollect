@@ -19,6 +19,12 @@ namespace Web.Repositories.Base.Interfaces
         IUserRepository UserRepository { get; }
         ISurveyStatusRepository SurveyStatusRepository { get; }
         IAnswerRepository AnswerRepository { get; }
+        IRQuestionRepository RQuestionRepository { get; }
+        IRAnswerRepository RAnswerRepository { get; }
+        INQuestionRepository NQuestionRepository { get; }
+        INAnswerRepository NAnswerRepository { get; }
+        IRelationshipRepository RelationshipRepository { get; }
+        IRespondentRepository RespondentRepository { get; }
         Task<int> SaveAsync();
     }
 }

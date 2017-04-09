@@ -32,16 +32,28 @@ namespace Web.Controllers
         private readonly IResultManager _resultManager;
         private readonly ISurveyManager _surveyManager;
         private readonly IQuestionManager _questionManager;
+        private readonly IRQuestionManager _rQuestionManager;
+        private readonly INQuestionManager _nQuestionManager;
+        private readonly IRelationshipManager _relationshipManager;
+        private readonly IRespondentManager _respondentManager;
 
         public SurveysController(ApplicationDbContext dbContextContext,
                                 IResultManager resultManager,
                                 ISurveyManager surveyManager,
-                                IQuestionManager questionManager)
+                                IQuestionManager questionManager,
+                                IRQuestionManager rQuestionManager,
+                                INQuestionManager nQuestionManager,
+                                IRelationshipManager relationshipManager,
+                                IRespondentManager respondentManager)
         {
             _dbContext = dbContextContext;
             _resultManager = resultManager;
             _surveyManager = surveyManager;
             _questionManager = questionManager;
+            _rQuestionManager = rQuestionManager;
+            _nQuestionManager = nQuestionManager;
+            _relationshipManager = relationshipManager;
+            _respondentManager = respondentManager;
         }
 
         public async Task<ActionResult> Index()
@@ -386,29 +398,27 @@ namespace Web.Controllers
 
         public async Task<ActionResult> Respondent(int? id, bool isAfter = false)
         {
-            if (id == null)
+            if (!id.HasValue)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var survey = await _dbContext.Surveys.FindAsync(id);
+            var survey = await _surveyManager.GetAsync(id.Value);
             if (survey == null)
             {
                 return HttpNotFound();
             }
             if (survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey == isAfter) == null)
             {
-                var resp = new Respondent()
+                var resp = new RespondentModel
                 {
                     SurveyId = id.Value,
-                    CreateDateUtc = DateTime.UtcNow,
-                    UpdateDateUtc = DateTime.UtcNow,
-                    IsAfterSurvey = isAfter
+                    IsAfterSurvey = isAfter,
+                    Questions = new List<QuestionModel>()
+
                 };
-                _dbContext.Respondents.Add(resp);
-                await _dbContext.SaveChangesAsync();
+                await _respondentManager.InsertAsync(resp);
                 survey.Respondents.Add(resp);
             }
-            _dbContext.Entry(survey).State = EntityState.Modified;
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             ViewBag.IsAfter = isAfter;
             return View(survey.Respondents.FirstOrDefault(x => x.IsAfterSurvey == isAfter));
@@ -435,12 +445,6 @@ namespace Web.Controllers
                 if (formatCode.Code == "matrix" && Request.Form["Answer.Rows"] != null)
                     question.Rows = string.Join(",",
                         Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
-
-                for (int i = 0; i < question.Answers.Count; i++)
-                {
-                    question.Answers[i].CreateDateUtc = DateTime.UtcNow;
-                    question.Answers[i].UpdateDateUtc = DateTime.UtcNow;
-                }
             }
             if ("text,slider".Contains(formatCode.Code))
             {
@@ -494,149 +498,198 @@ namespace Web.Controllers
 
             return Json(new { success = true });
         }
-
-        public ActionResult EditQuestion(int id, int respId, bool isAfter = true)
+        
+        [HttpGet]
+        public ActionResult CreateQuestion(int respId, bool isAfter)
         {
-            var model = Task.Run(() => _questionManager.GetAsync(id)).Result;
-
-            var _answers = new List<AnswerModel>();
+            var answers = new List<AnswerModel>();
             for (int i = 0; i < 5; i++)
             {
-                _answers.Add(new AnswerModel
+                answers.Add(new AnswerModel
                 {
                     OrderId = i + 1,
                     Text = "",
                     Value = "",
                 });
             }
-            if (model == null)
+            var model = new QuestionModel
             {
-                model = new QuestionModel
-                {
-                    TextRowsCount = 1,
-                    IsMultiple = false,
-                    IsAnnotation = false,
-                    IsCompulsory = false,
-                    IsShowValue = false,
-                    OrderId = 0,
-                    TextMin = "Strongly Agree",
-                    TextMax = "Strongly Disagree",
-                    ValueMin = "0",
-                    ValueMax = "5",
-                    Rows = ",,,,",
-                    Answers = _answers,
-                    RespondentId = respId,
-                    IsAfterSurvey = isAfter,
-                    Resolution = 1
-                };
-            }
+                TextRowsCount = 1,
+                IsMultiple = false,
+                IsAnnotation = false,
+                IsCompulsory = false,
+                IsShowValue = false,
+                OrderId = 0,
+                TextMin = "Strongly Agree",
+                TextMax = "Strongly Disagree",
+                ValueMin = "0",
+                ValueMax = "5",
+                Rows = ",,,,",
+                Answers = answers,
+                RespondentId = respId,
+                IsAfterSurvey = isAfter,
+                Resolution = 1,
+                
+            };
+
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
+            return PartialView("EditQuestion",model);
+        }
+
+        public async Task<ActionResult> EditQuestion(int id, int respId, bool isAfter = true)
+        {
+            var model = await _questionManager.GetAsync(id);
+
             if (string.IsNullOrEmpty(model.Rows))
                 model.Rows = ",,,,";
 
             if (model.Answers.Count == 0)
-                model.Answers = _answers;
+            {
+                var answers = new List<AnswerModel>();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    answers.Add(new AnswerModel
+                    {
+                        OrderId = i + 1,
+                        Text = "",
+                        Value = "",
+                    });
+                }
+                model.Answers = answers;
+            }
 
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             return PartialView(model);
         }
 
-        public ActionResult EditRQuestion(int id, int relId, bool isAfter = true)
+        public ActionResult CreateRQuestion(int relId)
         {
-            var model = _dbContext.RQuestions.Find(id);
-            var _answers = new List<RAnswer>();
+            var answers = new List<RAnswerModel>();
             for (int i = 0; i < 5; i++)
             {
-                _answers.Add(new RAnswer()
+                answers.Add(new RAnswerModel
                 {
                     OrderId = i + 1,
                     Text = "",
                     Value = "",
                 });
             }
-            if (model == null)
+
+            var model = new RQuestionModel
             {
-                model = new RQuestion()
-                {
-                    TextRowsCount = 1,
-                    IsMultiple = false,
-                    IsAnnotation = false,
-                    IsCompulsory = false,
-                    IsShowValue = false,
-                    OrderId = 0,
-                    TextMin = "Strongly Agree",
-                    TextMax = "Strongly Disagree",
-                    ValueMin = "0",
-                    ValueMax = "5",
-                    Rows = ",,,,",
-                    Answers = _answers,
-                    RelationshipItemId = relId,
-                    IsAfterSurvey = isAfter
-                };
-            }
-            if (string.IsNullOrEmpty(model.Rows))
+                TextRowsCount = 1,
+                IsMultiple = false,
+                IsAnnotation = false,
+                IsCompulsory = false,
+                IsShowValue = false,
+                OrderId = 0,
+                TextMin = "Strongly Agree",
+                TextMax = "Strongly Disagree",
+                ValueMin = "0",
+                ValueMax = "5",
+                Rows = ",,,,",
+                Answers = answers,
+                RelationshipItemId = relId
+            };
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
+            return PartialView("EditRQuestion", model);
+        }
+
+        public async Task<ActionResult> EditRQuestion(int id, int relId)
+        {
+            var model = await _rQuestionManager.GetAsync(id);
+            
+            if (model != null && string.IsNullOrEmpty(model.Rows))
                 model.Rows = ",,,,";
 
-            if (model.Answers.Count == 0)
-                model.Answers = _answers;
+            if (model != null && model.Answers.Count == 0)
+            {
+                var answers = new List<RAnswerModel>();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    answers.Add(new RAnswerModel
+                    {
+                        OrderId = i + 1,
+                        Text = "",
+                        Value = "",
+                    });
+                }
+
+                model.Answers = answers;
+            }
 
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             return PartialView(model);
         }
 
-        public ActionResult EditNQuestion(int id, int relId, bool isAfter = true)
+        public ActionResult CreateNQuestion(int relId)
         {
-            var model = _dbContext.NQuestions.Find(id);
-            var _answers = new List<NAnswer>();
+            var answers = new List<NAnswerModel>();
             for (int i = 0; i < 5; i++)
             {
-                _answers.Add(new NAnswer()
+                answers.Add(new NAnswerModel
                 {
                     OrderId = i + 1,
                     Text = "",
                     Value = "",
                 });
             }
-            if (model == null)
+
+            var model = new NQuestionModel
             {
-                model = new NQuestion()
-                {
-                    TextRowsCount = 1,
-                    IsMultiple = false,
-                    IsAnnotation = false,
-                    IsCompulsory = false,
-                    IsShowValue = false,
-                    OrderId = 0,
-                    TextMin = "Strongly Agree",
-                    TextMax = "Strongly Disagree",
-                    ValueMin = "0",
-                    ValueMax = "5",
-                    Rows = ",,,,",
-                    Answers = _answers,
-                    RelationshipItemId = relId,
-                    IsAfterSurvey = isAfter
-                };
-            }
-            if (string.IsNullOrEmpty(model.Rows))
+                TextRowsCount = 1,
+                IsMultiple = false,
+                IsAnnotation = false,
+                IsCompulsory = false,
+                IsShowValue = false,
+                OrderId = 0,
+                TextMin = "Strongly Agree",
+                TextMax = "Strongly Disagree",
+                ValueMin = "0",
+                ValueMax = "5",
+                Rows = ",,,,",
+                Answers = answers,
+                RelationshipItemId = relId
+            };
+
+            ViewBag.Formats = _dbContext.QuestionFormats.ToList();
+            return PartialView("EditNQuestion", model);
+        }
+
+        public async Task<ActionResult> EditNQuestion(int id, int relId, bool isAfter = true)
+        {
+            var model = await _nQuestionManager.GetAsync(id);
+
+            if (model != null && string.IsNullOrEmpty(model.Rows))
                 model.Rows = ",,,,";
 
-            if (model.Answers.Count == 0)
-                model.Answers = _answers;
+            if (model != null && model.Answers.Count == 0)
+            {
+                var answers = new List<NAnswerModel>();
+
+                for (int i = 0; i < 5; i++)
+                {
+                    answers.Add(new NAnswerModel
+                    {
+                        OrderId = i + 1,
+                        Text = "",
+                        Value = "",
+                    });
+                }
+                model.Answers = answers;
+            }
 
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
             return PartialView(model);
         }
-
 
         public async Task<ActionResult> DeleteQuestion(int id)
         {
             try
             {
-                var _Question = await _dbContext.Question.FindAsync(id);
-                var _RespId = _Question.RespondentId;
-                _dbContext.Question.Remove(_Question);
-                await _dbContext.SaveChangesAsync();
-
-                _dbContext.Database.ExecuteSqlCommand("exec SortRespondentQuestions {0}", _RespId);
+                await _questionManager.DeleteAsync(id);
 
                 return Json(new { success = true });
             }
@@ -818,26 +871,26 @@ namespace Web.Controllers
 
         public async Task<ActionResult> Relationship(int? id, bool questions = false, int? relId = null, bool node = false)
         {
-            var userId = User.Identity.GetUserId();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var survey = await _dbContext.Surveys.FindAsync(id);
+            
+            var survey = await _surveyManager.GetAsync(id.Value);
+
             if (survey == null)
             {
                 return HttpNotFound();
             }
             if (survey.RelationshipItems == null)
-                survey.RelationshipItems = new List<RelationshipItem>();
+                survey.RelationshipItems = new List<RelationshipItemModel>();
 
             ViewBag.SurveyId = id.Value;
 
-            var model = new RelationshipView();
-            model.RelationshipItems = survey.RelationshipItems.ToList();
+            var model = new RelationshipView {RelationshipItems = survey.RelationshipItems};
             if (model.RelationshipItems.Count == 0)
             {
-                var rel = new RelationshipItem()
+                var rel = new RelationshipItemModel
                 {
                     Name = "New Relationship",
                     MaximumNodes = 0,
@@ -849,8 +902,7 @@ namespace Web.Controllers
                     OrderId = 1,
                     NodeList = survey.SurveyFileId.ToString()
                 };
-                _dbContext.RelationshipItems.Add(rel);
-                _dbContext.SaveChanges();
+                rel.Id = await _relationshipManager.InsertAsync(rel);
 
                 model.RelationshipItems.Add(rel);
             }
@@ -861,9 +913,9 @@ namespace Web.Controllers
 
             ViewBag.QuestionLayoutId = new SelectList(_dbContext.QuestionLayouts, "Id", "Name", model.SelectedItem?.QuestionLayoutId);
             ViewBag.NodeSelectionId = new SelectList(_dbContext.NodeSelections, "Id", "Name", model.SelectedItem?.NodeSelectionId);
+            ViewBag.NodeList = new SelectList(_dbContext.SurveyFiles, "Id", "Name", model.SelectedItem?.NodeList);
             ViewBag.IsQuestion = questions;
             ViewBag.IsNode = node;
-            ViewBag.NodeList = new SelectList(_dbContext.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", model.SelectedItem?.NodeList);
             return View(model);
         }
 
@@ -963,66 +1015,62 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<JsonResult> Relationship(RQuestion question)
+        public async Task<JsonResult> Relationship(RQuestionModel question)
         {
-            var Answers = new List<RAnswer>();
-            var code = Request.Form["FormatCode"];
-            if (code == null)
-                return Json(new { success = false });
-            question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
-            question.QuestionFormatId = _dbContext.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
-            //[8]: "Answer.Rows"
-            //[9]: "Answer.Text"
-            //[10]: "Answer.Value"
-            if ("choice_across,choice_down,drop_down,matrix".Contains(code) && Request.Form["Answer.Text"] != null)
+            var formatCode = _dbContext.QuestionFormats.FirstOrDefault(t => t.Code == question.QuestionFormat.Code);
+
+            if (formatCode != null)
             {
-                var _text = Request.Form["Answer.Text"].Split(',');
-                var _val = Request.Form["Answer.Value"].Split(',');
-
-                if (code == "matrix" && Request.Form["Answer.Rows"] != null)
-                    question.Rows = string.Join(",", Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
-
-                for (int i = 0; i < _text.Length; i++)
-                {
-                    if (_text[i].Length > 0)
-                        Answers.Add(new RAnswer()
-                        {
-                            RQuestionId = question.Id,
-                            CreateDateUtc = DateTime.UtcNow,
-                            UpdateDateUtc = DateTime.UtcNow,
-                            Text = _text[i],
-                            Value = _val[i],
-                            IsDefault = _val[i] == Request.Form["Answer.Default"],
-                            OrderId = i
-                        });
-                }
+                question.QuestionFormatId = formatCode.Id;
             }
-            try
-            {
-                var orderId = _dbContext.RQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
-                if (question.OrderId == 0)
-                    question.OrderId = orderId;
-
-                if (question.Id == 0)
-                {
-                    question.Answers = Answers;
-                    _dbContext.RQuestions.Add(question);
-                }
-                else
-                {
-                    var answers = _dbContext.RAnswers.Where(x => x.RQuestionId == question.Id);
-                    _dbContext.RAnswers.RemoveRange(answers);
-                    _dbContext.SaveChanges();
-                    _dbContext.Entry(question).State = EntityState.Modified;
-                    _dbContext.SaveChanges();
-                    _dbContext.RAnswers.AddRange(Answers);
-                }
-
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
+            else
             {
                 return Json(new { success = false });
+            }
+
+            if ("choice_across,choice_down,drop_down,matrix".Contains(formatCode.Code))
+            {
+                if (formatCode.Code == "matrix" && Request.Form["Answer.Rows"] != null)
+                    question.Rows = string.Join(",",
+                        Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
+
+                for (int i = 0; i < question.Answers.Count; i++)
+                {
+                    question.Answers[i].CreateDateUtc = DateTime.UtcNow;
+                    question.Answers[i].UpdateDateUtc = DateTime.UtcNow;
+                }
+            }
+            if ("text,slider".Contains(formatCode.Code))
+            {
+                question.Answers = null;
+            }
+
+            if (question.OrderId == 0)
+            {
+                question.OrderId = _dbContext.RQuestions.Count(x => x.RelationshipItemId == question.RelationshipItemId) + 1;
+            }
+
+            if (question.Id == 0)
+            {
+                try
+                {
+                    await _rQuestionManager.InsertAsync(question);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false });
+                }
+            }
+            else
+            {
+                try
+                {
+                    await _rQuestionManager.UpdateAsync(question);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false });
+                }
             }
 
             return Json(new { success = true });
@@ -1030,66 +1078,62 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<JsonResult> RelationshipN(NQuestion question)
+        public async Task<JsonResult> RelationshipN(NQuestionModel question)
         {
-            var Answers = new List<NAnswer>();
-            var code = Request.Form["FormatCode"];
-            if (code == null)
-                return Json(new { success = false });
-            question.CreateDateUtc = question.UpdateDateUtc = DateTime.UtcNow;
-            question.QuestionFormatId = _dbContext.QuestionFormats.FirstOrDefault(x => x.Code == code)?.Id ?? 1;
-            //[8]: "Answer.Rows"
-            //[9]: "Answer.Text"
-            //[10]: "Answer.Value"
-            if ("choice_across,choice_down,drop_down,matrix".Contains(code) && Request.Form["Answer.Text"] != null)
+            var formatCode = _dbContext.QuestionFormats.FirstOrDefault(t => t.Code == question.QuestionFormat.Code);
+
+            if (formatCode != null)
             {
-                var _text = Request.Form["Answer.Text"].Split(',');
-                var _val = Request.Form["Answer.Value"].Split(',');
-
-                if (code == "matrix" && Request.Form["Answer.Rows"] != null)
-                    question.Rows = string.Join(",", Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
-
-                for (int i = 0; i < _text.Length; i++)
-                {
-                    if (_text[i].Length > 0)
-                        Answers.Add(new NAnswer()
-                        {
-                            NQuestionId = question.Id,
-                            CreateDateUtc = DateTime.UtcNow,
-                            UpdateDateUtc = DateTime.UtcNow,
-                            Text = _text[i],
-                            Value = _val[i],
-                            IsDefault = _val[i] == Request.Form["Answer.Default"],
-                            OrderId = i
-                        });
-                }
+                question.QuestionFormatId = formatCode.Id;
             }
-            try
-            {
-                var orderId = _dbContext.NQuestions.Where(x => x.RelationshipItemId == question.RelationshipItemId).Count() + 1;
-                if (question.OrderId == 0)
-                    question.OrderId = orderId;
-
-                if (question.Id == 0)
-                {
-                    question.Answers = Answers;
-                    _dbContext.NQuestions.Add(question);
-                }
-                else
-                {
-                    var answers = _dbContext.NAnswers.Where(x => x.NQuestionId == question.Id);
-                    _dbContext.NAnswers.RemoveRange(answers);
-                    _dbContext.SaveChanges();
-                    _dbContext.Entry(question).State = EntityState.Modified;
-                    _dbContext.SaveChanges();
-                    _dbContext.NAnswers.AddRange(Answers);
-                }
-
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
+            else
             {
                 return Json(new { success = false });
+            }
+
+            if ("choice_across,choice_down,drop_down,matrix".Contains(formatCode.Code))
+            {
+                if (formatCode.Code == "matrix" && Request.Form["Answer.Rows"] != null)
+                    question.Rows = string.Join(",",
+                        Request.Form["Answer.Rows"].Split(',').Where(x => x.Length > 0).ToList());
+
+                for (int i = 0; i < question.Answers.Count; i++)
+                {
+                    question.Answers[i].CreateDateUtc = DateTime.UtcNow;
+                    question.Answers[i].UpdateDateUtc = DateTime.UtcNow;
+                }
+            }
+            if ("text,slider".Contains(formatCode.Code))
+            {
+                question.Answers = null;
+            }
+
+            if (question.OrderId == 0)
+            {
+                question.OrderId = _dbContext.NQuestions.Count(x => x.RelationshipItemId == question.RelationshipItemId) + 1;
+            }
+
+            if (question.Id == 0)
+            {
+                try
+                {
+                    await _nQuestionManager.InsertAsync(question);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false });
+                }
+            }
+            else
+            {
+                try
+                {
+                    await _nQuestionManager.UpdateAsync(question);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false });
+                }
             }
 
             return Json(new { success = true });

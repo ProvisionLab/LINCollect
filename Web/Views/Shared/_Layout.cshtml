@@ -6,6 +6,11 @@
     <title>@ViewBag.Title - LINCollect</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .slider {
+            width: 100% !important;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -100,7 +105,7 @@
         function qrup(el) {
             var row = $(el).closest('tr');
             if (row.prev().length > 0) {
-                qtrup(row)
+                qtrup(row);
             }
         };
         function qtrdown(row) {
@@ -125,19 +130,78 @@
                 qtrdown(row);
             }
         };
+        function updateAnswer() {
+            $('.formats *[data-format]').each(function () {
+                if (!$(this).hasClass('hidden')) {
+                    $(this).addClass('hidden');
+                }
+                if ($(this).attr('data-format').indexOf($('input[name="QuestionFormat.Code"]:checked').val()) != -1) {
+                    $(this).removeClass('hidden');
+                }
+            });
+        }
+        function addAnswerRow(btn) {
+            var index = $(btn).parents('table.answers-table').find('tbody > tr').length;
+            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answers[' + index + '].Text" class="form-control" /></td><td><input type="text" name="Answers[' + index + '].Value" class="form-control" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answers[' + index + '].IsDefault" /></td><td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
+        }
+        function addRowsRow(btn) {
+            $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control" ></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));
+        }
+
+        function changeCb(cb) {
+            if ($(cb).prop('checked')) {
+                $('.answers-table input[type="checkbox"]').prop('checked', false);
+                $(cb).prop('checked', true);
+            }
+        }
+        function removeRow(btn) {
+            var row = $(btn).parents('tr');
+            if (row.next().length > 0) {
+                while (row.next().length > 0) {
+                    qtrup(row.next());
+                }
+            }
+            row.remove();
+        }
+
+        function updateCkeditor() {
+            var instance = CKEDITOR.instances["Text"];
+            if (instance) {
+                CKEDITOR.remove(instance);
+            }
+            CKEDITOR.replace("Text");
+
+            instance = CKEDITOR.instances["Introducing"];
+            if (instance) {
+                CKEDITOR.remove(instance);
+            }
+            CKEDITOR.replace("Introducing");
+        }
 
         $(document).ready(function () {
-            $('.modal').on('hidden.bs.modal', function (e) {
-                $(e.target).find('input[type="text"]').val('');
-                $(e.target).find('input[type="checkbox"]').prop('checked', false);
-                $(e.target).find('input[name="QuestionFormatId"]').prop("checked", false);
-                updateAnswer('hide all');
-                $(e.target).find('#Text').val('');
-                $(e.target).find('#Introducing').val('');
-                CKEDITOR.instances['Text'].setData();
-                CKEDITOR.instances['Introducing'].setData();
+            $('div[id*="slider"]').slider();
+        });
+
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
+                clearInput();
             });
         });
+
+        function sucessQuestion(data) {
+            if (data.success) {
+                location.reload();
+            }
+        }
+        function editQuestionSubmit() {
+            $('#question-options-edit #Text').val(CKEDITOR.instances['Text'].getData());
+            $('#question-options-edit #Introducing').val(CKEDITOR.instances['Introducing'].getData());
+            $('#question-options-edit').submit();
+        }
+        function clearInput() {
+            $('#editQuestionModal #question-options-edit').empty();
+            $('#addQuestionModal #question-options').empty();
+        }
     </script>
 </body>
 </html>

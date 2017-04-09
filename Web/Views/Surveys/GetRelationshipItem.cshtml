@@ -1,9 +1,9 @@
-﻿@model Web.Data.RelationshipItem
+﻿@model Web.Models.DTO.RelationshipItemModel
 
 @using (Html.BeginForm("GetRelationshipItem", "Surveys", FormMethod.Post, new { @id = "getRelItemForm" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <input type="hidden" value="false" name="isNext" id="isNext" />
         <input type="hidden" value="false" name="isBack" id="isBack" />
@@ -22,14 +22,18 @@
 
         <div class="form-group">
             <span class="control-label col-md-2">* Select a node list</span>
-            <div class="col-md-8">
-                @Html.DropDownList("NodeList", null, htmlAttributes: new { @class = "form-control" })
-                <label><input type="checkbox" name="SortNodeList" value="true" @(Model.SortNodeList ? "checked" : "") /> <small>Sort list by name alphabetically</small></label> 
-            </div>
-            <div class="col-xs-2">
-                <button type="button" class="btn btn-block" data-toggle="modal" data-target="#addFileModal">
-                    Manage
-                </button>
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-xs-10">
+                        @Html.DropDownList("NodeList", null, htmlAttributes: new { @class = "form-control" })
+                        <label><input type="checkbox" name="SortNodeList" value="true" @(Model.SortNodeList ? "checked" : "") /> <small>Sort list by name alphabetically</small></label>
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="button" class="btn btn-block" data-toggle="modal" data-target="#addFileModal">
+                            Manage
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -105,7 +109,7 @@
             </div>
         </div>
 
-        
+
     </div>
 }
 <!-- Modal -->

@@ -70,6 +70,10 @@ namespace Web
             builder.RegisterType<SectionManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<UserManager>().AsImplementedInterfaces().InstancePerDependency();
             builder.RegisterType<QuestionManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<RQuestionManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<NQuestionManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<RelationshipManager>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<RespondentManager>().AsImplementedInterfaces().InstancePerDependency();
 
             return builder.Build();
         }

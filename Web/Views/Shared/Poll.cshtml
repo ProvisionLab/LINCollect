@@ -80,7 +80,7 @@
                             <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
                             <br />
                             @Html.HiddenFor(p => p.AboutYouBefore.Id)
-                            @Html.Partial("Questions", Model.AboutYouBefore.Questions, new ViewDataDictionary { { "base", "AboutYouBefore" } })
+                            @Html.Partial("Questions", Model.AboutYouBefore.Questions, new ViewDataDictionary { { "base", "AboutYouBefore" }, { "region", "Html" } })
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                     <div class="row">
                         <div class="col-xs-12 qdiv">
                             @Html.Hidden($"Items[{i}].Id", Model.Items[i].Id)
-                            @Html.Partial("RQuestions", Model.Items[i].Questions, new ViewDataDictionary { { "base", $"Items[{i}]" } })
+                            @Html.Partial("RQuestions", Model.Items[i].Questions, new ViewDataDictionary { { "base", $"Items[{i}]" }, { "region", "Html" } })
                         </div>
                     </div>
                     @if (Model.Items[i].AddNodes)
@@ -178,7 +178,7 @@
                                         @if (Model.Items[i].NodeQuestions.Any())
                                         {
                                             <div id="NQResult" style="display: none"></div>
-                                            @Html.Partial("NQuestions", Model.Items[i].NodeQuestions, new ViewDataDictionary { { "base", $"Items[{i}]" }, { "id", Model.Items[i].Id } })
+                                            @Html.Partial("NQuestions", Model.Items[i].NodeQuestions, new ViewDataDictionary { { "base", $"Items[{i}]" }, { "id", Model.Items[i].Id }, { "region", "Html" } })
                                         }
                                     </div>
                                     <div class="modal-footer">

@@ -23,6 +23,12 @@ namespace Web.Repositories.Base.Implementations
         private IUserRepository _userRepository;
         private ISurveyStatusRepository _surveyStatusRepository;
         private IAnswerRepository _answerRepository;
+        private IRQuestionRepository _rQuestionRepository;
+        private IRAnswerRepository _rAnswerRepository;
+        private INQuestionRepository _nQuestionRepository;
+        private INAnswerRepository _nAnswerRepository;
+        private IRelationshipRepository _relationshipRepository;
+        private IRespondentRepository _respondentRepository;
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -68,6 +74,23 @@ namespace Web.Repositories.Base.Implementations
         public IAnswerRepository AnswerRepository
             => _answerRepository ?? (_answerRepository = new AnswerRepository(_context));
 
+        public IRQuestionRepository RQuestionRepository
+            => _rQuestionRepository ?? (_rQuestionRepository = new RQuestionRepository(_context));
+
+        public IRAnswerRepository RAnswerRepository
+            => _rAnswerRepository ?? (_rAnswerRepository = new RAnswerRepository(_context));
+
+        public INQuestionRepository NQuestionRepository
+            => _nQuestionRepository ?? (_nQuestionRepository = new NQuestionRepository(_context));
+
+        public INAnswerRepository NAnswerRepository
+            => _nAnswerRepository ?? (_nAnswerRepository = new NAnswerRepository(_context));
+
+        public IRelationshipRepository RelationshipRepository
+            => _relationshipRepository ?? (_relationshipRepository = new RelationshipRepository(_context));
+
+        public IRespondentRepository RespondentRepository
+            => _respondentRepository ?? (_respondentRepository = new RespondentRepository(_context));
         public async Task<int> SaveAsync()
         {
             return await _context.SaveChangesAsync();

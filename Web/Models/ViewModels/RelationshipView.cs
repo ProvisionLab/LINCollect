@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Web.Data;
+using Web.Models.DTO;
 
 namespace Web.Models.ViewModels
 {
@@ -7,7 +7,7 @@ namespace Web.Models.ViewModels
     {
         public int SurveyId { get; set; }
 
-        public List<RelationshipItem> RelationshipItems { get; set; }
-        public RelationshipItem SelectedItem { get; set; }
+        public List<RelationshipItemModel> RelationshipItems { get; set; }
+        public RelationshipItemModel SelectedItem { get; set; }
     }
 }

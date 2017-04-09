@@ -13,6 +13,7 @@ namespace Web.Models.MapperProfiles
         public NAnswerProfile()
         {
             CreateMap<NAnswer, NAnswerModel>();
+            CreateMap<NAnswerModel, NAnswer>();
         }
     }
 }

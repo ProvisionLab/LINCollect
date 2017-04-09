@@ -1,39 +1,39 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Web.Data.Interfaces;
 
 namespace Web.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using Interfaces;
-
-    public partial class QuestionLayout: IEntity
+    public class QuestionLayout : IEntity
     {
-        public int Id { get; set; }
         [StringLength(128)]
         public string Name { get; set; }
+
+        [StringLength(36)]
+        public string Code { get; set; }
+
+        public int Id { get; set; }
+    }
+
+    public class NodeSelection
+    {
+        public int Id { get; set; }
+
+        [StringLength(128)]
+        public string Name { get; set; }
+
         [StringLength(36)]
         public string Code { get; set; }
     }
 
-    public partial class NodeSelection
-    {
-        public int Id { get; set; }
-        [StringLength(128)]
-        public string Name { get; set; }
-        [StringLength(36)]
-        public string Code { get; set; }
-    }
-
-    public partial class RelationshipItem
+    public class RelationshipItem : IEntity
     {
         public RelationshipItem()
         {
             Questions = new HashSet<RQuestion>();
             NodeQuestions = new HashSet<NQuestion>();
         }
-
-        public int Id { get; set; }
 
         [Required]
         public int SurveyId { get; set; }
@@ -50,6 +50,7 @@ namespace Web.Data
 
         [Required]
         public int QuestionLayoutId { get; set; }
+
         public virtual QuestionLayout QuestionLayout { get; set; }
 
         public int MaximumNodes { get; set; }
@@ -64,11 +65,14 @@ namespace Web.Data
 
         [Required]
         public int NodeSelectionId { get; set; }
+
         public virtual NodeSelection NodeSelection { get; set; }
-        
+
         public string GeneratorName { get; set; }
 
         public virtual ICollection<RQuestion> Questions { get; set; }
         public virtual ICollection<NQuestion> NodeQuestions { get; set; }
+
+        public int Id { get; set; }
     }
 }

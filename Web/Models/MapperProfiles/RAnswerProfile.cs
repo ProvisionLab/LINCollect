@@ -13,6 +13,7 @@ namespace Web.Models.MapperProfiles
         public RAnswerProfile()
         {
             CreateMap<RAnswer, RAnswerModel>();
+            CreateMap<RAnswerModel, RAnswer>();
         }
     }
 }
