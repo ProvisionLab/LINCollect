@@ -4,28 +4,28 @@
 }
 <h3 class="font-green-haze">@ViewBag.Title</h3>
 @{
-    using (Html.BeginForm("Submit", "Poll", FormMethod.Post))
+    using (Html.BeginForm("Submit", "Poll", FormMethod.Post, new { id = "publishForm" }))
     {
         <div class="form-horizontal">
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(model=>model.SurveyId)
+            @Html.HiddenFor(model => model.SurveyId)
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
                 @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "control-label col-xs-2" })
                 <div class="col-xs-10">
-                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", id = "newName" })
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", required = "required" })
                     @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="row">
                 <label class="control-label col-xs-12">
                     You can user <span style="color:green;">[link]</span> or <span style="color:green;">[link:title]</span> element to place link inside of your email message.
-</label>
+                </label>
             </div>
             <div class="form-group">
                 @Html.LabelFor(model => model.Message, htmlAttributes: new { @class = "control-label col-xs-2" })
                 <div class="col-xs-10">
-                    @Html.TextAreaFor(model => model.Message, new { @class = "form-control ckeditor", id = "newName" })
+                    @Html.TextAreaFor(model => model.Message, new { @class = "form-control ckeditor", required = "required" })
                     @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -37,4 +37,48 @@
         </div>
     }
 }
+@section scripts{
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            CKEDITOR.on('instanceReady',
+                function () {
+                    var validator = $("#publishForm").validate({
+                        ignore: [],
+                        debug: false,
+                        rules: {
+                            Message: {
+                                required: function () {
+                                    CKEDITOR.instances["Message"].updateElement();
+                                    return true;
+                                }
+                            }
+                        },
+                        messages:
+                            {
+                                Message: {
+                                    required: "Please enter message"
+                                }
+                            },
+                        errorPlacement: function (error, $elem) {
+                            error = error.css('color', 'red');
+                            if ($elem.is('textarea')) {
+                                var next = $elem.next();
+                                next.after(error);
+                            } else {
+                                $elem.after(error);
+                            }
+                        }
+                    });
+                    $.each(CKEDITOR.instances, function (instance) {
+                        CKEDITOR.instances[instance].on('change', function () {
+                            CKEDITOR.instances[instance].updateElement();
+                            validator.element("#"+instance);
+                        });
+                    });
+                });
+
+           
+        });
+    </script>
+}

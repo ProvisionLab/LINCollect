@@ -54,11 +54,15 @@
     </div>
     <img src="@Url.Content("~/Content/img/giphy.gif")" id="loader" style="display:none;" />
     @Scripts.Render("~/bundles/jquery")
+@*@Scripts.Render("~/bundles/jqueryval")*@
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
+
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/ckeditor/ckeditor.js"></script>
     <script src="~/Scripts/ckeditor/adapters/jquery.js"></script>
     @RenderSection("scripts", required: false)
-    <script>
+    <script type="text/javascript">
         function Redirect(url) {
             var ua = navigator.userAgent.toLowerCase(),
                 isIE = ua.indexOf('msie') !== -1,
@@ -179,7 +183,10 @@
         }
 
         $(document).ready(function () {
-            $('div[id*="slider"]').slider();
+            var sliders = $('div[id*="slider"]');
+            if (sliders.length) {
+                sliders.slider();
+            }
         });
 
         $(document).ready(function () {

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
 using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using Web.Common;
 using Web.Data;
 using Web.Managers.Base.Implementations;

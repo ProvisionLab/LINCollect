@@ -437,7 +437,7 @@ namespace Web.Controllers
             }
             else
             {
-                return Json(new { success = false });
+                return Json(new { success = false, error="Format Code" });
             }
 
             if ("choice_across,choice_down,drop_down,matrix".Contains(formatCode.Code))
@@ -466,7 +466,7 @@ namespace Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return Json(new { success = false });
+                    return Json(new { success = false , exception=e.Message});
                 }
             }
             else
@@ -478,7 +478,7 @@ namespace Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return Json(new { success = false });
+                    return Json(new { success = false , exception=e.Message});
                 }
             }
 

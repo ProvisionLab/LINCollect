@@ -199,7 +199,7 @@
                             <h5 class="text-primary">Please answer the following questions about yourself:</h5>
                             <small><b>Note:</b> Questions marked with '*' are compulsory.</small>
                             <br />
-                            @Html.Partial("Questions", Model.AboutYouAfter.Questions, new ViewDataDictionary { { "base", "AboutYouAfter" } })
+                            @Html.Partial("Questions", Model.AboutYouAfter.Questions, new ViewDataDictionary { { "base", "AboutYouAfter" }, { "region", "Html" } })
                         </div>
                     }
                     <div class="col-xs-12 thanks-text" style="display: none;">
