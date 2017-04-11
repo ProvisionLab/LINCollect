@@ -19,13 +19,15 @@ namespace Web.Controllers
         private readonly IEmailService _emailService;
         private readonly IGoogleSheetsService _googleSheetsService;
         private readonly IPublishSurveyManager _publishSurveyManager;
+        private readonly INQuestionManager _nQuestionManager;
         private readonly ISurveyManager _surveyManager;
 
         public PollController(IGoogleSheetsService googleSheetsService,
             ApplicationDbContext dbContext,
             IEmailService emailService,
             ISurveyManager surveyManager,
-            IPublishSurveyManager publishSurveyManager
+            IPublishSurveyManager publishSurveyManager,
+            INQuestionManager nQuestionManager
         )
         {
             _googleSheetsService = googleSheetsService;
@@ -33,6 +35,7 @@ namespace Web.Controllers
             _emailService = emailService;
             _surveyManager = surveyManager;
             _publishSurveyManager = publishSurveyManager;
+            _nQuestionManager = nQuestionManager;
         }
 
         [HttpGet]
@@ -50,6 +53,17 @@ namespace Web.Controllers
             ViewBag.Passing = true;
 
             return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetNQuestions(int relationshipId, int index)
+        {
+            var nodeQuestions =await _nQuestionManager.GetByRelationship(relationshipId);
+            ViewData.Add("base", $"Items[{index}]");
+            ViewData.Add("id", relationshipId);
+            ViewData.Add("region", "Html");
+            return PartialView("NQuestions", nodeQuestions);
         }
 
         [HttpPost]

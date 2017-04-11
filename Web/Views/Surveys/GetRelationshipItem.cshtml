@@ -24,11 +24,11 @@
             <span class="control-label col-md-2">* Select a node list</span>
             <div class="col-md-10">
                 <div class="row">
-                    <div class="col-xs-10">
+                    <div class="col-xs-9 col-md-10">
                         @Html.DropDownList("NodeList", null, htmlAttributes: new { @class = "form-control" })
                         <label><input type="checkbox" name="SortNodeList" value="true" @(Model.SortNodeList ? "checked" : "") /> <small>Sort list by name alphabetically</small></label>
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-xs-3 col-md-2">
                         <button type="button" class="btn btn-block" data-toggle="modal" data-target="#addFileModal">
                             Manage
                         </button>

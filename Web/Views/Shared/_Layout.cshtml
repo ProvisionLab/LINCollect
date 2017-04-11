@@ -54,9 +54,9 @@
     </div>
     <img src="@Url.Content("~/Content/img/giphy.gif")" id="loader" style="display:none;" />
     @Scripts.Render("~/bundles/jquery")
-@*@Scripts.Render("~/bundles/jqueryval")*@
+    @*@Scripts.Render("~/bundles/jqueryval")*@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
 
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/ckeditor/ckeditor.js"></script>
@@ -185,7 +185,13 @@
         $(document).ready(function () {
             var sliders = $('div[id*="slider"]');
             if (sliders.length) {
-                sliders.slider();
+                sliders.slider()
+                    .on('slide',
+                        function (value) {
+                            var name = $(value.currentTarget).attr('name');
+                            var names = name.substring(0, name.lastIndexOf('.')) + '.Values[0]';
+                            $("input[name=\'" + names + "\']").val(value.value);
+                        });
             }
         });
 
@@ -208,6 +214,12 @@
         function clearInput() {
             $('#editQuestionModal #question-options-edit').empty();
             $('#addQuestionModal #question-options').empty();
+            var modals = $('.tab-pane.active .modal');
+            if (modals.length) {
+                modals.each(function(index, element) {
+                    $(element).find('.modal-body').empty();
+                });
+            }
         }
     </script>
 </body>

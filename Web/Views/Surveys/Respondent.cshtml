@@ -48,16 +48,23 @@
             <small>Edit questions that appear at the end of the survey</small>
         </div>
     </div>
-
     <div class="form-group">
-        <div class="col-md-4 text-left">
+        <div class="col-xs-3">
             <a class="btn btn-default" href="/Surveys/Edit/@Model.SurveyId">Previous</a>
         </div>
-        <div class="col-md-8 text-right">
+        <div class="col-xs-9 text-right">
             @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
             <a class="btn btn-default" href="/Surveys/Relationship/@Model.SurveyId">Next Step</a>
         </div>
     </div>
+    <div class="form-group">
+        <div class="col-md-12 text-right">
+            <button type="button" class="btn btn-sm purple" onclick="createNewQuestion(@Model.Id, '@Model.IsAfterSurvey.ToString()')">
+                Insert question
+            </button>
+        </div>
+    </div>
+
     @if (!Model.Questions.Any())
     {
         <div class="form-group">
@@ -74,17 +81,10 @@
         @Html.Partial("Questions", Model.Questions.OrderBy(t=>t.OrderId).ToList(), new ViewDataDictionary(ViewData) { { "region", "Scripts" }, { "Edit", "True" } })
     }
     <div class="form-group">
-        <div class="col-md-12 text-right">
-            <button type="button" class="btn btn-sm purple" onclick="createNewQuestion(@Model.Id, '@Model.IsAfterSurvey.ToString()')">
-                Insert question
-            </button>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-4 text-left">
+        <div class="col-xs-3">
             <a class="btn btn-default" href="/Surveys/Edit/@Model.SurveyId">Previous</a>
         </div>
-        <div class="col-md-8 text-right">
+        <div class="col-xs-9 text-right">
             @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
             <a class="btn btn-default" href="/Surveys/Relationship/@Model.SurveyId">Next Step</a>
         </div>

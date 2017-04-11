@@ -62,5 +62,10 @@ namespace Web.Managers.Implementations
             model.CreateDateUtc = model.UpdateDateUtc = DateTime.UtcNow;
             await base.UpdateAsync(model);
         }
+
+        public async Task<List<NQuestionModel>> GetByRelationship(int relationshipId)
+        {
+            return ObjectMapper.Map<IQueryable<NQuestion>, List<NQuestionModel>>(await UnitOfWork.NQuestionRepository.GetByRelationship(relationshipId));
+        }
     }
 }

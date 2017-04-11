@@ -37,12 +37,25 @@
                     {
                         if (Model[j].TextRowsCount > 1)
                         {
-                            @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}", @rows = Model[j].TextRowsCount })
+                            if (Model[j].IsCompulsory)
+                            {
+                                @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = "form-control", required = (Model[j].IsCompulsory ? "required" : ""), rows = Model[j].TextRowsCount })
+                            }
+                            else
+                            {
+                                @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = "form-control", rows = Model[j].TextRowsCount })
+                            }
                         }
                         else
                         {
-                            @Html.TextBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
-
+                            if (Model[j].IsCompulsory)
+                            {
+                                @Html.TextBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = "form-control", required = (Model[j].IsCompulsory ? "required" : "") })
+                            }
+                            else
+                            {
+                                @Html.TextBox($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", null, new { @class = "form-control" })
+                            }
                         }
                     }
                     else if (Model[j].QuestionFormat.Code == "choice_across")
@@ -55,18 +68,25 @@
                                 @Model[j].Answers[k].Text <br />
                                 @if (Model[j].IsMultiple)
                                 {
-                                    <input type="checkbox" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "") />
+                                    <input type="checkbox" class="@(Model[j].IsCompulsory ? "validate" : "")" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "") />
                                 }
                                 else
                                 {
-                                    @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                    if (Model[j].IsCompulsory)
+                                    {
+                                        @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault, new { required = Model[j].IsCompulsory ? "required" : "" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                    }
                                 }
                             </label>
                         }
 
                         if (Model[j].IsAnnotation)
                         {
-                            @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Anotation", null, new { rows = 2, @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
+                            @Html.TextArea($"{ViewData["base"]}.QuestionAnswers[{j}].Anotation", null, new { rows = 2, @class = $"form-control", required = (Model[j].IsCompulsory ? "required" : "") })
                         }
                     }
                     else if (Model[j].QuestionFormat.Code == "choice_down")
@@ -76,11 +96,18 @@
                             <label>
                                 @if (Model[j].IsMultiple)
                                 {
-                                    <input type="checkbox" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "") />
+                                    <input type="checkbox" class="@(Model[j].IsCompulsory ? "validate" : "")" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{k}]")" value="@Model[j].Answers[k].Value" @(Model[j].Answers[k].IsDefault ? "checked" : "") />
                                 }
                                 else
                                 {
-                                    @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                    if (Model[j].IsCompulsory)
+                                    {
+                                        @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault, new { required = Model[j].IsCompulsory ? "required" : "" })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                    }
                                 }
                                 @Model[j].Answers[k].Text
                             </label>
@@ -89,7 +116,7 @@
                     }
                     else if (Model[j].QuestionFormat.Code == "drop_down")
                     {
-                        @Html.DropDownList($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", new SelectList(Model[j].Answers, "Value", "Text", Model[j].Answers.Any(t => t.IsDefault) ? Model[j].Answers.FirstOrDefault(t => t.IsDefault).Value : ""), new { @class = $"form-control {(Model[j].IsCompulsory ? "required" : "")}" })
+                        @Html.DropDownList($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", new SelectList(Model[j].Answers, "Value", "Text", Model[j].Answers.Any(t => t.IsDefault) ? Model[j].Answers.FirstOrDefault(t => t.IsDefault).Value : ""), new { @class = "form-control", required = (Model[j].IsCompulsory ? "required" : "") })
                     }
                     else if (Model[j].QuestionFormat.Code == "matrix")
                     {
@@ -113,30 +140,37 @@
                                     @for (int k = 0; k < Model[j].Answers.Count; k++)
                                     {
                                         <td>
-                                            @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[{i}]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                            @if (Model[j].IsCompulsory)
+                                            {
+                                                @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault, new { required = Model[j].IsCompulsory ? "required" : "" })
+                                            }
+                                            else
+                                            {
+                                                @Html.RadioButton($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].Answers[k].Value, Model[j].Answers[k].IsDefault)
+                                            }
                                         </td>
                                     }
                                 </tr>
                             }
                         </table>
-                                }
-                                else if (Model[j].QuestionFormat.Code == "slider")
-                                {
-                                    <div class="row">
-                                        @Html.Hidden($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].ValueMax)
-                                        <div class="col-xs-3 text-right">@Model[j].TextMin</div>
-                                        <div class="col-xs-6">
-                                            <div id="slider-@Model[j].Id" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Slider")" data-slider-value="@Model[j].ValueMax" data-slider-min="@Model[j].ValueMin" data-slider-max="@Model[j].ValueMax" data-slider-step="@(Model[j].Resolution == 0 ? 1 : Model[j].Resolution)"
-                                                 data-slider-tooltip="@(Model[j].IsShowValue ? "show" : "hide")"></div>
-                                        </div>
-                                        <div class="col-xs-3">@Model[j].TextMax</div>
-                                    </div>
-                                }
+                        }
+                        else if (Model[j].QuestionFormat.Code == "slider")
+                        {
+                            <div class="row">
+                                @Html.Hidden($"{ViewData["base"]}.QuestionAnswers[{j}].Values[0]", Model[j].ValueMax)
+                                <div class="col-xs-3 text-right">@Model[j].TextMin</div>
+                                <div class="col-xs-6">
+                                    <div id="slider-@Model[j].Id" name="@($"{ViewData["base"]}.QuestionAnswers[{j}].Slider")" data-slider-value="@Model[j].ValueMax" data-slider-min="@Model[j].ValueMin" data-slider-max="@Model[j].ValueMax" data-slider-step="@(Model[j].Resolution == 0 ? 1 : Model[j].Resolution)"
+                                            data-slider-tooltip="@(Model[j].IsShowValue ? "show" : "hide")"></div>
+                                </div>
+                                <div class="col-xs-3">@Model[j].TextMax</div>
+                            </div>
+                        }
                 </div>
             </div>
-        }
-    }
-}
+                                        }
+                                    }
+                                }
 @if (region == "Scripts")
 {
     if (ViewData["Edit"] != null)

@@ -10,5 +10,6 @@ namespace Web.Managers.Interfaces
 {
     public interface INQuestionManager: ICrudManager<NQuestionModel>
     {
+        Task<List<NQuestionModel>> GetByRelationship(int relationshipId);
     }
 }

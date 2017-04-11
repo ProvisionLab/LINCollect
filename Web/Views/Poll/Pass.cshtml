@@ -1,6 +1,6 @@
 ﻿@model Web.Models.ViewModels.PreviewView
 
-@using (Html.BeginForm("Pass", "Poll", FormMethod.Post))
+@using (Html.BeginForm("Pass", "Poll", FormMethod.Post, new {id="publishForm"}))
 {
     @Html.AntiForgeryToken()
     @Html.Partial("Poll", Model, new ViewDataDictionary(ViewData) { { "region", "Html" } })

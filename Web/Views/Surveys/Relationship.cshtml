@@ -30,7 +30,7 @@
             </td>
             <td>
                 @Html.ActionLink("options", "Relationship", new { id = ViewBag.SurveyId, questions = false, relId = item.Id, node = false }, new { @class = "rel " + (Model.SelectedItem?.Id == item.Id && !ViewBag.IsQuestion && !ViewBag.IsNode ? "active" : "") }) |
-                @Html.ActionLink("+ node ?", "Relationship", new { id = ViewBag.SurveyId, questions = false, relId = item.Id, node = true }, new { @class = "rel " + (ViewBag.IsNode && Model.SelectedItem?.Id == item.Id ? "active" : "") }) |
+                <span id="add-node-@item.Id" style="@(!item.AddNodes?"display:none;":"")">@Html.ActionLink("+ node ?", "Relationship", new { id = ViewBag.SurveyId, questions = false, relId = item.Id, node = true }, new { @class = "rel " + (ViewBag.IsNode && Model.SelectedItem?.Id == item.Id ? "active" : "") }) |</span>
                 @Html.ActionLink("question", "Relationship", new { id = ViewBag.SurveyId, questions = true, relId = item.Id, node = false }, new { @class = "rel " + (ViewBag.IsQuestion && Model.SelectedItem?.Id == item.Id ? "active" : "") })
             </td>
             <td>
@@ -53,19 +53,35 @@
 <div class="form-horizontal">
     <input type="hidden" value="false" name="isNext" id="isNext" />
     <div class="form-group">
-        <div class="col-md-4 text-left">
+        <div class="col-xs-3">
             <a class="btn btn-default" href="#" onclick="saveRelOptions(false, true)">Save/Previous</a>
         </div>
-        <div class="col-md-8 text-right">
+        <div class="col-xs-9 text-right">
             @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
             <input type="button" value="Save" class="btn btn-default" onclick="saveRelOptions(false, false)" />
             <input type="submit" value="Save/Next Step" class="btn btn-default" onclick="saveRelOptions(true, false)" />
         </div>
     </div>
+    @if (ViewBag.IsNode || ViewBag.IsQuestion)
+    {
+        <div class="form-group">
+            <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-sm purple" onclick="createNewQuestion(@Model.SelectedItem.Id)">
+                    Insert question
+                </button>
+            </div>
+        </div>
+    }
 </div>
-<div id="r-options" class="@((ViewBag.IsQuestion || ViewBag.IsNode) ? "hidden" : "" )">
-    @Html.Partial("GetRelationshipItem", Model.SelectedItem)
-</div>
+
+
+@if (!ViewBag.IsQuestion && !ViewBag.IsNode)
+{
+    <div id="r-options">
+        @Html.Partial("GetRelationshipItem", Model.SelectedItem)
+    </div>
+}
+
 @if (!ViewBag.IsNode && ViewBag.IsQuestion)
 {
     if (!Model.SelectedItem.Questions.Any())
@@ -105,11 +121,17 @@
         </div>
     }
 }
-<div class="form-group">
-    <div class="col-md-12 text-right">
-        <button type="button" class="btn btn-sm purple" onclick="createNewQuestion(@Model.SelectedItem.Id)">
-            Insert question
-        </button>
+<div class="form-horizontal">
+    <input type="hidden" value="false" name="isNext" id="isNext" />
+    <div class="form-group">
+        <div class="col-xs-3">
+            <a class="btn btn-default" href="#" onclick="saveRelOptions(false, true)">Save/Previous</a>
+        </div>
+        <div class="col-xs-9 text-right">
+            @Html.ActionLink("Back to list", "Index", null, new { @class = "btn btn-default" })
+            <input type="button" value="Save" class="btn btn-default" onclick="saveRelOptions(false, false)" />
+            <input type="submit" value="Save/Next Step" class="btn btn-default" onclick="saveRelOptions(true, false)" />
+        </div>
     </div>
 </div>
 <!-- Modals -->
@@ -138,18 +160,18 @@
 
     <script type="text/javascript">
         function checkNode(el, id) {
-            var addNode = false;
-            if ($(el).prop('checked')) {
-                $('.add-node-' + id).show();
-                addNode = true;
-            } else {
-                $('.add-node-' + id).hide();
-            }
+            var addNode = $(el).prop('checked');
             ShowLoader();
             $.ajax({
                 type: "POST",
                 url: '/Surveys/AddNode/?id=' + id + '&addNode=' + addNode,
                 data: null
+            }).success(function() {
+                if ($(el).prop('checked')) {
+                    $('#add-node-' + id).show();
+                } else {
+                    $('#add-node-' + id).hide();
+                }
             }).always(function () {
                 HideLoader();
             });

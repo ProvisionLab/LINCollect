@@ -18,9 +18,11 @@
         <a class="btn btn-block purple" href="#">Preview Survey</a>
     </div>
 </div>
+@using (Html.BeginForm("Pass", "Poll", FormMethod.Post, new { id = "publishForm" }))
+{
+    @Html.Partial("Poll", Model, new ViewDataDictionary { { "region", "Html" }, { "preview", true } })
 
-@Html.Partial("Poll", Model, new ViewDataDictionary { {"region", "Html"} })
-
-@section scripts {
-    @Html.Partial("Poll", Model, new ViewDataDictionary {{"region", "Scripts"}})
+    @section scripts {
+        @Html.Partial("Poll", Model, new ViewDataDictionary(ViewData) { { "region", "Scripts" } })
+    }
 }

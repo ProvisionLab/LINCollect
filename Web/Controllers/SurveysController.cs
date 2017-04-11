@@ -149,8 +149,6 @@ namespace Web.Controllers
 
                     try
                     {
-                        //if (System.IO.File.Exists(path + BannerFile.FileName))
-                        //    System.IO.File.Delete(path + BannerFile.FileName);
                         var fileName = BannerFile.FileName.Split('\\').LastOrDefault();
                         BannerFile.SaveAs(path + fileName);
                         survey.Banner = fileName;
