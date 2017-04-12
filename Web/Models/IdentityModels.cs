@@ -73,6 +73,7 @@ namespace Web.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Survey>().HasRequired(t=>t.ApplicationUsers).WithMany().WillCascadeOnDelete(true);
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany<Survey>(t => t.Surveys)
                 .WithMany(t => t.ApplicationUsers)

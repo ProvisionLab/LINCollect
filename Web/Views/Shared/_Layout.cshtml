@@ -143,10 +143,10 @@
         }
         function addAnswerRow(btn) {
             var index = $(btn).parents('table.answers-table').find('tbody > tr').length;
-            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answers[' + index + '].Text" class="form-control" /></td><td><input type="text" name="Answers[' + index + '].Value" class="form-control" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answers[' + index + '].IsDefault" /></td><td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
+            $(btn).parents('table.answers-table').find('tbody').append($('<tr><td><input type="text" name="Answers[' + index + '].Text" class="form-control" required="required" /></td><td><input type="text" name="Answers[' + index + '].Value" class="form-control" required="required" /></td><td><input type="checkbox" onchange="changeCb(this);" value="true" name="Answers[' + index + '].IsDefault" /></td><td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td></tr>'));
         }
         function addRowsRow(btn) {
-            $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control" ></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));
+            $(btn).parents('table.rows').find('tbody').append($('<tr><td style="width:90%"><input type="text" name="Answer.Rows" class="form-control" required="required"></td><td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td></tr>'));
         }
 
         function changeCb(cb) {
