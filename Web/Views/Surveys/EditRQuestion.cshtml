@@ -8,14 +8,14 @@
     <div class="form-group">
         <span class="control-label col-md-12">Introduction (optional)</span>
         <div class="col-md-12">
-            @Html.TextAreaFor(m => m.Introducing, new { @class = "form-control ckeditor", style = "height: 200px" })
+            @Html.TextAreaFor(m => m.Introducing, new { @class = "form-control ckeditor", style = "height: 200px", required = "required" })
             <small>Text instructing your respondent to give an answer.</small>
         </div>
     </div>
     <div class="form-group">
         <span class="control-label col-md-12">* Question</span>
         <div class="col-md-12">
-            @Html.TextAreaFor(m => m.Text, new { @class = "form-control ckeditor required", style = "height: 200px" })
+            @Html.TextAreaFor(m => m.Text, new { @class = "form-control ckeditor required", style = "height: 200px", required = "required" })
             <small>Text instructing your respondent to give an answer.</small>
         </div>
     </div>
@@ -47,11 +47,11 @@
                         <label>
                             @if (Model.QuestionFormat?.Code == item.Code)
                             {
-                                @Html.RadioButtonFor(m => m.QuestionFormat.Code, item.Code, new { @checked = "true", onchange = $"updateAnswer('{item.Code}')" });
+                                @Html.RadioButtonFor(m => m.QuestionFormat.Code, item.Code, new { @checked = "true", onchange = $"updateAnswer('{item.Code}')", required = "required" });
                             }
                             else
                             {
-                                @Html.RadioButtonFor(m => m.QuestionFormat.Code, item.Code, new { onchange = $"updateAnswer('{item.Code}')" })
+                                @Html.RadioButtonFor(m => m.QuestionFormat.Code, item.Code, new { onchange = $"updateAnswer('{item.Code}')", required = "required" })
                             }
                             @item.Name
                         </label>
@@ -68,7 +68,7 @@
             </div>
             <div data-format="choice_across,choice_down,drop_down,matrix" class="hidden">
                 <div data-format="choice_across" class="hidden">
-                    Include annotation: 
+                    Include annotation:
                     @Html.CheckBox("IsAnnotation", Model.IsAnnotation)
                     <br />
                 </div>
@@ -76,18 +76,20 @@
                     <b>Rows:</b> These questions are displayed down the left hand side.
                     <table class="table rows">
                         <tbody>
-                            @foreach (var item in Model.Rows.Split(','))
+
+                            @{ var rows = Model.Rows.Split(',');}
+                            @for (int i = 0; i < rows.Length; i++)
                             {
                                 <tr>
-                                    <td style="width:90%"><input type="text" value="@item" name="Answer.Rows" class="form-control"></td>
-                                    <td class="text-right"><a href="#" onclick="removeRow(this)">delete</a></td>
+                                    <td style="width: 90%"><input id="row-@i" type="text" value="@rows[i]" name="Answer.Rows" class="form-control" required="required"></td>
+                                    <td class="text-right"><a href="#" onclick="removeRow(this)" tabindex="-1">delete</a></td>
                                 </tr>
                             }
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colspan="2" class="text-right">
-                                    <a href="#" onclick="addRowsRow(this);">add row</a>
+                                    <a href="#" onclick="addRowsRow(this);" tabindex="-1">add row</a>
                                 </td>
                             </tr>
                         </tfoot>
@@ -107,27 +109,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @for (int i = 0; i < Model.Answers.Count; i++)
-                    {
-                        <tr>
-                            @Html.Hidden($"Answers[{i}].OrderId", Model.Answers[i].OrderId)
-                            <td>
-                                @Html.TextBox($"Answers[{i}].Text", Model.Answers[i].Text, new {@class = "form-control"})
-                            </td>
-                            <td>
-                                @Html.TextBox($"Answers[{i}].Value", Model.Answers[i].Value, new {@class = "form-control"})
-                            </td>
-                            <td>
-                                @Html.CheckBox($"Answers[{i}].IsDefault", Model.Answers[i].IsDefault, new {onchange = "changeCb(this);"})
-                            </td>
-                            <td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)">down</a>&nbsp;<a href="#" onclick="removeRow(this);">delete</a></td>
-                        </tr>
-                    }
+                        @for (int i = 0; i < Model.Answers.Count; i++)
+                        {
+                            <tr>
+                                @Html.Hidden($"Answers[{i}].OrderId", Model.Answers[i].OrderId)
+                                <td>
+                                    @Html.TextBox($"Answers[{i}].Text", Model.Answers[i].Text, new { @class = "form-control", required = "required" })
+                                </td>
+                                <td>
+                                    @Html.TextBox($"Answers[{i}].Value", Model.Answers[i].Value, new { @class = "form-control", required = "required" })
+                                </td>
+                                <td>
+                                    @Html.CheckBox($"Answers[{i}].IsDefault", Model.Answers[i].IsDefault, new { onchange = "changeCb(this);" })
+                                </td>
+                                <td class="text-right"><a href="javascript:void(0);" onclick="qrup(this)" tabindex="-1">up</a>&nbsp;<a href="javascript:void(0);" onclick="qrdown(this)" tabindex="-1">down</a>&nbsp;<a href="#" onclick="removeRow(this);" tabindex="-1">delete</a></td>
+                            </tr>
+                        }
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="4" class="text-right">
-                                <a href="#" onclick="addAnswerRow(this);">add row</a>
+                                <a href="#" onclick="addAnswerRow(this);" tabindex="-1">add row</a>
                             </td>
                         </tr>
                     </tfoot>
@@ -137,7 +139,7 @@
                     <label>
                         @if (Model.IsMultiple)
                         {
-                            @Html.RadioButtonFor(m => m.IsMultiple, "true", new {@checked = "checked"})
+                            @Html.RadioButtonFor(m => m.IsMultiple, "true", new { @checked = "checked" })
                         }
                         else
                         {
@@ -149,7 +151,7 @@
                     <label>
                         @if (!Model.IsMultiple)
                         {
-                            @Html.RadioButtonFor(m => m.IsMultiple, "false", new {@checked = "checked"})
+                            @Html.RadioButtonFor(m => m.IsMultiple, "false", new { @checked = "checked" })
                         }
                         else
                         {
@@ -161,18 +163,23 @@
             </div>
             <div data-format="slider" class="hidden">
                 <label>* Extreme points:</label><br />
-                @Html.TextBoxFor(m=>m.TextMin, new {@class= "form-control" })
+                @Html.TextBoxFor(m => m.TextMin, new { @class = "form-control" })
                 <small>Appears to left of slider</small><br />
-                @Html.TextBoxFor(m=>m.TextMax, new {@class= "form-control" })
+                @Html.TextBoxFor(m => m.TextMax, new { @class = "form-control" })
                 <small>Appears to right  of slider</small><br /><br />
-                <label>* Values:</label><br />
-                @Html.TextBoxFor(m=>m.ValueMin, new {@class= "form-control", style= "display: inline-block; width:49%" })<span style="width:2%">-</span>@Html.TextBoxFor(m=>m.ValueMax, new {@class= "form-control", style= "display: inline-block; width:49%" })
-                <small class="text-center" style="width: 100%;display: inline-block;">Miniumum and maximum values for slider</small><br /><br />
+                <div>
+                    <label>* Values:</label><br />
+                    @Html.TextBoxFor(m => m.ValueMin, new { @class = "form-control slider-input", style = "display: inline-block; width:49%", required = "required" })<span style="width:2%">-</span>@Html.TextBoxFor(m => m.ValueMax, new { @class = "form-control slider-input", style = "display: inline-block; width:49%", required = "required" })
+                    <div class="col-xs-6 min"></div>
+                    <div class="col-xs-6 max"></div>
+                    <small class="text-center" style="width: 100%;display: inline-block;">Miniumum and maximum values for slider</small>
+                </div>
+                <br /><br />
                 <label>* Resolution:</label><br />
-                @Html.TextBoxFor(m=>m.Resolution, new {@class= "form-control" })
+                @Html.TextBoxFor(m => m.Resolution, new { @class = "form-control", required = "required" })
                 <small class="text-center" style="width: 100%;display: inline-block;">The step value. e.g. 0.5 will allow 1, 1.5, 2, 2.5 etc</small><br /><br />
                 <label>Show Value:</label>
-                @Html.CheckBoxFor(m=>m.IsShowValue)
+                @Html.CheckBoxFor(m => m.IsShowValue)
                 <br />
                 <small>Show user the value of the slider</small>
             </div>

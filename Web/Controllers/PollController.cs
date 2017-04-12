@@ -131,8 +131,11 @@ namespace Web.Controllers
 
                 var publishGuid = Guid.NewGuid().ToString();
 
+                //var pollUrl =
+                //    $"{Request.Url.Scheme}{Uri.SchemeDelimiter}{Request.Url.Authority}/poll/pass/{publishGuid}";
                 var pollUrl =
-                    $"{Request.Url.Scheme}{Uri.SchemeDelimiter}{Request.Url.Authority}/poll/pass/{publishGuid}";
+                      $"{Request.Url.Scheme}{Uri.SchemeDelimiter}{Request.Url.Host}:40083/poll/pass/{publishGuid}";
+
 
                 if (message.Body.Contains("[link]"))
                 {

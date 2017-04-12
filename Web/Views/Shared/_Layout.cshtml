@@ -54,10 +54,7 @@
     </div>
     <img src="@Url.Content("~/Content/img/giphy.gif")" id="loader" style="display:none;" />
     @Scripts.Render("~/bundles/jquery")
-    @*@Scripts.Render("~/bundles/jqueryval")*@
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
-
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/ckeditor/ckeditor.js"></script>
     <script src="~/Scripts/ckeditor/adapters/jquery.js"></script>
@@ -195,28 +192,104 @@
             }
         });
 
+        function addQuestion() {
+            var form = $('#question-options');
+            var elements = form.find('input[required]:visible, textarea:hidden');
+            if (elements.valid()) {
+                ShowLoader();
+                form.submit();
+            }
+        }
+
+        function editQuestionSubmit() {
+            var form = $('#question-options-edit');
+            var elements = form.find('input[required]:visible, textarea:hidden');
+            if (elements.valid()) {
+                ShowLoader();
+                form.submit();
+            }
+        }
+
         $(document).ready(function () {
+            //On modal hide
             $('.modal').on('hidden.bs.modal', function () {
                 clearInput();
             });
+
+            //On modal show
+            $('.modal').on('shown.bs.modal', function () {
+                var createForm = $('#addQuestionModal #question-options');
+                var editForm = $('#editQuestionModal #question-options-edit');
+                var validator = null;
+                if (createForm.find('div').length) {
+                    validator = initValidator(createForm);
+                }
+                if (editForm.find('div').length) {
+                    validator = initValidator(editForm);
+                }
+                $.each(CKEDITOR.instances, function (instance) {
+                    CKEDITOR.instances[instance].on('change', function () {
+                        CKEDITOR.instances[instance].updateElement();
+                        validator.element("#" + instance);
+                    });
+                });
+            });
+           
         });
+
+        function initValidator(form) {
+            var validator = form.validate({
+                ignore: 'input:hidden',
+                errorPlacement: function (error, $elem) {
+                    error = error.css('color', 'red');
+                    if ($elem.is('.slider-input')) {
+                        var container = null;
+                        if ($elem.next().is('span')) {
+                            container = $elem.parents('div').find('div.col-xs-6.min');
+                        } else {
+                            container = $elem.parents('div').find('div.col-xs-6.max');
+                        }
+                        container.html(error);
+                    }
+                    else if ($elem.is('textarea')) {
+                        var next = $elem.next();
+                        next.after(error);
+                    } else if ($elem.is(':radio')) {
+                        var errorContainer = $elem.closest('div.col-md-12').next();
+                        if (!errorContainer.length) {
+                            $elem.closest('div.row').after($('<div>').addClass('col-md-12 error').append(error));
+                        } else {
+                            errorContainer.html(error);
+                        }
+                    } else {
+                        $elem.after(error);
+                    }
+                }
+            });
+
+            form.find('textarea:required').each(function (index, element) {
+                $(element).rules('add',
+                {
+                    required: function () {
+                        CKEDITOR.instances[element.attr('name')].updateElement();
+                        return true;
+                    }
+                });
+            });
+            return validator;
+        }
 
         function sucessQuestion(data) {
             if (data.success) {
                 location.reload();
             }
         }
-        function editQuestionSubmit() {
-            $('#question-options-edit #Text').val(CKEDITOR.instances['Text'].getData());
-            $('#question-options-edit #Introducing').val(CKEDITOR.instances['Introducing'].getData());
-            $('#question-options-edit').submit();
-        }
         function clearInput() {
             $('#editQuestionModal #question-options-edit').empty();
             $('#addQuestionModal #question-options').empty();
             var modals = $('.tab-pane.active .modal');
             if (modals.length) {
-                modals.each(function(index, element) {
+                modals.each(function (index, element) {
                     $(element).find('.modal-body').empty();
                 });
             }

@@ -197,6 +197,7 @@
         </div>
         <script type="text/javascript">
             function createNewQuestion(relId) {
+                ShowLoader();
                 $.ajax({
                     type: "GET",
                     url: "/Surveys/CreateRQuestion/?relId=" + relId
@@ -204,6 +205,8 @@
                     $('#addQuestionModal #question-options').empty().html(data);
                     updateCkeditor();
                     $('#addQuestionModal').modal('show');
+                }).always(function () {
+                    HideLoader();
                 });
             }
 

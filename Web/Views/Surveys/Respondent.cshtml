@@ -117,37 +117,7 @@
     @Scripts.Render("~/bundles/slider")
 
     <script type="text/javascript">
-        function addQuestion() {
-            $('#question-options #Text').val(CKEDITOR.instances['Text'].getData());
-            $('#question-options #Introducing').val(CKEDITOR.instances['Introducing'].getData());
-            var valid = true;
-            $('#question-options input[required], #question-options select[required], #question-options textarea.required').each(function (i) {
-                if ($(this).val() == null || $(this).val().length == 0) {
-                    $(this).parent().addClass('has-error');
-                    $(this).focus();
-                    if($(this).prop("tagName").toLowerCase() == "textarea") {
-                        $('#cke_' + $(this).attr('id')).attr('style', 'border-color: #b94a48');
-                        $('#cke_' + $(this).attr('id')).focus();
-                    }
-                    valid = false;
-                }
-                else {
-                    $(this).parent().removeClass('has-error');
-                    if($(this).prop("tagName").toLowerCase() == "textarea") {
-                        $('#cke_' + $(this).attr('id')).attr('style', '');
-                    }
-                }
-            });
 
-            if(!$('input[name="QuestionFormat.Code"]').prop('checked')) {
-                $('.format-group-section').css('color', '#b94a48');
-            } else {
-                $('.format-group-section').css('color', 'initial');
-            }
-            if(valid) {
-                $('#question-options').submit();
-            }
-        }
         function updatePosition(id, value) {
             Redirect('/Surveys/Respondent/' + id + '/?isAfter=' + value);
         }

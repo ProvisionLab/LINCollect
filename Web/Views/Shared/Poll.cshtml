@@ -436,7 +436,6 @@
                     var form = $('#publishForm');
                     var validator = form.validate({
                         ignore:[],
-                        debug: true,
                         errorPlacement: function (error, $elem) {
                             error = error.css('color', 'red');
                             if (("checkbox, radio").indexOf($elem.attr('type')) !== -1) {
