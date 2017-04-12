@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -92,8 +93,8 @@ namespace Web.Controllers
 
                 if (BannerFile != null)
                 {
-                    string path = System.Web.HttpContext.Current.Server.MapPath("~/Content/files/banners/");
-
+                    string path = System.Web.HttpContext.Current.Server.MapPath("~/Content/files/img/");
+                    Directory.CreateDirectory(path);
                     try
                     {
                         var fileName = BannerFile.FileName.Split('\\').LastOrDefault();
@@ -145,8 +146,8 @@ namespace Web.Controllers
             {
                 if (BannerFile != null)
                 {
-                    string path = System.Web.HttpContext.Current.Server.MapPath("~/Content/files/banners/");
-
+                    string path = System.Web.HttpContext.Current.Server.MapPath("~/Content/files/img/");
+                    Directory.CreateDirectory(path);
                     try
                     {
                         var fileName = BannerFile.FileName.Split('\\').LastOrDefault();
