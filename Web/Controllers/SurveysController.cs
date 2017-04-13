@@ -167,19 +167,24 @@ namespace Web.Controllers
             return RedirectToAction("Edit", new { @id = survey.Id });
         }
 
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var surveyView = await _dbContext.Surveys.FindAsync(id);
-            if (surveyView == null)
+            var survey = await _dbContext.Surveys.FindAsync(id);
+            if (survey == null)
             {
                 return RedirectToAction("Index");
             }
             try
             {
+                foreach (var user in survey.ApplicationUsers)
+                {
+                    await _surveyManager.Dissociate(user.Id, id);
+                }
+                
                 _dbContext.Database.ExecuteSqlCommand("exec DeleteSurvay {0}", id);
             }
             catch { }

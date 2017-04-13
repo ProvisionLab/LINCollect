@@ -100,6 +100,12 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingUser = await UserManager.FindByEmailAsync(model.Email);
+                if (existingUser != null)
+                {
+                    ModelState.AddModelError("Email", @"User with the same email already exist");
+                    return View(model);
+                }
                 var user = new ApplicationUser
                 {
                     UserName = model.Email,
