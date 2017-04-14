@@ -285,13 +285,13 @@
 
         function AllCompanyClick(id, action) {
             if (action == 1) {
-                $('.left-companies-' + id + ' .company-prew').each(function(i) {
+                $('.left-companies-' + id + ' .company-prew').not(".node").each(function(i) {
                     $(this).find('.fa-plus-circle').addClass('hide');
                     $(this).find('.fa-minus-circle').removeClass('hide');
                     $('.right-companies-' + id).append($(this));
                 });
             } else {
-                $('.right-companies-' + id + ' .company-prew').each(function(i) {
+                $('.right-companies-' + id + ' .company-prew').not(".node").each(function (i) {
                     $(this).find('.fa-plus-circle').removeClass('hide');
                     $(this).find('.fa-minus-circle').addClass('hide');
                     $('.left-companies-' + id).append($(this));
@@ -349,7 +349,7 @@
                 });
 
                 //Add node company to list
-                $('.right-companies-' + id).append($('<div class="company-prew" data-name=' +
+                $('.right-companies-' + id).append($('<div class="company-prew node" data-name=' +
                     companyName +
                     ' style="cursor:pointer">' +
                     node +
