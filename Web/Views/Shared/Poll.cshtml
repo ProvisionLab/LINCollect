@@ -98,32 +98,41 @@
                         }
                         <div class="col-xs-6">
                             <div class="well">
-                                <div>
+                                <div class="row">
                                     @if (Model.Items[i].UseDDSearch)
                                     {
-                                    <div class="pull-right">
-                                        <span>Search:</span>
-                                        <input type="text" class="form-control-sm search-companies" data-id="@Model.Items[i].Id" />
-                                        <button type="button" class="btn purple" onclick="resetSearch()">Reset</button>
-                                    </div>
+                                        <div class="col-md-4">
+                                            <b>Search:</b>
+                                           </div>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control search-companies" data-id="@Model.Items[i].Id" />
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn purple" onclick="resetSearch()">Reset</button>
+                                                </span>
+                                            </div>
+                                        </div>
                                     }
-                                    <b>Companies</b>
-                                    <hr />
+                                    <div class="col-md-12">
+                                        <br />
+                                        <b>Companies</b>
+                                        <hr />
+                                    </div>
                                 </div>
                                 <div class="left-companies-@(Model.Items[i].Id)">
                                     @if (!string.IsNullOrEmpty(Model.Items[i].Companies.Error))
                                     {
-                                    <div class="text-danger">@Html.Raw(Model.Items[i].Companies.Error)</div>
+                                        <div class="text-danger">@Html.Raw(Model.Items[i].Companies.Error)</div>
                                     }
 
                                     @for (int k = 0; k < Model.Items[i].Companies.Names.Count; k++)
                                     {
-                                    <div class="company-prew" style="cursor: pointer" onclick="CompanyClick(this, @Model.Items[i].Id, '@($"Items[{i}].Companies.Names[{k}].Checked")')">
-                                        @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Name)
-                                        @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Checked)
-                                        <i class="fa fa-plus-circle"></i>
-                                        <i class="fa fa-minus-circle hide"></i> @Model.Items[i].Companies.Names[k].Name
-                                    </div>
+                                        <div class="company-prew" style="cursor: pointer" onclick="CompanyClick(this, @Model.Items[i].Id, '@($"Items[{i}].Companies.Names[{k}].Checked")')">
+                                            @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Name)
+                                            @Html.HiddenFor(p => p.Items[i].Companies.Names[k].Checked)
+                                            <i class="fa fa-plus-circle"></i>
+                                            <i class="fa fa-minus-circle hide"></i> @Model.Items[i].Companies.Names[k].Name
+                                        </div>
                                     }
                                 </div>
                                 @if (Model.Items[i].AllowSelectAllNodes)
