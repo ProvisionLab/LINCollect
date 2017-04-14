@@ -17,6 +17,7 @@ namespace Web.Repositories.Implementations
             var question = await base.Get(id);
             var respId = question.RespondentId;
             await base.Delete(id);
+            await DbContext.SaveChangesAsync();
             DbContext.Database.ExecuteSqlCommand("exec SortRespondentQuestions {0}", respId);
         }
     }

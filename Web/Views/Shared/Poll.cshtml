@@ -301,10 +301,10 @@
 
         function AddNode(isQ, isH, id, index) {
             var node = $('#add-node-' + id).val();
-            ShowLoader()
             if (node.trim().length > 0) {
                 var companyName = node.trim().split(' ')[0];
                 var modal = $('#addNodeModal-' + id + ' .modal-body');
+                ShowLoader();
                 $.ajax({
                     type: "GET",
                     url: '@Url.Action("GetNQuestions","Poll")?relationshipId=' + id + '&index=' + index

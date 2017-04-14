@@ -709,12 +709,7 @@ namespace Web.Controllers
         {
             try
             {
-                var _Question = await _dbContext.RQuestions.FindAsync(id);
-                var _RelId = _Question.RelationshipItemId;
-                _dbContext.RQuestions.Remove(_Question);
-                await _dbContext.SaveChangesAsync();
-
-                _dbContext.Database.ExecuteSqlCommand("exec SortRelationQuestions {0}", _RelId);
+                await _rQuestionManager.DeleteAsync(id);
 
                 return Json(new { success = true });
             }
@@ -730,12 +725,7 @@ namespace Web.Controllers
         {
             try
             {
-                var _Question = await _dbContext.NQuestions.FindAsync(id);
-                var _RelId = _Question.RelationshipItemId;
-                _dbContext.NQuestions.Remove(_Question);
-                await _dbContext.SaveChangesAsync();
-
-                _dbContext.Database.ExecuteSqlCommand("exec SortRelationNodeQuestions {0}", _RelId);
+                await _nQuestionManager.DeleteAsync(id);
 
                 return Json(new { success = true });
             }
@@ -743,8 +733,6 @@ namespace Web.Controllers
             {
                 return Json(new { success = false, error = ex.Message });
             }
-
-
         }
 
         public async Task<ActionResult> ChangeQuestionPosition(int id, bool isInc)

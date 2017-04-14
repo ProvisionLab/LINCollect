@@ -17,5 +17,16 @@ namespace Web.Repositories.Implementations
         {
             return Task.FromResult(DbSet.Where(t => t.RelationshipItemId == relationshipId));
         }
+
+
+        public override async Task Delete(int id)
+        {
+            var question = await base.Get(id);
+            var relId = question.RelationshipItemId;
+            await base.Delete(id);
+            await DbContext.SaveChangesAsync();
+            //DbContext.Database.ExecuteSqlCommand("exec SortRelationQuestions {0}", relId);
+            DbContext.Database.ExecuteSqlCommand("exec SortRelationNodeQuestions {0}", relId);
+        }
     }
 }
