@@ -76,7 +76,14 @@
     <script>
         function ClearSurveyData(id, name) {
             if (confirm('WARNING: All current data for the survey ' + name + ' will be lost. Are you sure want to continue?')) {
-                window.location.reload();
+                ShowLoader();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Clear")',
+                    data: {id: id}
+                }).always(function () {
+                    HideLoader();
+                });
             }
         }
     </script>

@@ -18,5 +18,6 @@ namespace Web.Managers.Interfaces
         Task<List<SurveyModel>> GetByUser(string id);
         Task<bool> Submit(int publishSurveyId, PollResultView model);
         Task Offline(int surveyId);
+        Task Clear(int surveyId);
     }
 }

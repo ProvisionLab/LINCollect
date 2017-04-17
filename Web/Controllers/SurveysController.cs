@@ -162,7 +162,7 @@ namespace Web.Controllers
                 {
                     await _surveyManager.Dissociate(user.Id, id);
                 }
-                
+
                 _dbContext.Database.ExecuteSqlCommand("exec DeleteSurvay {0}", id);
             }
             catch { }
@@ -419,7 +419,7 @@ namespace Web.Controllers
             }
             else
             {
-                return Json(new { success = false, error="Format Code" });
+                return Json(new { success = false, error = "Format Code" });
             }
 
             if ("choice_across,choice_down,drop_down,matrix".Contains(formatCode.Code))
@@ -448,7 +448,7 @@ namespace Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return Json(new { success = false , exception=e.Message});
+                    return Json(new { success = false, exception = e.Message });
                 }
             }
             else
@@ -460,7 +460,7 @@ namespace Web.Controllers
                 }
                 catch (Exception e)
                 {
-                    return Json(new { success = false , exception=e.Message});
+                    return Json(new { success = false, exception = e.Message });
                 }
             }
 
@@ -481,7 +481,7 @@ namespace Web.Controllers
 
             return Json(new { success = true });
         }
-        
+
         [HttpGet]
         public ActionResult CreateQuestion(int respId, bool isAfter)
         {
@@ -512,11 +512,11 @@ namespace Web.Controllers
                 RespondentId = respId,
                 IsAfterSurvey = isAfter,
                 Resolution = 1,
-                
+
             };
 
             ViewBag.Formats = _dbContext.QuestionFormats.ToList();
-            return PartialView("EditQuestion",model);
+            return PartialView("EditQuestion", model);
         }
 
         public async Task<ActionResult> EditQuestion(int id, int respId, bool isAfter = true)
@@ -582,7 +582,7 @@ namespace Web.Controllers
         public async Task<ActionResult> EditRQuestion(int id, int relId)
         {
             var model = await _rQuestionManager.GetAsync(id);
-            
+
             if (model != null && string.IsNullOrEmpty(model.Rows))
                 model.Rows = ",,,,";
 
@@ -846,7 +846,7 @@ namespace Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             var survey = await _surveyManager.GetAsync(id.Value);
 
             if (survey == null)
@@ -858,7 +858,7 @@ namespace Web.Controllers
 
             ViewBag.SurveyId = id.Value;
 
-            var model = new RelationshipView {RelationshipItems = survey.RelationshipItems};
+            var model = new RelationshipView { RelationshipItems = survey.RelationshipItems };
             if (model.RelationshipItems.Count == 0)
             {
                 var rel = new RelationshipItemModel
@@ -1169,6 +1169,21 @@ namespace Web.Controllers
                 await _surveyManager.Offline(id);
             }
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Clear(int id)
+        {
+            try
+            {
+                await _surveyManager.Clear(id);
+
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = true, error = e.Message });
+            }
         }
     }
 }
