@@ -15,7 +15,8 @@ namespace Web.Managers.Interfaces
         Task<List<SurveyModel>> GetPublished();
         Task<PreviewView> GetPreview(Guid id);
         Task<PreviewView> GetPreview(int id);
-        Task<List<SurveyView>> GetByUser(string id);
+        Task<List<SurveyModel>> GetByUser(string id);
         Task<bool> Submit(int publishSurveyId, PollResultView model);
+        Task Offline(int surveyId);
     }
 }

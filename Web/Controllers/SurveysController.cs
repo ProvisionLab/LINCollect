@@ -26,9 +26,6 @@ namespace Web.Controllers
     [Authorize(Roles = "Administrator")]
     public class SurveysController : Controller
     {
-        //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
-        //static string ApplicationName = "LinCollect";
-
         private readonly ApplicationDbContext _dbContext;
         private readonly IResultManager _resultManager;
         private readonly ISurveyManager _surveyManager;
@@ -59,16 +56,8 @@ namespace Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var surveyViews = _dbContext.Surveys.Select(x => new SurveyView()
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Language = x.Language.Name,
-                Status = x.Status.Name,
-                SurveyStatusId = x.SurveyStatusId,
-                UpdateDateUtc = x.UpdateDateUtc
-            }).OrderByDescending(x => x.UpdateDateUtc);
-            return View(await surveyViews.ToListAsync());
+            var surveys = await _surveyManager.GetAsync();
+            return View(surveys);
         }
 
         public ActionResult Create()
@@ -110,38 +99,29 @@ namespace Web.Controllers
                 {
                     return RedirectToAction("Respondent", new { id = survey.Id });
                 }
-                else
-                {
-                    return RedirectToAction("Edit", new { id = survey.Id });
-                }
+                return RedirectToAction("Edit", new { id = survey.Id });
             }
             ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name", survey.LanguageId);
             ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles.Where(x => x.UserId == userId), "Id", "Name", survey.SurveyFileId);
             return View(survey);
         }
 
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            var userId = User.Identity.GetUserId();
-            if (!id.HasValue)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var surveyView = await _dbContext.Surveys.FindAsync(id);
-            if (surveyView == null)
+            var survey = await _surveyManager.GetAsync(id);
+            if (survey == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name", surveyView.LanguageId);
-            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles, "Id", "Name", surveyView.SurveyFileId);
-            return View(surveyView);
+            ViewBag.LanguageId = new SelectList(_dbContext.Languages, "Id", "Name", survey.LanguageId);
+            ViewBag.SurveyFileId = new SelectList(_dbContext.SurveyFiles, "Id", "Name", survey.SurveyFileId);
+            return View(survey);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<ActionResult> Edit(Survey survey, HttpPostedFileBase BannerFile, bool isNext = false)
+        public async Task<ActionResult> Edit(SurveyModel survey, HttpPostedFileBase BannerFile, bool isNext = false)
         {
-            var userId = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
                 if (BannerFile != null)
@@ -156,15 +136,13 @@ namespace Web.Controllers
                     }
                     catch (Exception ex) { var t = ex.Message; }
                 }
-                survey.UpdateDateUtc = DateTime.UtcNow;
-                _dbContext.Entry(survey).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
+                await _surveyManager.UpdateAsync(survey);
                 if (isNext)
                 {
                     return RedirectToAction("Respondent", new { id = survey.Id });
                 }
             }
-            return RedirectToAction("Edit", new { @id = survey.Id });
+            return RedirectToAction("Edit", new { id = survey.Id });
         }
 
         public async Task<ActionResult> Delete(int id)
@@ -492,13 +470,14 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<JsonResult> SetRespondentPosition(int id, bool value)
         {
-            var resp = _dbContext.Respondents.SingleOrDefault(x => x.Id == id);
+            var resp = await _respondentManager.GetAsync(id);
             if (resp == null)
             {
                 return Json(new { success = false });
             }
             resp.IsAfterSurvey = value;
-            await _dbContext.SaveChangesAsync();
+
+            await _respondentManager.UpdateAsync(resp);
 
             return Json(new { success = true });
         }
@@ -916,9 +895,8 @@ namespace Web.Controllers
         {
             try
             {
-                var survey = await _dbContext.Surveys.FindAsync(id);
-                var count = _dbContext.RelationshipItems.Count(x => x.SurveyId == id);
-                var rel = new RelationshipItem()
+                var survey = await _surveyManager.GetAsync(id);
+                var rel = new RelationshipItemModel
                 {
                     Name = "New Relationship",
                     MaximumNodes = 0,
@@ -927,11 +905,10 @@ namespace Web.Controllers
                     SurveyId = id,
                     CreateDateUtc = DateTime.UtcNow,
                     UpdateDateUtc = DateTime.UtcNow,
-                    OrderId = count + 1,
+                    OrderId = survey.RelationshipItems.Count + 1,
                     NodeList = survey.SurveyFileId.ToString()
                 };
-                _dbContext.RelationshipItems.Add(rel);
-                _dbContext.SaveChanges();
+                await _relationshipManager.InsertAsync(rel);
 
                 return Json(new { success = true, id = id, relId = rel.Id });
             }
@@ -1136,12 +1113,12 @@ namespace Web.Controllers
         {
             try
             {
-                var item = _dbContext.RelationshipItems.Find(id);
+                var item = await _relationshipManager.GetAsync(id);
 
                 if (item != null)
                     item.AddNodes = addNode;
 
-                await _dbContext.SaveChangesAsync();
+                await _relationshipManager.UpdateAsync(item);
 
                 return Json(new { success = true });
             }
@@ -1153,7 +1130,7 @@ namespace Web.Controllers
 
         public async Task<ActionResult> GetRelationshipItem(int id)
         {
-            var item = await _dbContext.RelationshipItems.FindAsync(id);
+            var item = await _relationshipManager.GetAsync(id);
             ViewBag.QuestionLayoutId = new SelectList(_dbContext.QuestionLayouts, "Id", "Name", item.QuestionLayoutId);
             ViewBag.NodeSelectionId = new SelectList(_dbContext.NodeSelections, "Id", "Name", item.NodeSelectionId);
             return View(item);
@@ -1162,35 +1139,19 @@ namespace Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
-        public async Task<ActionResult> GetRelationshipItem(RelationshipItem item)
+        public async Task<ActionResult> GetRelationshipItem(RelationshipItemModel item)
         {
-            int _id = int.Parse(Request.Form["RelId"]);
-            var buff = _dbContext.RelationshipItems.FirstOrDefault(x => x.Id == _id);
-
-            buff.Name = item.Name;
-            buff.UpdateDateUtc = DateTime.UtcNow;
-            buff.NodeList = item.NodeList;
-            buff.QuestionLayoutId = item.QuestionLayoutId;
-            buff.MaximumNodes = item.MaximumNodes;
-            buff.AddNodes = item.AddNodes;
-            buff.HideAddedNodes = item.HideAddedNodes;
-            buff.AllowSelectAllNodes = item.AllowSelectAllNodes;
-            buff.CanSkip = item.CanSkip;
-            buff.UseDDSearch = item.UseDDSearch;
-            buff.SuperUserViewNodes = item.SuperUserViewNodes;
-            buff.NodeSelectionId = item.NodeSelectionId;
-            buff.GeneratorName = item.GeneratorName;
-            buff.SortNodeList = item.SortNodeList;
-
-            await _dbContext.SaveChangesAsync();
+            int id = int.Parse(Request.Form["RelId"]);
+            item.Id = id;
+            await _relationshipManager.UpdateAsync(item);
 
             if (bool.Parse(Request.Form["isBack"]))
-                return RedirectToAction("Respondent", new { id = buff.SurveyId });
+                return RedirectToAction("Respondent", new { id = item.SurveyId });
 
             if (bool.Parse(Request.Form["isNext"]))
-                return RedirectToAction("Index", "Preview", new { id = buff.SurveyId });
+                return RedirectToAction("Index", "Preview", new { id = item.SurveyId });
 
-            return RedirectToAction("Relationship", new { id = buff.SurveyId, questions = false, relId = buff.Id });
+            return RedirectToAction("Relationship", new { id = item.SurveyId, questions = false, relId = item.Id });
         }
 
         public async Task<FileResult> Download(int id)
@@ -1198,6 +1159,16 @@ namespace Web.Controllers
             var spreadsheetData = await _resultManager.GetResults(id);
             var survey = await _surveyManager.GetAsync(id);
             return File(await SpreadSheetProvider.Instance.Generate(survey, spreadsheetData), "application/ms-excel", $"{survey.Name}-{DateTime.Now:yyyy_MM_dd HH-mm}.xlsx");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Offline(int id)
+        {
+            if (id > 0)
+            {
+                await _surveyManager.Offline(id);
+            }
+            return RedirectToAction("Index");
         }
     }
 }

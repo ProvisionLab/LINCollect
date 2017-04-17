@@ -8,6 +8,10 @@ namespace Web.Models.DTO
         public string UserId { get; set; }
         public int? SurveyFileId { get; set; }
         public virtual SurveyFileModel SurveyFile { get; set; }
+        public virtual string Status { get; set; }
+        public int SurveyStatusId { get; set; }
+        public int LanguageId { get; set; }
+        public virtual string Language { get; set; }
         public string Name { get; set; }
         public string Banner { get; set; }
         public string Introduction { get; set; }

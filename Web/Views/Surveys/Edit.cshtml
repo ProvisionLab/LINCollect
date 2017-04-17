@@ -1,4 +1,4 @@
-﻿@model Web.Data.Survey
+﻿@model Web.Models.DTO.SurveyModel
 @{
     ViewBag.Title = "Edit - Survey";
 }
@@ -26,7 +26,6 @@
         <input type="hidden" value="false" name="isNext" id="isNext" />
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.UserId)
-        @Html.HiddenFor(model => model.CreateDateUtc)
         @Html.HiddenFor(model => model.SurveyStatusId)
 
         <div class="form-group">

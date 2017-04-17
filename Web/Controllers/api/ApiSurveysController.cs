@@ -49,7 +49,7 @@ namespace Web.Controllers.api
 
             var surveys = await _surveyManager.GetByUser(token.UserId);
 
-            return new DataOperationResult<List<SurveyView>>(surveys);
+            return new DataOperationResult<List<SurveyModel>>(surveys);
         }
 
         [HttpPost, Route("start")]

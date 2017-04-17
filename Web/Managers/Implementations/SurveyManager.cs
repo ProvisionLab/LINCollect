@@ -154,9 +154,9 @@ namespace Web.Managers.Implementations
             return model;
         }
 
-        public async Task<List<SurveyView>> GetByUser(string id)
+        public async Task<List<SurveyModel>> GetByUser(string id)
         {
-            return Mapper.Map<IQueryable<Survey>, List<SurveyView>>(await UnitOfWork.SurveyRepository.GetByUser(id));
+            return Mapper.Map<IQueryable<Survey>, List<SurveyModel>>(await UnitOfWork.SurveyRepository.GetByUser(id));
         }
 
         public async Task<bool> Submit(int publishSurveyId, PollResultView model)
@@ -297,6 +297,32 @@ namespace Web.Managers.Implementations
                 }
             }
             return true;
+        }
+
+        public async Task Offline(int surveyId)
+        {
+            var survey = GetAsync(surveyId);
+
+            if(survey == null)
+            {
+                return;
+            }
+
+            await Clear(surveyId);
+
+            await UnitOfWork.SurveyRepository.Offline(surveyId);
+
+            await UnitOfWork.SaveAsync();
+        }
+
+        public async Task Clear(int surveyId)
+        {
+            var published = await UnitOfWork.PublishSurveyRepository.GetBySurvey(surveyId);
+            foreach (var item in published)
+            {
+                await UnitOfWork.PublishSurveyRepository.Delete(item.Id);
+            }
+            await UnitOfWork.SaveAsync();
         }
     }
 }

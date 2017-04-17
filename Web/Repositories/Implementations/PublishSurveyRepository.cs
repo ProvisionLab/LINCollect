@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,6 +24,11 @@ namespace Web.Repositories.Implementations
         public Task<PublishSurvey> GetByGuid(Guid guid)
         {
             return Task.FromResult(DbSet.FirstOrDefault(i => i.Link == guid.ToString()));
+        }
+
+        public Task<IQueryable<PublishSurvey>> GetBySurvey(int surveyId)
+        {
+            return Task.FromResult(DbSet.Where(t => t.SurveyId == surveyId));
         }
     }
 }

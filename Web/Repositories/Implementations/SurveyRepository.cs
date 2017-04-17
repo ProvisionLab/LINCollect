@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Data;
@@ -35,6 +36,15 @@ namespace Web.Repositories.Implementations
         public Task<IQueryable<Survey>> GetByUser(string id)
         {
             return Task.FromResult(DbSet.Include(t => t.ApplicationUsers).Where(t => t.ApplicationUsers.Select(u=>u.Id).Contains(id)));
+        }
+
+        public async Task Offline(int id)
+        {
+            var item = await Get(id);
+
+            item.Status = DbContext.SurveyStatuses.FirstOrDefault(s => s.Name == "Offline");
+
+            await this.Update(item);
         }
     }
 }

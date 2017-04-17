@@ -8,6 +8,7 @@ namespace Web.Repositories.Interfaces
     public interface ISurveyRepository: IRepository<Survey>
     {
         Task Publish(int id);
+        Task Offline(int id);
         Task<IQueryable<Survey>> GetByUser(string id);
     }
 }

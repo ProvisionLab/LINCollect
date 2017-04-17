@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Web.Models.ViewModels.SurveyView>
+﻿@model IEnumerable<Web.Models.DTO.SurveyModel>
 
 @{
     ViewBag.Title = "Surveys";
@@ -37,26 +37,26 @@
                 @item.Name (@item.Language)
             </td>
             <td>
-                @if (item.SurveyStatusId == 2)
+                @if (item.Status == "Published")
                 {
                     @Html.ActionLink("Download", "Download", new { id = item.Id })
                 }
                 else
                 {
-                    @Html.Raw("Download")
+                    @Html.Raw("No data")
                 }
             </td>
             <td>
-                @if (item.SurveyStatusId == 1)
+                @if (item.Status == "Offline")
                 {
                     @Html.ActionLink("Publish", "Publish", "Poll", new { id = item.Id }, null)
                 }
                 else
                 {
-                    @Html.Raw("Publish")
+                    @Html.ActionLink("Offline", "Offline", new {id = item.Id })
                 }
                 |
-                @if (item.SurveyStatusId == 1)
+                @if (item.Status == "Offline")
                 {
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                 }

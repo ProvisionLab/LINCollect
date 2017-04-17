@@ -11,5 +11,6 @@ namespace Web.Repositories.Interfaces
     public interface IPublishSurveyRepository: IRepository<PublishSurvey>
     {
         Task<PublishSurvey> GetByGuid(Guid guid);
+        Task<IQueryable<PublishSurvey>> GetBySurvey(int surveyId);
     }
 }

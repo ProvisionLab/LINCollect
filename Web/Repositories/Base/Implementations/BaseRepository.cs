@@ -82,9 +82,12 @@ namespace Web.Repositories.Base.Implementations
         {
             return Task.Factory.StartNew(() =>
             {
-                DbEntityEntry entry = DbContext.Entry(entity);
+                if (entity != null)
+                {
+                    DbEntityEntry entry = DbContext.Entry(entity);
 
-                entry.State = EntityState.Detached;
+                    entry.State = EntityState.Detached;
+                }
             });
         }
 
