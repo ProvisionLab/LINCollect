@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FF005CA7</color>
+    <color name="colorPrimaryDark">#005193</color>
+    <color name="colorAccent">#FF8AC760</color>
+
+    <color name="activity_background">#efefef</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="green">#FF8AC760</color>
+    <color name="green_pressed">#a9c794</color>
+    <color name="blue">#0349A5</color>
+    <color name="blue_pressed">#0367A5</color>
+    <color name="blue_light">#5391B8</color>
+    <color name="line_grey">#cccccc</color>
+    <color name="grey">#eeeeee</color>
+    <color name="progress_bg">#70000000</color>
+</resources>

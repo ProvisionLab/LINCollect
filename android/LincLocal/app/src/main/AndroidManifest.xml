@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ua.com.lsoft.lincollect">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name=".LincLocalApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SurveysListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AddCompanyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.QuizActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SurveyEndActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver
+            android:name=".receiver.NetworkChangeReceiver"
+            android:label="NetworkConnection">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".activity.StartActivity" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="789e8cf77819253f928d744a5086c524fe9a51f4" />
+    </application>
+
+</manifest>

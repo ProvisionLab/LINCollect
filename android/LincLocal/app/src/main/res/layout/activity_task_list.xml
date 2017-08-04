@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/activity_background"
+    android:orientation="vertical"
+    tools:context=".activity.SurveysListActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <ListView
+        android:id="@+id/surveys_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="32dp"
+        android:divider="@color/activity_background"
+        android:dividerHeight="10dp" />
+
+    <include layout="@layout/progress_layout" />
+
+</LinearLayout>

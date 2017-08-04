@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">LINCollect</string>
+
+    <string name="prev">Prev</string>
+    <string name="next">Next</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="finish">Finish</string>
+
+    <!-- LoginModel -->
+    <string name="login_welcome">WELCOME</string>
+    <string name="login_name">Username</string>
+    <string name="login_pass">Password</string>
+    <string name="login_text">Login</string>
+    <string name="login_or">or</string>
+    <string name="login_reg">Regiser new account</string>
+    <string name="login_please">Please loginModel to get started</string>
+    <string name="wrong_login">Wrong username or password</string>
+
+    <!-- Registeration -->
+    <string name="register_text">REGISTRATION</string>
+    <string name="register_signup">Sign Up</string>
+    <string name="register_please">Please fill out this fields</string>
+    <string name="register_repeat">Repeat Password</string>
+    <string name="register_email">Email</string>
+
+    <!-- Surveys list -->
+    <string name="surveys_list_choose">Surveys</string>
+
+    <!-- User info -->
+    <string name="info_first_name">First Name</string>
+    <string name="info_last_name">Last Name</string>
+    <string name="info_position">Position</string>
+    <string name="info_phone">Phone Number</string>
+    <string name="info_email">Email</string>
+    <string name="info_employment">Employment Status</string>
+    <string name="info_full">Full time</string>
+    <string name="info_part">Part time</string>
+    <string name="info_consult">Consultant</string>
+    <string name="info_volunt">Volunteer</string>
+
+    <!-- Add company -->
+    <string name="add_company_title">Add company</string>
+    <string name="add_company_show_full_list">Show full list</string>
+    <string name="add_company_name">Name of the company</string>
+    <string name="add_company_country">Country</string>
+    <string name="add_company_city">City</string>
+    <string name="add_company_address">Address</string>
+    <string name="add_company_phone">Phone Number</string>
+    <string name="add_company_postal">Postal Code</string>
+    <string name="add_company_website">Website</string>
+    <string name="add_company_thanks">Thank you!\nCompany has been added to the list</string>
+    <string name="add_company_company_list">Company list</string>
+
+    <!-- fragment_first -->
+    <string name="fragment_first_respondent">1. Respondent Name</string>
+    <string name="fragment_first_company">2. Respondent Email</string>
+    <string name="fragment_first_cant_find">You can add new company if you do not see one in the list above</string>
+
+    <!-- last screen -->
+    <string name="thank_you">Thank You</string>
+    <string name="submitted">Your application has been submitted</string>
+    <string name="start_new">Start New Survey</string>
+    <string name="choose_different">Choose Different</string>
+
+    <!-- choose company relationships -->
+    <string name="choose_comp_rel_select">Select</string>
+    <string name="choose_comp_rel_selection">Selection</string>
+    <string name="choose_comp_rel_search">Search:</string>
+    <string name="choose_comp_rel_header">Please indicate all of the organizations that you have worked with in the Sanitation Sector. You can add new organizations if you do not see one in the list.</string>
+    <string name="fill_out_company_error">Please, fill out company name</string>
+    <string name="add_companies">Please, select companies</string>
+    <string name="answer_mandatory">Please, answer mandatory questions</string>
+    <string name="enter_name_or_email">Please, enter name or email</string>
+    <string name="incorrect_email">Incorrect email address</string>
+    <string name="company_exists">Company already exists</string>
+
+</resources>
