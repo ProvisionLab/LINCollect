@@ -14,7 +14,7 @@
     <string name="login_text">Login</string>
     <string name="login_or">or</string>
     <string name="login_reg">Regiser new account</string>
-    <string name="login_please">Please loginModel to get started</string>
+    <string name="login_please">Please login to get started</string>
     <string name="wrong_login">Wrong username or password</string>
 
     <!-- Registeration -->
