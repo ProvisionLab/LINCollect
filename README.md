@@ -3,12 +3,12 @@ LincLocal is an application for passing surveys.
 
 # Features
 1. Question types:
-  * Text
-  * Choice Across (Radiobutton, Checkbox)
-  * Choice Down (Radiobutton, Checkbox)
-  * Drop Down
-  * Matrix
-  * Slider
+    * Text
+    * Choice Across (Radiobutton, Checkbox)
+    * Choice Down (Radiobutton, Checkbox)
+    * Drop Down
+    * Matrix
+    * Slider
 2. Individual questions for choosed companies
 3. Ability to add new company
 
