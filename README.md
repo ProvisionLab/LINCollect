@@ -19,7 +19,7 @@ LincLocal is an application for passing surveys.
 
 # Installation and Run
 1. Open https://github.com/ProvisionLab/LINCollect
-2. Clone project using git bash to your local machine via command git@github.com:ProvisionLab/LINCollect.git
+2. Clone project using git bash to your local machine via command "git clone git@github.com:ProvisionLab/LINCollect.git"
 3. In git bash switch to “android” branch
 4. Start Android Studio
 5. If there is open project go to File->Open, else choose “Open an existing Android Studio project”
